@@ -1,6 +1,7 @@
 package com.example.notweshare.backend
 
 import android.util.Log
+import com.example.notweshare.models.User
 import com.google.firebase.firestore.*
 
 object FetchUsers {
