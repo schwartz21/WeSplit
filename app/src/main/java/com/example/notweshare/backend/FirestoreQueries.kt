@@ -9,6 +9,9 @@ class FirestoreQueries {
 
     class UserQueries {
         companion object {
+            @JvmStatic fun allUsers(): Query {
+                return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath)
+            }
             @JvmStatic fun userWithDocumentID(userDocumentID: String): Query {
                 return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereEqualTo(FieldPath.documentId(), userDocumentID)
             }

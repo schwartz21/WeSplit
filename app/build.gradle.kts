@@ -51,6 +51,8 @@ android {
 }
 
 dependencies {
+    implementation("io.insert-koin:koin-androidx-compose:3.4.6")
+
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-firestore:24.0.0")
     implementation("com.google.firebase:firebase-analytics")
@@ -70,4 +72,5 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation("eu.bambooapps:compose-material3-pullrefresh:1.0.0")
 }
