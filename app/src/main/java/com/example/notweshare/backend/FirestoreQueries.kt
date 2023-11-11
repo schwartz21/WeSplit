@@ -31,7 +31,7 @@ class FirestoreQueries {
             @JvmStatic fun groupWithDocumentID(groupDocumentID: String): Query {
                 return FirebaseFirestore.getInstance().collection("groups").whereEqualTo(FieldPath.documentId(), groupDocumentID)
             }
-            @JvmStatic fun groupWithMember(memberDocumentID: String): Query {
+            @JvmStatic fun groupsWithMember(memberDocumentID: String): Query {
                 return FirebaseFirestore.getInstance().collection("groups").whereArrayContains("members", memberDocumentID)
             }
             // Post a new group

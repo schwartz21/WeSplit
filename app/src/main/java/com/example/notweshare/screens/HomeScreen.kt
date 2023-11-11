@@ -37,7 +37,7 @@ fun HomeScreen(
     val isRefreshing by remember { mutableStateOf(false) }
 
     val state = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {
-        groupViewModel.findGroups()
+        groupViewModel.findGroupsWithMember("test")
     })
 
     when (groupViewModel.isLoading.value) {
