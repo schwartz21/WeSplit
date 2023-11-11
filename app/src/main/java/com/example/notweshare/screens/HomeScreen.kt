@@ -2,6 +2,7 @@ package com.example.notweshare.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,45 +15,66 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavController
+import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.notweshare.models.Group
 import com.example.notweshare.models.User
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import org.koin.androidx.compose.koinViewModel
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigation: NavController,
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel = koinViewModel()
+    groupViewModel: GroupViewModel = koinViewModel(),
 ) {
     val isRefreshing by remember { mutableStateOf(false) }
 
     val state = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {
-        userViewModel.findUsers()
+        groupViewModel.findGroups()
     })
 
-    when (userViewModel.isLoading.value) {
+    when (groupViewModel.isLoading.value) {
         false -> {
-            Box(modifier = modifier.fillMaxSize()){
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .pullRefresh(state)
-                ) {
-                    items(items = userViewModel.users) { user -> UserCard(user) }
+            Column {
+                Box(modifier = modifier.fillMaxSize()){
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .pullRefresh(state)
+                    ) {
+                        items(items = groupViewModel.groups) { group -> GroupCard(group) }
+                    }
+                    PullRefreshIndicator(
+                        refreshing = isRefreshing,
+                        state = state,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                    )
+                    Button (
+                        onClick = {
+                            groupViewModel.postGroup(
+                                Group(
+                                    name = "Test Group",
+                                    expired = false,
+                                    members = mutableListOf("test", "test2"),
+                                    expenses = mutableListOf(),
+                                    createdBy = "test",
+                                    createdAt = Date(),
+                                )
+                            )
+                        },
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    ) {
+                        Text(text = "Create Group")
+                    }
                 }
-
-                PullRefreshIndicator(
-                    refreshing = isRefreshing,
-                    state = state,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                )
-
             }
         }
         true -> {
@@ -62,6 +84,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun UserCard (user: User){
-    Text(text = user.name ?: "Unknown user")
+fun GroupCard (group: Group){
+    Text(text = group.name ?: "Unknown user")
+    Text(text = group.toString() ?: "Unknown amount")
 }
