@@ -1,6 +1,5 @@
 package com.example.notweshare.models
 
-import android.graphics.Bitmap
 import java.io.Serializable
 import java.util.*
 
