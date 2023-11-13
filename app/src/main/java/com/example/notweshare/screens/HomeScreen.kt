@@ -61,7 +61,7 @@ fun HomeScreen(
                         onClick = {
                             groupViewModel.postGroup(
                                 Group(
-                                    name = "Test Group",
+                                    name = "Test Group created by button",
                                     expired = false,
                                     members = mutableListOf("test", "test2"),
                                     expenses = mutableListOf(),

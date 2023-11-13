@@ -29,7 +29,7 @@ class GroupViewModel(): ViewModel() {
         isLoading.value = true
         groups.clear()
         viewModelScope.launch {
-            fetchGroups(FirestoreQueries.GroupQueries.allGroups()) { foundGroups ->
+            fetchGroups() { foundGroups ->
                 groups.clear()
                 groups.addAll(foundGroups)
                 isLoading.value = false
@@ -49,10 +49,10 @@ class GroupViewModel(): ViewModel() {
         }
     }
 
-    private fun fetchGroups(queryCondition: Query, callback: (MutableList<Group>) -> Unit) {
+    private fun fetchGroups(callback: (MutableList<Group>) -> Unit) {
         var groupArray: MutableList<Group> = mutableListOf<Group>()
 
-        listener = queryCondition.addSnapshotListener(object : EventListener<QuerySnapshot> {
+        listener = FirestoreQueries.GroupQueries.allGroups().addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
                 error: FirebaseFirestoreException?
