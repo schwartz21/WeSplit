@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.compose.AppTheme
+import com.example.compose.md_success
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
@@ -36,6 +38,7 @@ import com.example.notweshare.models.getTotalExpense
 import com.example.notweshare.models.getTotalUnpaid
 import org.koin.androidx.compose.koinViewModel
 import java.text.DecimalFormat
+import kotlin.math.abs
 
 @Composable
 fun GroupCard(
@@ -44,6 +47,11 @@ fun GroupCard(
 ) {
     val smallPadding = dimensionResource(R.dimen.padding_small)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
+
+    val userContribution = getMemberDebt(group, userViewModel.activeUser.documentID)
+    val absContribution = abs(userContribution)
+    val userOwes = userContribution > 0
+
 
     Surface(
         modifier = Modifier.padding(mediumPadding),
@@ -61,12 +69,11 @@ fun GroupCard(
                     .fillMaxWidth()
                     .height(with(LocalDensity.current) {
                         110.sp.toDp()
-                    })
-                    .background(
+                    }).background(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
-                                0f to MaterialTheme.colorScheme.primary,
-                                1f to MaterialTheme.colorScheme.tertiary
+                                0f to MaterialTheme.colorScheme.tertiaryContainer,
+                                1f to MaterialTheme.colorScheme.tertiaryContainer
                             )
                         )
                     ),
@@ -75,7 +82,7 @@ fun GroupCard(
                 Text(
                     text = group.name ?: "unknown group name",
                     modifier = Modifier.padding(smallPadding),
-                    color = MaterialTheme.colorScheme.onTertiary,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
                     style = MaterialTheme.typography.displaySmall,
                     textAlign = TextAlign.Center,
                 )
@@ -93,16 +100,14 @@ fun GroupCard(
                 DoubleStack(
                     topItem = DecimalFormat("#.##").format(getTotalUnpaid(group)),
                     bottomItem = "Total Unpaid",
-                    owed = getTotalUnpaid(group) > 0
+                    owed = getTotalUnpaid(group) > 0,
+                    positiveIsGreen = true
                 )
                 DoubleStack(
-                    topItem = DecimalFormat("#.##").format(
-                        getMemberDebt(
-                            group,
-                            userViewModel.activeUser.documentID
-                        )
-                    ),
-                    bottomItem = "You will receive" // TODO: change this text depending on - or positive
+                    topItem = DecimalFormat("#.##").format(absContribution),
+                    bottomItem = if (userOwes) "You owe" else "You will receive",
+                    owed = userOwes,
+                    positiveIsGreen = true
 // TODO: Show green text when positive and red text when negative
                 )
             }
@@ -111,9 +116,15 @@ fun GroupCard(
 }
 
 @Composable
-fun DoubleStack(topItem: String, bottomItem: String, owed: Boolean = false) {
+fun DoubleStack(topItem: String, bottomItem: String, owed: Boolean = false, positiveIsGreen: Boolean = false) {
     val smallPadding = dimensionResource(R.dimen.padding_small)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
+
+    val paymentColor = when {
+        owed -> MaterialTheme.colorScheme.error
+        positiveIsGreen && !owed -> md_success
+        else -> MaterialTheme.colorScheme.onSurface
+    }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
@@ -123,8 +134,8 @@ fun DoubleStack(topItem: String, bottomItem: String, owed: Boolean = false) {
             Text(
                 text = topItem,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                color = if (owed) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                fontWeight = FontWeight.ExtraBold,
+                color = paymentColor
             )
             Spacer(modifier = Modifier.padding(with(LocalDensity.current) {
                 0.8.sp.toDp()

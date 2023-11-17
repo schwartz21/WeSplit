@@ -1,6 +1,7 @@
 package com.example.notweshare.screens
 
 import android.graphics.ColorSpace
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -58,7 +61,18 @@ fun HomeScreen(
     when (groupViewModel.isLoading.value) {
         false -> {
             Column {
-                Box(modifier = modifier.fillMaxSize()) {
+                Box(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.verticalGradient(
+                                colorStops = arrayOf(
+                                    0f to MaterialTheme.colorScheme.primary,
+                                    1f to MaterialTheme.colorScheme.tertiary
+                                )
+                            )
+                        )
+                ) {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
