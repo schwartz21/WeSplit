@@ -20,14 +20,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
-import com.example.notweshare.models.Expense
-import com.example.notweshare.models.ExpenseMember
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.User
 import com.example.notweshare.models.getDefaultGroup
+import com.example.notweshare.models.getMemberDebt
+import com.example.notweshare.models.getTotalExpense
+import com.example.notweshare.models.getTotalUnpaid
 import org.koin.androidx.compose.koinViewModel
-import java.util.Date
-import kotlin.random.Random
 
 @Composable
 fun GroupCard(
@@ -71,15 +70,15 @@ fun GroupCard(
                     .padding(smallPadding)
             ) {
                 DoubleStack(
-                    topItem = group.getTotalExpense().toString(),
+                    topItem = getTotalExpense(group).toString(),
                     bottomItem = "Total Expenses"
                 )
                 DoubleStack(
-                    topItem = group.getTotalUnpaid().toString(),
+                    topItem = getTotalUnpaid(group).toString(),
                     bottomItem = "Total Unpaid"
                 )
                 DoubleStack(
-                    topItem = group.getMemberDebt(userViewModel.activeUser.documentID).toString(),
+                    topItem = getMemberDebt(group, userViewModel.activeUser.documentID).toString(),
                     bottomItem = "You will receive"
                 )
             }

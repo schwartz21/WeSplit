@@ -2,7 +2,6 @@ package com.example.notweshare.models
 
 import java.io.Serializable
 import java.util.*
-import kotlin.math.exp
 import kotlin.random.Random
 
 /**
@@ -18,67 +17,68 @@ data class Group(
     var createdAt: Date? = Date(),
 
     var documentID: String = "g",
-) : Serializable {
-    fun getTotalExpense(): Float {
-        var out = 0f
-        expenses.forEach {
-            out += it.expenseAmount
-        }
+) : Serializable
 
-        return out
+fun getTotalExpense(group: Group): Float {
+    var out = 0f
+    group.expenses.forEach {
+        out += it.expenseAmount
     }
 
-    fun getTotalUnpaid(): Float {
-        val memberDebts = computeMemberDebts()
+    return out
+}
 
-        var out = 0f
-        val debts = memberDebts.values
+fun getTotalUnpaid(group: Group): Float {
+    val memberDebts = computeMemberDebts(group)
 
-        for (debt in debts) {
-            if (debt <= 0) {
+    var out = 0f
+    val debts = memberDebts.values
+
+    for (debt in debts) {
+        if (debt <= 0) {
+            continue
+        }
+
+        out += debt
+    }
+
+    return out
+}
+
+/**
+ * @param id this should be a User.documentId
+ */
+fun getMemberDebt(group: Group, id: String): Float {
+    val memberDebts = computeMemberDebts(group)
+
+    println(memberDebts)
+
+    return memberDebts[id] ?: 0f
+}
+
+fun getAllMemberDebts(group: Group): MutableMap<String, Float> {
+    return computeMemberDebts(group)
+}
+
+private fun computeMemberDebts(group: Group): MutableMap<String, Float> {
+    val memberDebts = mutableMapOf<String, Float>()
+    for (expense in group.expenses) {
+        val owner = expense.owner
+        val expenseMembers = expense.members.values
+        val equalShare = expense.expenseAmount / expenseMembers.size
+        for (member in expenseMembers) {
+            if (member.payed) {
                 continue
             }
 
-            out += debt
+            memberDebts[owner] = (memberDebts[owner] ?: 0f) - equalShare
+            memberDebts[member.memberId] = (memberDebts[member.memberId] ?: 0f) + equalShare
         }
-
-        return out
     }
 
-    /**
-     * @param id this should be a User.documentId
-     */
-    fun getMemberDebt(id: String): Float {
-        val memberDebts = computeMemberDebts()
-
-        println(memberDebts)
-
-        return memberDebts[id] ?: 0f
-    }
-
-    fun getAllMemberDebts(): MutableMap<String, Float> {
-        return computeMemberDebts()
-    }
-
-    private fun computeMemberDebts(): MutableMap<String, Float> {
-        val memberDebts = mutableMapOf<String, Float>()
-        for (expense in expenses) {
-            val owner = expense.owner
-            val expenseMembers = expense.members.values
-            val equalShare = expense.expenseAmount / expenseMembers.size
-            for (member in expenseMembers) {
-                if (member.payed) {
-                    continue
-                }
-
-                memberDebts[owner] = (memberDebts[owner] ?: 0f) - equalShare
-                memberDebts[member.memberId] = (memberDebts[member.memberId] ?: 0f) + equalShare
-            }
-        }
-
-        return memberDebts
-    }
+    return memberDebts
 }
+
 
 fun getDefaultGroup(): Group {
     return Group(
