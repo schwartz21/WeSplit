@@ -1,13 +1,21 @@
 package com.example.notweshare.screens
 
+import android.graphics.ColorSpace
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,10 +23,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.notweshare.components.GroupCard
+import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.User
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
@@ -26,6 +39,7 @@ import eu.bambooapps.material3.pullrefresh.pullRefresh
 import org.koin.androidx.compose.koinViewModel
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 import java.util.Date
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +57,7 @@ fun HomeScreen(
     when (groupViewModel.isLoading.value) {
         false -> {
             Column {
-                Box(modifier = modifier.fillMaxSize()){
+                Box(modifier = modifier.fillMaxSize()) {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -57,14 +71,19 @@ fun HomeScreen(
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                     )
-                    Button (
+                    Button(
                         onClick = {
                             groupViewModel.postGroup(
                                 Group(
                                     name = "Test Group created by button",
                                     expired = false,
                                     members = mutableListOf("test", "test2"),
-                                    expenses = mutableListOf(),
+                                    expenses = mutableListOf(
+                                        Expense(
+                                            "testExp",
+                                            Random.nextFloat() * 2000
+                                        )
+                                    ),
                                     createdBy = "test",
                                     createdAt = Date(),
                                 )
@@ -77,14 +96,11 @@ fun HomeScreen(
                 }
             }
         }
+
         true -> {
             Text(text = "is loading")
         }
     }
 }
 
-@Composable
-fun GroupCard (group: Group){
-    Text(text = group.name ?: "Unknown user")
-    Text(text = group.toString() ?: "Unknown amount")
-}
+
