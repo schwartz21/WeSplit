@@ -31,6 +31,23 @@ data class Group(
         return out
     }
 
+    fun getTotalUnpaid(): Float{
+        computeMemberDebts()
+
+        var out = 0f
+        val debts = memberDebts.values
+
+        for (debt in debts){
+            if(debt <= 0){
+                continue
+            }
+
+            out += debt
+        }
+
+        return out
+    }
+
     fun getMemberDebt(id: String): Float{
 //        if (hasComputedMembers){
 //            return memberDebts[id] ?: 0f
@@ -38,10 +55,12 @@ data class Group(
 
         computeMemberDebts()
 
+        println(memberDebts)
+
         return memberDebts[id] ?: 0f
     }
 
-    fun getMemberDebts(): MutableMap<String, Float>{
+    fun getAllMemberDebts(): MutableMap<String, Float>{
         computeMemberDebts()
         return memberDebts
     }
