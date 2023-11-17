@@ -13,17 +13,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.AppTheme
 import com.example.exampleapplication.routes.Screen
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
-import com.example.notweshare.ui.theme.NotWeShareTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NotWeShareTheme {
+            AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Navigation("for the Android 2")
@@ -53,7 +53,7 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    NotWeShareTheme {
+    AppTheme {
         Navigation("for the Android")
     }
 }

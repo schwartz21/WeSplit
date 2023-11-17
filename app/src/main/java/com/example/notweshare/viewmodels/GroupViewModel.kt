@@ -112,7 +112,6 @@ class GroupViewModel(): ViewModel() {
     }
 
     fun postGroup(group: Group) {
-        println(group.toString())
         viewModelScope.launch {
             FirestoreQueries.GroupQueries.postGroup(group)
         }

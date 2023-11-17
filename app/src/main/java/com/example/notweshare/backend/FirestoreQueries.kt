@@ -36,7 +36,8 @@ class FirestoreQueries {
             }
             // Post a new group
             @JvmStatic fun postGroup(group: Group): Task<DocumentReference> {
-                return FirebaseFirestore.getInstance().collection("groups").add(group)
+                val fbCollection = FirebaseFirestore.getInstance().collection("groups")
+                return fbCollection.add(group)
             }
         }
     }
