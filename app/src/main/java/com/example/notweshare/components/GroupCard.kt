@@ -72,8 +72,8 @@ fun GroupCard(
                     }).background(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
-                                0f to MaterialTheme.colorScheme.tertiaryContainer,
-                                1f to MaterialTheme.colorScheme.tertiaryContainer
+                                0f to MaterialTheme.colorScheme.primary,
+                                1f to MaterialTheme.colorScheme.tertiary
                             )
                         )
                     ),
@@ -82,7 +82,7 @@ fun GroupCard(
                 Text(
                     text = group.name ?: "unknown group name",
                     modifier = Modifier.padding(smallPadding),
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.displaySmall,
                     textAlign = TextAlign.Center,
                 )

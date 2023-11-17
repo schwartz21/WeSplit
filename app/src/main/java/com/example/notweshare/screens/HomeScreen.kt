@@ -64,14 +64,6 @@ fun HomeScreen(
                 Box(
                     modifier = modifier
                         .fillMaxSize()
-                        .background(
-                            Brush.verticalGradient(
-                                colorStops = arrayOf(
-                                    0f to MaterialTheme.colorScheme.primary,
-                                    1f to MaterialTheme.colorScheme.tertiary
-                                )
-                            )
-                        )
                 ) {
                     LazyColumn(
                         modifier = Modifier

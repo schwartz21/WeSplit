@@ -29,16 +29,8 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            Brush.verticalGradient(
-                                colorStops = arrayOf(
-                                    0f to MaterialTheme.colorScheme.primary,
-                                    1f to MaterialTheme.colorScheme.tertiary
-                                )
-                            )
-                        ),
-//                    color = MaterialTheme.colorScheme.background
+                        .fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation("for the Android 2")
                 }
