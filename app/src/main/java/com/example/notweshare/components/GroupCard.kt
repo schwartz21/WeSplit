@@ -18,22 +18,37 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Expense
+import com.example.notweshare.models.ExpenseMember
 import com.example.notweshare.models.Group
+import com.example.notweshare.models.User
+import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 import kotlin.random.Random
 
 @Composable
-fun GroupCard(group: Group) {
+fun GroupCard(
+    group: Group,
+    userViewModel: UserViewModel = koinViewModel()
+) {
     val smallPadding = dimensionResource(R.dimen.padding_small)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
+
+    println("##############################################3")
+    println(userViewModel.users.isEmpty())
+    if (userViewModel.users.isEmpty()){
+        userViewModel.users.add(User())
+    }
+    println(userViewModel)
+
     Surface(
         modifier = Modifier.padding(mediumPadding),
         color = Color(0xFFB3E5FC),
         shape = RoundedCornerShape(mediumPadding)
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -61,35 +76,62 @@ fun GroupCard(group: Group) {
                     .fillMaxWidth()
                     .padding(smallPadding)
             ) {
-                Text(
-                    modifier = Modifier.padding(smallPadding),
-                    text = group.createdBy.toString() ?: "Unknown amount"
+                DoubleStack(
+                    topItem = group.getTotalExpense().toString(),
+                    bottomItem = "Total Expenses"
                 )
-                Text(
-                    modifier = Modifier.padding(smallPadding),
-                    text = group.getTotalExpense().toString() ?: "Unknown expiration"
+                DoubleStack(
+                    topItem = group.getTotalUnpaid().toString(),
+                    bottomItem = "Total Unpaid"
                 )
-                Text(
-                    modifier = Modifier.padding(smallPadding),
-                    text = group.expired.toString() ?: "Unknown expiration"
+                DoubleStack(
+                    topItem = group.getMemberDebt(userViewModel.users[0].name).toString(),
+                    bottomItem = "You will receive"
                 )
             }
         }
     }
 }
 
-
-@Preview(showBackground = true)
 @Composable
-fun GroupCardPreview() {
-    GroupCard(
-        group = Group(
-            name = "Test Group created by button",
-            expired = false,
-            members = mutableListOf("test", "test2"),
-            expenses = mutableListOf(Expense("testExp", Random.nextFloat()*2000)),
-            createdBy = "test",
-            createdAt = Date(),
+fun DoubleStack(topItem: String, bottomItem: String) {
+    val smallPadding = dimensionResource(R.dimen.padding_small)
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            modifier = Modifier.padding(smallPadding),
+            text = topItem
         )
-    )
+        Text(
+            modifier = Modifier.padding(smallPadding),
+            text = bottomItem
+        )
+    }
 }
+
+
+//@Preview(showBackground = true)
+//@Composable
+//fun GroupCardPreview() {
+//    val userViewModel = UserViewModel()
+//    userViewModel.users.add(User())
+//
+//    GroupCard(
+//        group = Group(
+//            name = "Test Group created by button",
+//            expired = false,
+//            members = mutableListOf("test", "test2"),
+//            expenses = mutableListOf(
+//                Expense(
+//                    "testExp",
+//                    Random.nextFloat() * 2000,
+//                    mutableMapOf("test" to ExpenseMember("test"), "test2" to ExpenseMember("test2", true))
+//                )
+//            ),
+//            createdBy = "test",
+//            createdAt = Date(),
+//        ),
+//        userViewModel = userViewModel
+//    )
+//}
