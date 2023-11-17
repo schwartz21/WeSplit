@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +35,7 @@ import com.example.notweshare.models.getMemberDebt
 import com.example.notweshare.models.getTotalExpense
 import com.example.notweshare.models.getTotalUnpaid
 import org.koin.androidx.compose.koinViewModel
+import java.text.DecimalFormat
 
 @Composable
 fun GroupCard(
@@ -44,7 +47,7 @@ fun GroupCard(
 
     Surface(
         modifier = Modifier.padding(mediumPadding),
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(mediumPadding),
         shadowElevation = 8.dp
     ) {
@@ -57,13 +60,13 @@ fun GroupCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(with(LocalDensity.current) {
-                        100.sp.toDp()
+                        110.sp.toDp()
                     })
                     .background(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
-                                0f to MaterialTheme.colorScheme.tertiary,
-                                1f to MaterialTheme.colorScheme.primary
+                                0f to MaterialTheme.colorScheme.primary,
+                                1f to MaterialTheme.colorScheme.tertiary
                             )
                         )
                     ),
@@ -72,8 +75,9 @@ fun GroupCard(
                 Text(
                     text = group.name ?: "unknown group name",
                     modifier = Modifier.padding(smallPadding),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.displaySmall
+                    color = MaterialTheme.colorScheme.onTertiary,
+                    style = MaterialTheme.typography.displaySmall,
+                    textAlign = TextAlign.Center,
                 )
             }
             Row(
@@ -83,17 +87,23 @@ fun GroupCard(
                     .padding(mediumPadding)
             ) {
                 DoubleStack(
-                    topItem = getTotalExpense(group).toString(),
+                    topItem = DecimalFormat("#.##").format(getTotalExpense(group)),
                     bottomItem = "Total Expenses"
                 )
                 DoubleStack(
-                    topItem = getTotalUnpaid(group).toString(),
+                    topItem = DecimalFormat("#.##").format(getTotalUnpaid(group)),
                     bottomItem = "Total Unpaid",
                     owed = getTotalUnpaid(group) > 0
                 )
                 DoubleStack(
-                    topItem = getMemberDebt(group, userViewModel.activeUser.documentID).toString(),
-                    bottomItem = "You will receive"
+                    topItem = DecimalFormat("#.##").format(
+                        getMemberDebt(
+                            group,
+                            userViewModel.activeUser.documentID
+                        )
+                    ),
+                    bottomItem = "You will receive" // TODO: change this text depending on - or positive
+// TODO: Show green text when positive and red text when negative
                 )
             }
         }
@@ -124,7 +134,7 @@ fun DoubleStack(topItem: String, bottomItem: String, owed: Boolean = false) {
                 style = MaterialTheme.typography.bodySmall,
             )
         }
-        Spacer(modifier = Modifier.padding(smallPadding/2))
+        Spacer(modifier = Modifier.padding(smallPadding / 2))
         Text(
 //            modifier = Modifier.padding(smallPadding),
             text = bottomItem,
