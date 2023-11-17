@@ -34,6 +34,7 @@ import com.example.notweshare.components.GroupCard
 import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.User
+import com.example.notweshare.models.getDefaultGroup
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import org.koin.androidx.compose.koinViewModel
@@ -74,19 +75,7 @@ fun HomeScreen(
                     Button(
                         onClick = {
                             groupViewModel.postGroup(
-                                Group(
-                                    name = "Test Group created by button",
-                                    expired = false,
-                                    members = mutableListOf("test", "test2"),
-                                    expenses = mutableListOf(
-                                        Expense(
-                                            "testExp",
-                                            Random.nextFloat() * 2000
-                                        )
-                                    ),
-                                    createdBy = "test",
-                                    createdAt = Date(),
-                                )
+                                getDefaultGroup()
                             )
                         },
                         modifier = Modifier.align(Alignment.BottomCenter)

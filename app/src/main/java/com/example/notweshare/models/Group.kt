@@ -3,6 +3,7 @@ package com.example.notweshare.models
 import java.io.Serializable
 import java.util.*
 import kotlin.math.exp
+import kotlin.random.Random
 
 /**
  * @param createdBy This must be a member id
@@ -16,29 +17,25 @@ data class Group(
     var createdBy: String = "",
     var createdAt: Date? = Date(),
 
-    var documentID: String = "g"
+    var documentID: String = "g",
 ) : Serializable {
-
-    var memberDebts = mutableMapOf<String, Float>()
-    var hasComputedMembers = false
-
     fun getTotalExpense(): Float {
         var out = 0f
-        expenses.forEach{
+        expenses.forEach {
             out += it.expenseAmount
         }
 
         return out
     }
 
-    fun getTotalUnpaid(): Float{
-        computeMemberDebts()
+    fun getTotalUnpaid(): Float {
+        val memberDebts = computeMemberDebts()
 
         var out = 0f
         val debts = memberDebts.values
 
-        for (debt in debts){
-            if(debt <= 0){
+        for (debt in debts) {
+            if (debt <= 0) {
                 continue
             }
 
@@ -48,24 +45,23 @@ data class Group(
         return out
     }
 
-    fun getMemberDebt(id: String): Float{
-//        if (hasComputedMembers){
-//            return memberDebts[id] ?: 0f
-//        }
-
-        computeMemberDebts()
+    /**
+     * @param id this should be a User.documentId
+     */
+    fun getMemberDebt(id: String): Float {
+        val memberDebts = computeMemberDebts()
 
         println(memberDebts)
 
         return memberDebts[id] ?: 0f
     }
 
-    fun getAllMemberDebts(): MutableMap<String, Float>{
-        computeMemberDebts()
-        return memberDebts
+    fun getAllMemberDebts(): MutableMap<String, Float> {
+        return computeMemberDebts()
     }
 
-    private fun computeMemberDebts() {
+    private fun computeMemberDebts(): MutableMap<String, Float> {
+        val memberDebts = mutableMapOf<String, Float>()
         for (expense in expenses) {
             val owner = expense.owner
             val expenseMembers = expense.members.values
@@ -80,8 +76,29 @@ data class Group(
             }
         }
 
-        hasComputedMembers = true
+        return memberDebts
     }
+}
+
+fun getDefaultGroup(): Group {
+    return Group(
+        name = "Test Group created by button",
+        expired = false,
+        members = mutableListOf("test", "test2"),
+        expenses = mutableListOf(
+            Expense(
+                "testExp",
+                Random.nextFloat() * 2000,
+                mutableMapOf(
+                    "test" to ExpenseMember("test"),
+                    "test2" to ExpenseMember("test2", true)
+                )
+            )
+        ),
+        createdBy = "test",
+        createdAt = Date(),
+    )
+
 }
 
 data class Expense(
@@ -94,7 +111,11 @@ data class Expense(
 ) : Serializable
 
 
-// A member of the expense
+/**
+ * A member of the expense
+ *
+ * @param memberId This refers to the User.documentId
+ */
 data class ExpenseMember(
     var memberId: String = "",
     var payed: Boolean = false,

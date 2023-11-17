@@ -24,6 +24,7 @@ import com.example.notweshare.models.Expense
 import com.example.notweshare.models.ExpenseMember
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.User
+import com.example.notweshare.models.getDefaultGroup
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 import kotlin.random.Random
@@ -35,13 +36,6 @@ fun GroupCard(
 ) {
     val smallPadding = dimensionResource(R.dimen.padding_small)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
-
-    println("##############################################3")
-    println(userViewModel.users.isEmpty())
-    if (userViewModel.users.isEmpty()){
-        userViewModel.users.add(User())
-    }
-    println(userViewModel)
 
     Surface(
         modifier = Modifier.padding(mediumPadding),
@@ -85,7 +79,7 @@ fun GroupCard(
                     bottomItem = "Total Unpaid"
                 )
                 DoubleStack(
-                    topItem = group.getMemberDebt(userViewModel.users[0].name).toString(),
+                    topItem = group.getMemberDebt(userViewModel.activeUser.documentID).toString(),
                     bottomItem = "You will receive"
                 )
             }
@@ -111,27 +105,14 @@ fun DoubleStack(topItem: String, bottomItem: String) {
 }
 
 
-//@Preview(showBackground = true)
-//@Composable
-//fun GroupCardPreview() {
-//    val userViewModel = UserViewModel()
-//    userViewModel.users.add(User())
-//
-//    GroupCard(
-//        group = Group(
-//            name = "Test Group created by button",
-//            expired = false,
-//            members = mutableListOf("test", "test2"),
-//            expenses = mutableListOf(
-//                Expense(
-//                    "testExp",
-//                    Random.nextFloat() * 2000,
-//                    mutableMapOf("test" to ExpenseMember("test"), "test2" to ExpenseMember("test2", true))
-//                )
-//            ),
-//            createdBy = "test",
-//            createdAt = Date(),
-//        ),
-//        userViewModel = userViewModel
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun GroupCardPreview() {
+    val userViewModel = UserViewModel()
+    userViewModel.users.add(User())
+
+    GroupCard(
+        group = getDefaultGroup(),
+        userViewModel = userViewModel
+    )
+}
