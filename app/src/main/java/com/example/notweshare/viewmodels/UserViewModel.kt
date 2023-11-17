@@ -36,6 +36,18 @@ class UserViewModel(): ViewModel() {
         }
     }
 
+    fun findUserWithPhoneNumber(phoneNumber: String) {
+        isLoading.value = true
+        users.clear()
+        viewModelScope.launch {
+            fetchUsers(FirestoreQueries.UserQueries.userWithPhoneNumber(phoneNumber)) { foundUsers ->
+                users.clear()
+                users.addAll(foundUsers)
+                isLoading.value = false
+            }
+        }
+    }
+
     private fun fetchUsers(queryCondition: Query, callback: (MutableList<User>) -> Unit) {
         var userArray: MutableList<User> = mutableListOf<User>()
 
