@@ -75,8 +75,8 @@ fun HomeScreen(
                     Button(
                         onClick = {
                             login(
-                                phoneNumber = "test",
-                                password = "test",
+                                phoneNumber = username,
+                                password = "Gigachad",
                                 userViewModel = userViewModel
                             )
                         },
@@ -128,6 +128,7 @@ fun login(
     userViewModel: UserViewModel,
 ) {
     authenticateLoginCredentials(phoneNumber, password, userViewModel)
+    userViewModel.setActiveUser(userViewModel.users[0])
     // TODO: Navigate to home screen
 }
 

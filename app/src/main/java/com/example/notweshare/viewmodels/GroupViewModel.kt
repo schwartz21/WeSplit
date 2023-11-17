@@ -21,10 +21,6 @@ class GroupViewModel(): ViewModel() {
     val groups = mutableStateListOf<Group>()
     var isLoading = mutableStateOf(false)
 
-    init {
-        findGroups()
-    }
-
     fun findGroups () {
         isLoading.value = true
         groups.clear()

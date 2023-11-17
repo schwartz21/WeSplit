@@ -19,9 +19,10 @@ class UserViewModel(): ViewModel() {
     //mutatable state such that Compose can observe it.
     val users = mutableStateListOf<User>()
     var isLoading = mutableStateOf(false)
+    var activeUser = User()
 
-    init {
-        findUsers()
+    fun setActiveUser(user: User) {
+        activeUser = user
     }
 
     fun findUsers () {
