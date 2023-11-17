@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.exampleapplication.routes.Screen
+import com.example.notweshare.screens.GroupDetailsScreen
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
@@ -41,11 +42,12 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
     Column {
         NavHost(
             navController = navigation,
-            startDestination = Screen.HomeScreen.route
+            startDestination = Screen.GroupDetailsScreen.route
         ){
             composable(Screen.HomeScreen.route) { HomeScreen(navigation = navigation) }
             composable(Screen.NewGroupScreen.route) { NewGroupScreen(navigation = navigation)}
             composable(Screen.ProfileScreen.route) { ProfileScreen(navigation = navigation)}
+            composable(Screen.GroupDetailsScreen.route) { GroupDetailsScreen(navigation = navigation)}
         }
     }
 }
