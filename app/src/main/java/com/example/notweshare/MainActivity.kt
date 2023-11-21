@@ -41,7 +41,7 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
     Column {
         NavHost(
             navController = navigation,
-            startDestination = Screen.HomeScreen.route
+            startDestination = Screen.ProfileScreen.route
         ){
             composable(Screen.HomeScreen.route) { HomeScreen(navigation = navigation) }
             composable(Screen.NewGroupScreen.route) { NewGroupScreen(navigation = navigation)}

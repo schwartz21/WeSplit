@@ -15,9 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,11 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.notweshare.R
+import com.example.notweshare.models.User
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navigation: NavController) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(MaterialTheme.colorScheme.primary)
 
@@ -49,12 +49,13 @@ fun ProfileScreen() {
 }
 
 @Composable
+//fun ProfileHeader(user: User) {
 fun ProfileHeader() {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
@@ -65,41 +66,20 @@ fun ProfileHeader() {
                 .background(MaterialTheme.colorScheme.primary)
         )
 
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Column {
-            Text(
-                text = "John Doe",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Android Developer",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+        Text(
+//                text = user.name ?: "Unknown user",
+            text = "John Doe",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
 @Composable
 fun ProfileDetails() {
     LazyColumn {
-        item {
-            ProfileItem(
-                icon = Icons.Default.Person,
-                title = "About Me",
-                description = "Passionate about Android development."
-            )
-        }
-        item {
-            ProfileItem(
-                icon = Icons.Default.Email,
-                title = "Email",
-                description = "john.doe@example.com"
-            )
-        }
         item {
             ProfileItem(
                 icon = Icons.Default.Phone,
@@ -109,9 +89,9 @@ fun ProfileDetails() {
         }
         item {
             ProfileItem(
-                icon = Icons.Default.Place,
-                title = "Location",
-                description = "City, Country"
+                icon = Icons.Default.Email,
+                title = "Email",
+                description = "john.doe@example.com"
             )
         }
     }
