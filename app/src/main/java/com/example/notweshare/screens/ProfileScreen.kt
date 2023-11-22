@@ -2,6 +2,7 @@ package com.example.notweshare.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,20 +17,27 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.notweshare.R
-import com.example.notweshare.models.User
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
@@ -79,26 +87,40 @@ fun ProfileHeader() {
 
 @Composable
 fun ProfileDetails() {
+    var phoneNumber by remember { mutableStateOf("+1 234 567 890") }
+    var email by remember { mutableStateOf("john.doe@example.com") }
+
     LazyColumn {
         item {
             ProfileItem(
                 icon = Icons.Default.Phone,
                 title = "Phone",
-                description = "+1 234 567 890"
+                description = phoneNumber,
+                onValueChange = { phoneNumber = it }
             )
         }
         item {
             ProfileItem(
                 icon = Icons.Default.Email,
                 title = "Email",
-                description = "john.doe@example.com"
+                description = email,
+                onValueChange = { email = it }
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileItem(icon: ImageVector, title: String, description: String) {
+fun ProfileItem(
+    icon: ImageVector,
+    title: String,
+    description: String,
+    onValueChange: (String) -> Unit
+) {
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -108,19 +130,34 @@ fun ProfileItem(icon: ImageVector, title: String, description: String) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(24.dp)
         )
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            OutlinedTextField(
+                value = description,
+                onValueChange = onValueChange,
+                modifier = Modifier.width(screenWidth / 2),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
+                )
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = description, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
