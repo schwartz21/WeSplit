@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.notweshare.R
+import com.example.notweshare.components.GradientCard
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
@@ -46,26 +47,33 @@ fun ProfileScreen(navigation: NavController) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(MaterialTheme.colorScheme.primary)
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        ProfileHeader()
-        Spacer(modifier = Modifier.height(16.dp))
-        ProfileDetails()
-        Spacer(modifier = Modifier.height(32.dp))
-        Button(
-            onClick = {
-                print("Save button clicked")
-            },
+    Column(modifier = Modifier.fillMaxSize()) {
+        GradientCard(text = "John Doe") {
+            Text(text = "Phone 1")
+            Text(text = "Something else")
+        }
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            Text(text = "Save")
+            ProfileHeader()
+            Spacer(modifier = Modifier.height(16.dp))
+            ProfileDetails()
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(
+                onClick = {
+                    print("Save button clicked")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text(text = "Save")
+            }
         }
     }
+
 }
 
 @Composable

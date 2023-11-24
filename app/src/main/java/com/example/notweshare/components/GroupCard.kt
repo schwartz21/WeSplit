@@ -1,35 +1,23 @@
 package com.example.notweshare.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.compose.md_success
-import com.example.exampleapplication.routes.Screen
-import com.example.exampleapplication.routes.ScreenOptions
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
@@ -48,82 +36,38 @@ fun GroupCard(
     navigation: NavController,
     userViewModel: UserViewModel = koinViewModel()
 ) {
-    val smallPadding = dimensionResource(R.dimen.padding_small)
-    val mediumPadding = dimensionResource(R.dimen.padding_medium)
-
     val userContribution = getMemberDebt(group, userViewModel.activeUser.documentID)
     val absContribution = abs(userContribution)
     val userOwes = userContribution > 0
 
-
-    Surface(
-        modifier = Modifier.padding(mediumPadding),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        shape = RoundedCornerShape(mediumPadding),
-        shadowElevation = 4.dp,
-        onClick = {
-            navigation.navigate(ScreenOptions.ProfileScreen.name)
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(with(LocalDensity.current) {
-                        100.sp.toDp()
-                    })
-                    .background(
-                        Brush.verticalGradient(
-                            colorStops = arrayOf(
-                                0f to MaterialTheme.colorScheme.primary,
-                                1f to MaterialTheme.colorScheme.tertiary
-                            )
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = group.name ?: "unknown group name",
-                    modifier = Modifier.padding(smallPadding),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center,
-                )
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(mediumPadding)
-            ) {
-                DoubleStack(
-                    topItem = DecimalFormat("#.##").format(getTotalExpense(group)),
-                    bottomItem = "Total Expenses"
-                )
-                DoubleStack(
-                    topItem = DecimalFormat("#.##").format(getTotalUnpaid(group)),
-                    bottomItem = "Total Unpaid",
-                    owed = getTotalUnpaid(group) > 0,
-                    positiveIsGreen = true
-                )
-                DoubleStack(
-                    topItem = DecimalFormat("#.##").format(absContribution),
-                    bottomItem = if (userOwes) "You owe" else "You will receive",
-                    owed = userOwes,
-                    positiveIsGreen = true
-// TODO: Show green text when positive and red text when negative
-                )
-            }
-        }
+    GradientCard(navigation = navigation, text = group.name ?: "unknown group name") {
+        DoubleStack(
+            topItem = DecimalFormat("#.##").format(getTotalExpense(group)),
+            bottomItem = "Total Expenses"
+        )
+        DoubleStack(
+            topItem = DecimalFormat("#.##").format(getTotalUnpaid(group)),
+            bottomItem = "Total Unpaid",
+            owed = getTotalUnpaid(group) > 0,
+            positiveIsGreen = true
+        )
+        DoubleStack(
+            topItem = DecimalFormat("#.##").format(absContribution),
+            bottomItem = if (userOwes) "You owe" else "You will receive",
+            owed = userOwes,
+            positiveIsGreen = true
+            // TODO: Show green text when positive and red text when negative
+        )
     }
 }
 
 @Composable
-fun DoubleStack(topItem: String, bottomItem: String, owed: Boolean = false, positiveIsGreen: Boolean = false) {
+fun DoubleStack(
+    topItem: String,
+    bottomItem: String,
+    owed: Boolean = false,
+    positiveIsGreen: Boolean = false
+) {
     val smallPadding = dimensionResource(R.dimen.padding_small)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
@@ -174,7 +118,7 @@ fun GroupCardPreview() {
     AppTheme {
         GroupCard(
             group = getDefaultGroup(),
-            navigation=navigation,
+            navigation = navigation,
             userViewModel = userViewModel
         )
 
