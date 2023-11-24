@@ -14,11 +14,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.compose.md_success
-import com.example.exampleapplication.routes.ScreenOptions
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
@@ -34,7 +31,7 @@ import kotlin.math.abs
 @Composable
 fun GroupCard(
     group: Group,
-    navigation: NavController,
+    onNavigateToProfile: () -> Unit = {},
     userViewModel: UserViewModel = koinViewModel()
 ) {
     val userContribution = getMemberDebt(group, userViewModel.activeUser.documentID)
@@ -42,7 +39,7 @@ fun GroupCard(
     val userOwes = userContribution > 0
 
     GradientCard(
-        onClickFunction = { navigation.navigate(ScreenOptions.ProfileScreen.name) },
+        onClickFunction = onNavigateToProfile,
         text = group.name ?: "unknown group name"
     ) {
         DoubleStack(
@@ -116,13 +113,9 @@ fun GroupCardPreview() {
     val userViewModel = UserViewModel()
     userViewModel.users.add(User())
 
-    val navigation = rememberNavController();
-
-
     AppTheme {
         GroupCard(
             group = getDefaultGroup(),
-            navigation = navigation,
             userViewModel = userViewModel
         )
 

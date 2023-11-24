@@ -31,15 +31,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
-import com.example.exampleapplication.routes.ScreenOptions
+import com.example.exampleapplication.routes.PopulatedNavHost
+import com.example.exampleapplication.routes.Screen
 import com.example.notweshare.models.TabItem
-import com.example.notweshare.screens.HomeScreen
-import com.example.notweshare.screens.NewGroupScreen
-import com.example.notweshare.screens.ProfileScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +48,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation("for the Android 2")
+                    Navigation()
                 }
             }
         }
@@ -60,13 +56,19 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Navigation(name: String, modifier: Modifier = Modifier) {
+fun Navigation() {
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(
         TabItem("Home", R.drawable.home),
         TabItem("Groups", R.drawable.group),
         TabItem("Profile", R.drawable.profile)
+    )
+
+    val screens = listOf(
+        Screen.HomeScreen,
+        Screen.NewGroupScreen,
+        Screen.ProfileScreen
     )
 
     val tabBarHeight = with(LocalDensity.current){
@@ -81,7 +83,9 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
         bottomBar = {
             BottomAppBar(
                 contentColor = Color.White,
-                modifier = Modifier.fillMaxWidth().height(tabBarHeight)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(tabBarHeight)
             ) {
                 tabs.forEachIndexed { index, tab ->
                     val tint = ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
@@ -89,7 +93,7 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
                         onClick = {
                             // This is the variable that must be changed to change the selected tab
                             selectedTabIndex = index
-                            navController.navigate(ScreenOptions.values()[index].name)
+                            navController.navigate(screens[index].route)
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -114,11 +118,7 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
             }
         }
     ) {
-        NavHost(navController, startDestination = ScreenOptions.HomeScreen.name, modifier= Modifier.height(contentHeight)) {
-            composable(ScreenOptions.HomeScreen.name) { HomeScreen(navigation = navController) }
-            composable(ScreenOptions.NewGroupScreen.name) { NewGroupScreen(navigation = navController) }
-            composable(ScreenOptions.ProfileScreen.name) { ProfileScreen(navigation = navController) }
-        }
+        PopulatedNavHost(navController = navController, contentHeight = contentHeight)
         // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
         val something = it
     }
@@ -128,6 +128,6 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     AppTheme {
-        Navigation("for the Android")
+        Navigation()
     }
 }

@@ -36,6 +36,7 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(
     navigation: NavController,
     modifier: Modifier = Modifier,
+    navigateToProfile: () -> Unit,
     groupViewModel: GroupViewModel = koinViewModel(),
 ) {
     val isRefreshing by remember { mutableStateOf(false) }
@@ -63,7 +64,7 @@ fun HomeScreen(
                         items(items = groupViewModel.groups) { group ->
                             GroupCard(
                                 group,
-                                navigation = navigation
+                                onNavigateToProfile = navigateToProfile
                             )
                         }
                     }
