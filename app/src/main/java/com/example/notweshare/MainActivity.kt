@@ -1,5 +1,9 @@
 package com.example.notweshare
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +27,9 @@ import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
 import com.example.notweshare.ui.theme.NotWeShareTheme
 
+import android.util.Log
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +39,9 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Navigation("for the Android 2")
+
+                    //For notification
+                    //
                     Button(onClick = { service.showNotification(Counter.value)})
                     {
                          Text(text = "Show notification")

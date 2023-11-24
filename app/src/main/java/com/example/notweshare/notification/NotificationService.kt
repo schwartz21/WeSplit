@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.example.notweshare.R
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.notweshare.MainActivity
@@ -26,7 +27,7 @@ class NotificationService (private val context: Context) {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
         val notification = NotificationCompat.Builder(context, COUNTER_CHANNEL_ID)
-            .setSmallIcon(R.baseline_airplanemode_active_24)
+            .setSmallIcon(R.drawable.baseline_airplanemode_active_24)
             .setContentTitle("Increment counter")
             .setContentText("The count is $counter")
             .setContentIntent(activityPendingIntent)
