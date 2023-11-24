@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +54,17 @@ fun ProfileScreen(navigation: NavController) {
         ProfileHeader()
         Spacer(modifier = Modifier.height(16.dp))
         ProfileDetails()
+        Spacer(modifier = Modifier.height(32.dp))
+        Button(
+            onClick = {
+                navigation.navigate("HomeScreen")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+        ) {
+            Text(text = "Save")
+        }
     }
 }
 
