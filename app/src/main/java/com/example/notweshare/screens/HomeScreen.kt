@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.notweshare.R
 import com.example.notweshare.components.GroupCard
@@ -34,7 +33,6 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navigation: NavController,
     modifier: Modifier = Modifier,
     navigateToProfile: () -> Unit,
     groupViewModel: GroupViewModel = koinViewModel(),

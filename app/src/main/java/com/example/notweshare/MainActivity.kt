@@ -31,11 +31,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
-import com.example.notweshare.routes.PopulatedNavHost
-import com.example.notweshare.routes.Screen
 import com.example.notweshare.models.TabItem
+import com.example.notweshare.screens.HomeScreen
+import com.example.notweshare.screens.NewGroupScreen
+import com.example.notweshare.screens.ProfileScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,18 +63,14 @@ fun Navigation() {
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(
-        TabItem("Home", R.drawable.home),
-        TabItem("Groups", R.drawable.group),
-        TabItem("Profile", R.drawable.profile)
+        TabItem("Home", Screen.HomeScreen.route, R.drawable.home),
+        TabItem("Groups", Screen.NewGroupScreen.route, R.drawable.group),
+        TabItem("Profile", Screen.ProfileScreen.route, R.drawable.profile)
     )
 
-    val screens = listOf(
-        Screen.HomeScreen,
-        Screen.NewGroupScreen,
-        Screen.ProfileScreen
-    )
 
-    val tabBarHeight = with(LocalDensity.current){
+
+    val tabBarHeight = with(LocalDensity.current) {
         65.sp.toDp()
     }
 
@@ -88,12 +87,13 @@ fun Navigation() {
                     .height(tabBarHeight)
             ) {
                 tabs.forEachIndexed { index, tab ->
-                    val tint = ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
+                    val tint =
+                        ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
                     IconButton(
                         onClick = {
                             // This is the variable that must be changed to change the selected tab
                             selectedTabIndex = index
-                            navController.navigate(screens[index].route)
+                            navController.navigate(tab.route)
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -118,10 +118,42 @@ fun Navigation() {
             }
         }
     ) {
-        PopulatedNavHost(navController = navController, contentHeight = contentHeight)
+        NavHost(
+            navController,
+            startDestination = Screen.HomeScreen.route,
+            modifier = Modifier.height(
+                contentHeight
+            )
+        ) {
+            with(navController) {
+                composable(Screen.HomeScreen.route) {
+                    HomeScreen(navigateToProfile = {
+                        navigate(
+                            Screen.ProfileScreen.route
+                        )
+                    })
+                }
+                composable(Screen.NewGroupScreen.route) {
+                    NewGroupScreen(navigateToProfile = {
+                        navigate(
+                            Screen.ProfileScreen.route
+                        )
+                    })
+                }
+                composable(Screen.ProfileScreen.route) { ProfileScreen() }
+            }
+
+        }
+
         // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
         val something = it
     }
+}
+
+sealed class Screen(val route: String) {
+    object HomeScreen : Screen("HomeScreen")
+    object NewGroupScreen : Screen("NewScreen")
+    object ProfileScreen : Screen("ProfileScreen")
 }
 
 @Preview(showBackground = true)
