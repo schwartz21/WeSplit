@@ -26,9 +26,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.compose.md_success
+import com.example.exampleapplication.routes.ScreenOptions
 import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.notweshare.Navigation
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.User
@@ -43,6 +48,7 @@ import kotlin.math.abs
 @Composable
 fun GroupCard(
     group: Group,
+    navigation: NavController,
     userViewModel: UserViewModel = koinViewModel()
 ) {
     val smallPadding = dimensionResource(R.dimen.padding_small)
@@ -57,7 +63,10 @@ fun GroupCard(
         modifier = Modifier.padding(mediumPadding),
         color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(mediumPadding),
-        shadowElevation = 8.dp
+        shadowElevation = 4.dp,
+        onClick = {
+            navigation.navigate(ScreenOptions.ProfileScreen.name)
+        }
     ) {
         Column(
             modifier = Modifier
@@ -68,8 +77,9 @@ fun GroupCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(with(LocalDensity.current) {
-                        110.sp.toDp()
-                    }).background(
+                        100.sp.toDp()
+                    })
+                    .background(
                         Brush.verticalGradient(
                             colorStops = arrayOf(
                                 0f to MaterialTheme.colorScheme.primary,
@@ -161,9 +171,13 @@ fun GroupCardPreview() {
     val userViewModel = UserViewModel()
     userViewModel.users.add(User())
 
+    val navigation = rememberNavController();
+
+
     AppTheme {
         GroupCard(
             group = getDefaultGroup(),
+            navigation=navigation,
             userViewModel = userViewModel
         )
 
