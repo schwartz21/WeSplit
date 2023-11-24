@@ -164,7 +164,7 @@ fun ProfileItem(
                 modifier = Modifier.width(screenWidth / 2),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     unfocusedBorderColor = MaterialTheme.colorScheme.primary
                 )
             )
