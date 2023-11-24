@@ -28,7 +28,7 @@ import com.example.notweshare.R
 @Composable
 fun GradientCard(
     text: String,
-    navigation: NavController? = null,
+    onClickFunction: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     val smallPadding = dimensionResource(R.dimen.padding_small)
@@ -39,11 +39,7 @@ fun GradientCard(
         color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(mediumPadding),
         shadowElevation = 4.dp,
-        onClick = {
-            if (navigation !== null){
-                navigation.navigate(ScreenOptions.ProfileScreen.name)
-            }
-        }
+        onClick = onClickFunction
     ) {
         Column(
             modifier = Modifier

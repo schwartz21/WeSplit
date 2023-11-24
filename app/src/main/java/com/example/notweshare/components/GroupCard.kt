@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.compose.md_success
+import com.example.exampleapplication.routes.ScreenOptions
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
@@ -40,7 +41,10 @@ fun GroupCard(
     val absContribution = abs(userContribution)
     val userOwes = userContribution > 0
 
-    GradientCard(navigation = navigation, text = group.name ?: "unknown group name") {
+    GradientCard(
+        onClickFunction = { navigation.navigate(ScreenOptions.ProfileScreen.name) },
+        text = group.name ?: "unknown group name"
+    ) {
         DoubleStack(
             topItem = DecimalFormat("#.##").format(getTotalExpense(group)),
             bottomItem = "Total Expenses"
