@@ -57,7 +57,7 @@ fun ProfileScreen(navigation: NavController) {
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = {
-                navigation.navigate("HomeScreen")
+                print("Save button clicked")
             },
             modifier = Modifier
                 .fillMaxWidth()

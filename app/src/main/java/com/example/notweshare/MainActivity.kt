@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,12 +55,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Navigation(name: String, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
+    var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(
         TabItem("Home", R.drawable.home),
         TabItem("Groups", R.drawable.group),
         TabItem("Profile", R.drawable.profile)
     )
-    var selectedTabIndex by remember { mutableStateOf(0) }
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -67,6 +68,7 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 tabs.forEachIndexed { index, tab ->
+                    val tint = ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
                     IconButton(
                         onClick = {
                             selectedTabIndex = index
@@ -79,6 +81,7 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
                             verticalArrangement = Arrangement.Bottom
                         ) {
                             Image(
+                                colorFilter = tint,
                                 painter = painterResource(tab.icon),
                                 contentDescription = null,
                                 modifier = Modifier.size(24.dp)
@@ -86,7 +89,7 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
                             Text(
                                 text = tab.title,
                                 style = MaterialTheme.typography.bodySmall,
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onBackground,
+                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                             )
                         }
                     }
