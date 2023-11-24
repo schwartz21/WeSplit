@@ -2,6 +2,7 @@ package com.example.notweshare.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
@@ -161,12 +163,9 @@ fun ProfileItem(
             OutlinedTextField(
                 value = description,
                 onValueChange = onValueChange,
-                modifier = Modifier.width(screenWidth / 2),
+                modifier = Modifier.width(screenWidth / 1.6f).border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
                 textStyle = MaterialTheme.typography.bodyMedium,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
-                )
+                shape = RoundedCornerShape(16.dp)
             )
         }
     }
