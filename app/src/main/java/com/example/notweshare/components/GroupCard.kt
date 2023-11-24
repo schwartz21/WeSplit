@@ -83,7 +83,7 @@ fun GroupCard(
                     text = group.name ?: "unknown group name",
                     modifier = Modifier.padding(smallPadding),
                     color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.displaySmall,
+                    style = MaterialTheme.typography.titleLarge,
                     textAlign = TextAlign.Center,
                 )
             }
