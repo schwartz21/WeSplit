@@ -13,6 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotWeShare"
         tools:targetApi="31">
+        <service
+            android:name=".notification.firebaseService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false" />
+        <service
+            android:name=".notification.NotificationJobIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -20,7 +28,7 @@
             android:theme="@style/Theme.NotWeShare">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

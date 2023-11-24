@@ -1,6 +1,9 @@
 package com.example.notweshare
 
+import NotificationJobIntentService
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -10,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,18 +39,49 @@ import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
 import com.example.notweshare.ui.theme.NotWeShareTheme
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
+        getFireBaseToken()
         setContent {
             NotWeShareTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Navigation("for the Android 2")
+                    Button(onClick= {startNotificationService()}){
+                        Text(text = "CLICK ME")
+                    }
                 }
             }
         }
+    }
+
+    private fun getFireBaseToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                //save this token to the user and store in DB for late use.
+                //dont know if we should check if the token is the same as previous every time the app launches
+                val token = task.result
+                Log.d("FCM Token", token)
+                println(token)
+                // Send this token to your server to identify and target specific devices
+            } else {
+                Log.e("FCM Token", "Failed to get token: ${task.exception}")
+            }
+        }
+    }
+    private fun startNotificationService() {
+        // Create an intent to start the NotificationJobIntentService
+        val intent = Intent(this, NotificationJobIntentService::class.java)
+        intent.putExtra("title", "Notification Title")
+        intent.putExtra("body", "Notification Body")
+
+        // Enqueue the work to be done by the service
+        NotificationJobIntentService.enqueueWork(this, intent)
     }
 }
 
