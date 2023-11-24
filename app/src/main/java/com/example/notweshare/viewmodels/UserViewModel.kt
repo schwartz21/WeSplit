@@ -21,7 +21,7 @@ class UserViewModel(): ViewModel() {
     var isLoading = mutableStateOf(false)
     var activeUser = User()
 
-    fun setActiveUser(user: User) {
+    fun setTheActiveUser(user: User) {
         activeUser = user
     }
 

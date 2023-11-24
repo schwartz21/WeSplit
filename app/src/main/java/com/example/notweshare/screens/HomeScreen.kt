@@ -128,7 +128,7 @@ fun login(
     userViewModel: UserViewModel,
 ) {
     authenticateLoginCredentials(phoneNumber, password, userViewModel)
-    userViewModel.setActiveUser(userViewModel.users[0])
+    userViewModel.setTheActiveUser(userViewModel.users[0])
     // TODO: Navigate to home screen
 }
 
