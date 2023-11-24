@@ -27,7 +27,7 @@ fun GroupDetailsScreen(
     group: Group = Group(
         name = "Test Group created by button",
         expired = false,
-        members = mutableListOf("test", "test2"),
+        members = mutableListOf("test", "test"),
         expenses = mutableListOf(Expense("testExp", Random.nextFloat()*2000)),
         createdBy = "test",
         createdAt = Date(),
