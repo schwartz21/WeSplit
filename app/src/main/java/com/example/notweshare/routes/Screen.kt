@@ -8,7 +8,7 @@ sealed class Screen(val route: String) {
 }
 
 enum class ScreenOptions(string: String){
-    HomeScreen("home"),
-    NewGroupScreen("newGroup"),
-    ProfileScreen("Profile")
+    HomeScreen("Walla"),
+    NewGroupScreen("1"),
+    ProfileScreen("2")
 }

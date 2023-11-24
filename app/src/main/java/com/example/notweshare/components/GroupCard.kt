@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,13 +25,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.compose.md_success
+import com.example.exampleapplication.routes.Screen
 import com.example.exampleapplication.routes.ScreenOptions
 import com.example.exampleapplication.viewmodels.UserViewModel
-import com.example.notweshare.Navigation
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.User

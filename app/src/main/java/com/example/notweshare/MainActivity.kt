@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.IconButton
@@ -24,12 +25,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.AppTheme
+import com.example.exampleapplication.routes.ScreenOptions
 import com.example.notweshare.models.TabItem
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewGroupScreen
@@ -62,18 +68,28 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
         TabItem("Groups", R.drawable.group),
         TabItem("Profile", R.drawable.profile)
     )
+
+    val tabBarHeight = with(LocalDensity.current){
+        65.sp.toDp()
+    }
+
+    val contentHeight = LocalConfiguration.current.screenHeightDp.dp - tabBarHeight
+
+    // If We wish to change the highlighted tab, we should probably do it by modifiying an external variable
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
                 contentColor = Color.White,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().height(tabBarHeight)
             ) {
                 tabs.forEachIndexed { index, tab ->
                     val tint = ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
                     IconButton(
                         onClick = {
+                            // This is the variable that must be changed to change the selected tab
                             selectedTabIndex = index
-                            navController.navigate(index.toString())
+                            navController.navigate(ScreenOptions.values()[index].name)
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -98,10 +114,10 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
             }
         }
     ) {
-        NavHost(navController, startDestination = "0") {
-            composable("0") { HomeScreen(navigation = navController) }
-            composable("1") { NewGroupScreen(navigation = navController) }
-            composable("2") { ProfileScreen(navigation = navController) }
+        NavHost(navController, startDestination = ScreenOptions.HomeScreen.name, modifier= Modifier.height(contentHeight)) {
+            composable(ScreenOptions.HomeScreen.name) { HomeScreen(navigation = navController) }
+            composable(ScreenOptions.NewGroupScreen.name) { NewGroupScreen(navigation = navController) }
+            composable(ScreenOptions.ProfileScreen.name) { ProfileScreen(navigation = navController) }
         }
         // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
         val something = it

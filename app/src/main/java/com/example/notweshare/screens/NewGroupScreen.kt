@@ -6,12 +6,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.example.exampleapplication.routes.Screen
+import com.example.exampleapplication.routes.ScreenOptions
 
 @Composable
 fun NewGroupScreen(navigation: NavController) {
     Column {
         Text(text = "NewGroupScreen")
-        Button(onClick = {navigation.navigate(Screen.ProfileScreen.route)}) {
+        Button(onClick = {navigation.navigate(ScreenOptions.ProfileScreen.name)}) {
             Text(text = "Navigation to the 'ProfileScreen' screen")
         }
     }
