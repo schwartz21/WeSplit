@@ -37,13 +37,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.notweshare.R
 import com.example.notweshare.components.GradientCard
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun ProfileScreen(navigation: NavController) {
+fun ProfileScreen() {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(MaterialTheme.colorScheme.primary)
 

@@ -17,8 +17,6 @@ sealed class Screen(val route: String) {
     object ProfileScreen : Screen("ProfileScreen")
 }
 
-class SomeOption(val route: String, screen: Unit)
-
 @Composable
 fun PopulatedNavHost(navController: NavHostController, contentHeight: Dp): Unit {
     NavHost(
@@ -35,7 +33,13 @@ fun PopulatedNavHost(navController: NavHostController, contentHeight: Dp): Unit 
                 )
             })
         }
-        composable(Screen.NewGroupScreen.route) { NewGroupScreen(navigation = navController) }
-        composable(Screen.ProfileScreen.route) { ProfileScreen(navigation = navController) }
+        composable(Screen.NewGroupScreen.route) {
+            NewGroupScreen(navigateToProfile = {
+                navController.navigate(
+                    Screen.ProfileScreen.route
+                )
+            })
+        }
+        composable(Screen.ProfileScreen.route) { ProfileScreen() }
     }
 }
