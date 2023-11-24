@@ -1,4 +1,4 @@
-package com.example.exampleapplication.routes
+package com.example.notweshare.routes
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable

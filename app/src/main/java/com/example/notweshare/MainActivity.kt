@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
-import com.example.exampleapplication.routes.PopulatedNavHost
-import com.example.exampleapplication.routes.Screen
+import com.example.notweshare.routes.PopulatedNavHost
+import com.example.notweshare.routes.Screen
 import com.example.notweshare.models.TabItem
 
 class MainActivity : ComponentActivity() {
