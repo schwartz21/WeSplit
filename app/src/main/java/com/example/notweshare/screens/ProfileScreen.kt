@@ -69,7 +69,6 @@ fun ProfileScreen(navigation: NavController) {
 }
 
 @Composable
-//fun ProfileHeader(user: User) {
 fun ProfileHeader() {
     Column(
         modifier = Modifier
@@ -89,7 +88,6 @@ fun ProfileHeader() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-//                text = user.name ?: "Unknown user",
             text = "John Doe",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
