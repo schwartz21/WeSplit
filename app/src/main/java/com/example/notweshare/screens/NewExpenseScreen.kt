@@ -25,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.notweshare.models.Expense
+import com.example.notweshare.models.ExpenseMember
+import com.example.notweshare.models.User
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -40,13 +43,15 @@ fun NewExpenseScreen(
     var expenseName by remember { mutableStateOf("") }
     var expenseAmount by remember { mutableStateOf("") }
 
-    val selectedItems = remember {
+    val selectedUsers = remember {
         mutableStateListOf<String>()
     }
 
-    LazyColumn(modifier = Modifier
-        .padding(36.dp)
-        .fillMaxWidth()) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(36.dp)
+            .fillMaxWidth()
+    ) {
         item {
             //add expense headline
             Text(
@@ -83,38 +88,40 @@ fun NewExpenseScreen(
             Spacer(modifier = Modifier.padding(10.dp))
         }
         items(items = group.members) { phoneNumber ->
-            val isSelected = selectedItems.contains(phoneNumber)
-            ListItem(
-                modifier = Modifier.combinedClickable(
-                    onClick = {
+            val isSelected = selectedUsers.contains(phoneNumber)
+            if (phoneNumber != userViewModel.activeUser.value.phoneNumber) {
+                ListItem(
+                    modifier = Modifier.combinedClickable(
+                        onClick = {
                             if (isSelected) {
-                                selectedItems.remove(phoneNumber)
+                                selectedUsers.remove(phoneNumber)
                             } else {
-                                selectedItems.add(phoneNumber)
+                                selectedUsers.add(phoneNumber)
                             }
-                    }
-                ),
-                leadingContent = {
-                    if (isSelected) {
-                        Icon(
-                            imageVector = Icons.Rounded.CheckCircle,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                        }
+                    ),
+                    leadingContent = {
+                        if (isSelected) {
+                            Icon(
+                                imageVector = Icons.Rounded.CheckCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Rounded.CheckCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.outline,
+                            )
+                        }
+                    },
+                    headlineContent = {
+                        Text(
+                            text = phoneNumber,
                         )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Rounded.CheckCircle,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.outline,
-                        )
-                    }
-                },
-                headlineContent = {
-                    Text(
-                        text = phoneNumber,
-                    )
-                },
-            )
+                    },
+                )
+            }
         }
         item {
             Spacer(modifier = Modifier.padding(10.dp))
@@ -122,6 +129,7 @@ fun NewExpenseScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
+                    groupViewModel.addExpenseToGroup(group.documentID, createExpense(expenseName, expenseAmount.toFloat(), selectedUsers, user))
                     navigateUp()
                 }
             ) {
@@ -129,4 +137,18 @@ fun NewExpenseScreen(
             }
         }
     }
+}
+
+fun createExpense(expenseName: String, expenseAmount: Float, selectedUsers: List<String>, activeUser: User): Expense {
+    var expenseMembers = mutableMapOf<String, ExpenseMember>()
+    var i = 0
+    selectedUsers.forEach {
+        expenseMembers[i.toString()] = ExpenseMember(selectedUsers[i], false)
+        i++
+    }
+    expenseMembers[i.toString()] = ExpenseMember(activeUser.documentID, true)
+
+    var expense = Expense(expenseName, expenseAmount, expenseMembers, activeUser.documentID)
+
+    return expense
 }
