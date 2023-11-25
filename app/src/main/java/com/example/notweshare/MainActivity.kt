@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.IconButton
@@ -24,26 +25,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.AppTheme
 import com.example.notweshare.models.TabItem
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
-import com.example.notweshare.ui.theme.NotWeShareTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NotWeShareTheme {
+            AppTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Navigation("for the Android 2")
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Navigation()
                 }
             }
         }
@@ -51,26 +59,41 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Navigation(name: String, modifier: Modifier = Modifier) {
+fun Navigation() {
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(
-        TabItem("Home", R.drawable.home),
-        TabItem("Groups", R.drawable.group),
-        TabItem("Profile", R.drawable.profile)
+        TabItem("Home", Screen.HomeScreen.route, R.drawable.home),
+        TabItem("Groups", Screen.NewGroupScreen.route, R.drawable.group),
+        TabItem("Profile", Screen.ProfileScreen.route, R.drawable.profile)
     )
+
+
+
+    val tabBarHeight = with(LocalDensity.current) {
+        65.sp.toDp()
+    }
+
+    val contentHeight = LocalConfiguration.current.screenHeightDp.dp - tabBarHeight
+
+    // If We wish to change the highlighted tab, we should probably do it by modifiying an external variable
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
                 contentColor = Color.White,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(tabBarHeight)
             ) {
                 tabs.forEachIndexed { index, tab ->
-                    val tint = ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
+                    val tint =
+                        ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
                     IconButton(
                         onClick = {
+                            // This is the variable that must be changed to change the selected tab
                             selectedTabIndex = index
-                            navController.navigate(index.toString())
+                            navController.navigate(tab.route)
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -95,20 +118,48 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
             }
         }
     ) {
-        NavHost(navController, startDestination = "0") {
-            composable("0") { HomeScreen(navigation = navController) }
-            composable("1") { NewGroupScreen(navigation = navController) }
-            composable("2") { ProfileScreen(navigation = navController) }
+        NavHost(
+            navController,
+            startDestination = Screen.HomeScreen.route,
+            modifier = Modifier.height(
+                contentHeight
+            )
+        ) {
+            with(navController) {
+                composable(Screen.HomeScreen.route) {
+                    HomeScreen(navigateToProfile = {
+                        navigate(
+                            Screen.ProfileScreen.route
+                        )
+                    })
+                }
+                composable(Screen.NewGroupScreen.route) {
+                    NewGroupScreen(navigateToProfile = {
+                        navigate(
+                            Screen.ProfileScreen.route
+                        )
+                    })
+                }
+                composable(Screen.ProfileScreen.route) { ProfileScreen() }
+            }
+
         }
+
         // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
         val something = it
     }
 }
 
+sealed class Screen(val route: String) {
+    object HomeScreen : Screen("HomeScreen")
+    object NewGroupScreen : Screen("NewScreen")
+    object ProfileScreen : Screen("ProfileScreen")
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    NotWeShareTheme {
-        Navigation("for the Android")
+    AppTheme {
+        Navigation()
     }
 }
