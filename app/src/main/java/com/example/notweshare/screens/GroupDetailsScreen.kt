@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
@@ -29,6 +27,7 @@ fun GroupDetailsScreen(
     userViewModel: UserViewModel,
 ) {
     val group = groupViewModel.selectedGroup.value
+    val groupMembers = group.members
 
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -39,7 +38,7 @@ fun GroupDetailsScreen(
             GroupCard(group, userViewModel = userViewModel, groupViewModel = groupViewModel)
         }
         items(items = group.members) { member ->
-            GroupDetailsMemberCard(group, member, userViewModel)
+            GroupDetailsMemberCard(group, member, returnNameFromId(member, userViewModel))
             Spacer(modifier = Modifier.padding(smallPadding))
         }
         item {
@@ -70,4 +69,14 @@ fun GroupDetailsScreen(
             Spacer(modifier = Modifier.padding(smallPadding))
         }
     }
+}
+
+private fun returnNameFromId(id: String, userViewModel: UserViewModel): String {
+    var name = "Unknown User"
+    userViewModel.users.forEach {
+        if (it.documentID == id) {
+            name = it.name
+        }
+    }
+    return name
 }

@@ -1,7 +1,5 @@
 package com.example.notweshare.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,21 +17,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.compose.md_success
-import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
 import kotlin.math.abs
 
 @Composable
-fun GroupDetailsMemberCard(group: Group, member: String, userViewModel: UserViewModel) {
+fun GroupDetailsMemberCard(group: Group, member: String, memberName: String) {
 
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -49,8 +43,6 @@ fun GroupDetailsMemberCard(group: Group, member: String, userViewModel: UserView
         !userOwes -> md_success
         else -> MaterialTheme.colorScheme.onSurface
     }
-
-    val memberName = userViewModel.findUserWithDocumentId(member).name
 
     Surface(
         modifier = Modifier.padding(horizontal = mediumPadding),

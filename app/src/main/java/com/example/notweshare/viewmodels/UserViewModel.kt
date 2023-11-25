@@ -43,21 +43,18 @@ class UserViewModel(): ViewModel() {
         }
     }
 
-    fun findUserWithDocumentId (documentId: String): User {
-        var out = User()
+    // Find users within a list of user document IDs
+    fun findUsersWithDocumentIDs (userDocumentIDs: MutableList<String>) {
         isLoading.value = true
         viewModelScope.launch {
-            fetchUser(FirestoreQueries.UserQueries.userWithDocumentId(documentId)) { foundUser ->
+            fetchUsers(FirestoreQueries.UserQueries.usersWithDocumentIDs(userDocumentIDs)) { foundUsers ->
                 users.clear()
-                users.add(foundUser)
-                println(foundUser)
+                users.addAll(foundUsers)
                 isLoading.value = false
-                out = foundUser
-                println("fetch user out: $out")
             }
         }
-        return out
     }
+
 
     private fun fetchUser(queryCondition: Query, callback: (User) -> Unit) {
         listener = queryCondition.addSnapshotListener(object : EventListener<QuerySnapshot> {

@@ -47,6 +47,7 @@ fun NewExpenseScreen(
         mutableStateListOf<String>()
     }
 
+
     LazyColumn(
         modifier = Modifier
             .padding(36.dp)
@@ -117,7 +118,7 @@ fun NewExpenseScreen(
                     },
                     headlineContent = {
                         Text(
-                            text = phoneNumber,
+                            text = returnNameFromId(phoneNumber, userViewModel),
                         )
                     },
                 )
@@ -139,7 +140,7 @@ fun NewExpenseScreen(
     }
 }
 
-fun createExpense(expenseName: String, expenseAmount: Float, selectedUsers: List<String>, activeUser: User): Expense {
+private fun createExpense(expenseName: String, expenseAmount: Float, selectedUsers: List<String>, activeUser: User): Expense {
     var expenseMembers = mutableMapOf<String, ExpenseMember>()
     var i = 0
     selectedUsers.forEach {
@@ -151,4 +152,14 @@ fun createExpense(expenseName: String, expenseAmount: Float, selectedUsers: List
     var expense = Expense(expenseName, expenseAmount, expenseMembers, activeUser.documentID)
 
     return expense
+}
+
+private fun returnNameFromId(id: String, userViewModel: UserViewModel): String {
+    var name = "Unknown User"
+    userViewModel.users.forEach {
+        if (it.documentID == id) {
+            name = it.name
+        }
+    }
+    return name
 }

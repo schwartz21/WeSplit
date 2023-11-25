@@ -18,9 +18,9 @@ class FirestoreQueries {
             @JvmStatic fun userWithDocumentID(userDocumentID: String): Query {
                 return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereEqualTo(FieldPath.documentId(), userDocumentID)
             }
-
-            @JvmStatic fun userWithDocumentId(userDocumentId: String): Query {
-                return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereEqualTo("documentID", userDocumentId)
+            // Find users within the list of user document IDs
+            @JvmStatic fun usersWithDocumentIDs(userDocumentIDs: MutableList<String>): Query {
+                return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereIn(FieldPath.documentId(), userDocumentIDs)
             }
         }
     }
