@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,34 +31,36 @@ fun ExpensesCard(expense: Expense) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val smallPadding = dimensionResource(R.dimen.padding_small)
 
-    Row(
-        modifier = Modifier
-            .padding(horizontal = mediumPadding)
-            .height(IntrinsicSize.Min)
-            .fillMaxSize()
-            .background(
-                color = Color.Gray,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .padding(smallPadding),
-        verticalAlignment = Alignment.CenterVertically,
+    Surface(
+        modifier = Modifier.padding(horizontal = mediumPadding),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = RoundedCornerShape(mediumPadding),
+        shadowElevation = 4.dp,
     ) {
-        Column() {
+        Row(
+            modifier = Modifier
+                .height(IntrinsicSize.Min)
+                .fillMaxSize()
+                .padding(smallPadding),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column() {
+                Text(
+                    text = "Amount: ${expense.expenseAmount}",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                Text(
+                    text = expense.createdAt.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
             Text(
-                text = "Amount: ${expense.expenseAmount}",
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.bodyLarge,
-            )
-            Text(
-                text = expense.createdAt.toString(),
-                style = MaterialTheme.typography.bodySmall,
+                text = expense.name,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.End,
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
-        Text(
-            text = expense.name,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.End,
-            style = MaterialTheme.typography.bodyMedium,
-        )
     }
 }
