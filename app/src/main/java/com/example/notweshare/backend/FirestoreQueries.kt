@@ -18,9 +18,9 @@ class FirestoreQueries {
             @JvmStatic fun userWithDocumentID(userDocumentID: String): Query {
                 return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereEqualTo(FieldPath.documentId(), userDocumentID)
             }
-
-            @JvmStatic fun userWithPhoneNumber(userPhoneNumber: String): Query {
-                return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereEqualTo("phoneNumber", userPhoneNumber)
+            // Find users within the list of user document IDs
+            @JvmStatic fun usersWithDocumentIDs(userDocumentIDs: MutableList<String>): Query {
+                return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereIn(FieldPath.documentId(), userDocumentIDs)
             }
         }
     }
@@ -41,8 +41,8 @@ class FirestoreQueries {
                 return fbCollection.add(group)
             }
             // Add expense to a group
-            @JvmStatic fun addExpenseToGroup(groupDocumentID: String, expense: Expense): Task<Void> {
-                return FirebaseFirestore.getInstance().collection("groups").document(groupDocumentID).update("expenses", expense)
+            @JvmStatic fun updateExpensesOnAGroup(groupDocumentID: String, expenses: MutableList<Expense>): Task<Void> {
+                return FirebaseFirestore.getInstance().collection("groups").document(groupDocumentID).update("expenses", expenses)
             }
         }
     }
