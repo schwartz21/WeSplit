@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.exampleapplication.routes.Screen
 import com.example.notweshare.screens.GroupDetailsScreen
 import com.example.notweshare.screens.HomeScreen
+import com.example.notweshare.screens.NewExpenseScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
 import com.example.notweshare.ui.theme.NotWeShareTheme
@@ -48,6 +49,7 @@ fun Navigation(name: String, modifier: Modifier = Modifier) {
             composable(Screen.NewGroupScreen.route) { NewGroupScreen(navigation = navigation)}
             composable(Screen.ProfileScreen.route) { ProfileScreen(navigation = navigation)}
             composable(Screen.GroupDetailsScreen.route) { GroupDetailsScreen(navigation = navigation)}
+            composable(Screen.NewExpenseScreen.route) { NewExpenseScreen(navigation = navigation)}
         }
     }
 }
