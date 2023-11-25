@@ -8,8 +8,8 @@ import kotlin.random.Random
  * @param createdBy This must be a member id
  */
 data class Group(
-    var name: String? = "",
-    var expired: Boolean? = false,
+    var name: String = "",
+    var expired: Boolean = false,
     var members: MutableList<String> = mutableListOf(),
     var expenses: MutableList<Expense> = mutableListOf(),
 
