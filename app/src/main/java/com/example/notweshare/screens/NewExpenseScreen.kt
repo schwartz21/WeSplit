@@ -23,29 +23,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
-import com.example.notweshare.models.Expense
-import com.example.notweshare.models.Group
-import org.koin.androidx.compose.koinViewModel
-import java.util.Date
-import kotlin.random.Random
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NewExpenseScreen(
-    navigation: NavController,
-    group: Group = Group(
-        name = "Test Group",
-        expired = false,
-        members = mutableListOf("Test", "Test2"),
-        expenses = mutableListOf(Expense( "test", Random.nextFloat()*2000)),
-        createdBy = "test",
-        createdAt = Date(),
-    ),
-    userViewModel: UserViewModel = koinViewModel(),
+    navigateUp: () -> Unit,
+    groupViewModel: GroupViewModel,
+    userViewModel: UserViewModel,
 ) {
+    val group = groupViewModel.selectedGroup.value
+    val user = userViewModel.activeUser.value
+
     var expenseName by remember { mutableStateOf("") }
     var expenseAmount by remember { mutableStateOf("") }
 
@@ -131,7 +122,7 @@ fun NewExpenseScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    navigation.navigateUp()
+                    navigateUp()
                 }
             ) {
                 Text(text = "Add expense")
