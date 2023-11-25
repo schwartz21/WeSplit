@@ -39,7 +39,7 @@ fun GroupDetailsScreen(
             GroupCard(group, userViewModel = userViewModel, groupViewModel = groupViewModel)
         }
         items(items = group.members) { member ->
-            GroupDetailsMemberCard(group, member)
+            GroupDetailsMemberCard(group, member, userViewModel)
             Spacer(modifier = Modifier.padding(smallPadding))
         }
         item {

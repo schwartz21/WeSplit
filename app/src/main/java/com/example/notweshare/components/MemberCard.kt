@@ -27,13 +27,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.compose.md_success
+import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
 import kotlin.math.abs
 
 @Composable
-fun GroupDetailsMemberCard(group: Group, member: String) {
+fun GroupDetailsMemberCard(group: Group, member: String, userViewModel: UserViewModel) {
 
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -48,6 +49,8 @@ fun GroupDetailsMemberCard(group: Group, member: String) {
         !userOwes -> md_success
         else -> MaterialTheme.colorScheme.onSurface
     }
+
+    val memberName = userViewModel.findUserWithDocumentId(member).name
 
     Surface(
         modifier = Modifier.padding(horizontal = mediumPadding),
@@ -64,7 +67,7 @@ fun GroupDetailsMemberCard(group: Group, member: String) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(.6f),
-                text = member,
+                text = memberName,
                 style = MaterialTheme.typography.bodyLarge,
             )
             Row(

@@ -43,16 +43,49 @@ class UserViewModel(): ViewModel() {
         }
     }
 
-    fun findUserWithPhoneNumber (phoneNumber: String) {
+    fun findUserWithDocumentId (documentId: String): User {
+        var out = User()
         isLoading.value = true
-        users.clear()
         viewModelScope.launch {
-            fetchUsers(FirestoreQueries.UserQueries.userWithPhoneNumber(phoneNumber)) { foundUsers ->
+            fetchUser(FirestoreQueries.UserQueries.userWithDocumentId(documentId)) { foundUser ->
                 users.clear()
-                users.addAll(foundUsers)
+                users.add(foundUser)
+                println(foundUser)
                 isLoading.value = false
+                out = foundUser
+                println("fetch user out: $out")
             }
         }
+        return out
+    }
+
+    private fun fetchUser(queryCondition: Query, callback: (User) -> Unit) {
+        listener = queryCondition.addSnapshotListener(object : EventListener<QuerySnapshot> {
+            override fun onEvent(
+                value: QuerySnapshot?,
+                error: FirebaseFirestoreException?
+            ) {
+                var user: User? = null
+
+                if (error != null) {
+                    Log.e("Firestore error", error.message.toString())
+                    callback(User())
+                }
+
+                value?.let { actualValue ->
+                    for (document in actualValue.documents) {
+                        Log.d("Success", document.toString())
+
+                        document.toObject(User::class.java)?.let { foundObject ->
+                            foundObject.documentID = document.id
+                            user = foundObject
+                        }
+                    }
+                }
+
+                callback(user ?: User())
+            }
+        })
     }
 
     private fun fetchUsers(queryCondition: Query, callback: (MutableList<User>) -> Unit) {

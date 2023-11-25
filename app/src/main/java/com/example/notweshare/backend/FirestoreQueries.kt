@@ -19,8 +19,8 @@ class FirestoreQueries {
                 return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereEqualTo(FieldPath.documentId(), userDocumentID)
             }
 
-            @JvmStatic fun userWithPhoneNumber(userPhoneNumber: String): Query {
-                return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereEqualTo("phoneNumber", userPhoneNumber)
+            @JvmStatic fun userWithDocumentId(userDocumentId: String): Query {
+                return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereEqualTo("documentID", userDocumentId)
             }
         }
     }
