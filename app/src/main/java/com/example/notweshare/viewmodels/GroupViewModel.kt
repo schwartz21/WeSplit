@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notweshare.backend.FirestoreQueries
+import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -19,9 +20,14 @@ class GroupViewModel(): ViewModel() {
     //mutatable state such that Compose can observe it.
     val groups = mutableStateListOf<Group>()
     var isLoading = mutableStateOf(false)
+    val selectedGroup = mutableStateOf(Group())
 
     init {
         findGroups()
+    }
+
+    fun setTheSelectedGroup(group: Group) {
+        selectedGroup.value = group
     }
 
     fun findGroups () {
@@ -82,6 +88,12 @@ class GroupViewModel(): ViewModel() {
     fun postGroup(group: Group) {
         viewModelScope.launch {
             FirestoreQueries.GroupQueries.postGroup(group)
+        }
+    }
+
+    fun addExpenseToGroup(groupDocumentID: String, expense: Expense) {
+        viewModelScope.launch {
+            FirestoreQueries.GroupQueries.addExpenseToGroup(groupDocumentID, expense)
         }
     }
 }

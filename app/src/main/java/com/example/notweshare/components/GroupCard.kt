@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.compose.AppTheme
 import com.example.compose.md_success
+import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
@@ -24,22 +25,25 @@ import com.example.notweshare.models.getDefaultGroup
 import com.example.notweshare.models.getMemberDebt
 import com.example.notweshare.models.getTotalExpense
 import com.example.notweshare.models.getTotalUnpaid
-import org.koin.androidx.compose.koinViewModel
 import java.text.DecimalFormat
 import kotlin.math.abs
 
 @Composable
 fun GroupCard(
     group: Group,
-    onNavigateToProfile: () -> Unit = {},
-    userViewModel: UserViewModel = koinViewModel()
+    onNavigateToGroupDetails: () -> Unit = {},
+    userViewModel: UserViewModel,
+    groupViewModel: GroupViewModel,
 ) {
-    val userContribution = getMemberDebt(group, userViewModel.activeUser.documentID)
+    val userContribution = getMemberDebt(group, userViewModel.activeUser.value.documentID)
     val absContribution = abs(userContribution)
     val userOwes = userContribution > 0
 
     GradientCard(
-        onClickFunction = onNavigateToProfile,
+        onClickFunction = {
+            groupViewModel.setTheSelectedGroup(group)
+            onNavigateToGroupDetails()
+        },
         text = group.name ?: "unknown group name"
     ) {
         DoubleStack(
@@ -116,7 +120,8 @@ fun GroupCardPreview() {
     AppTheme {
         GroupCard(
             group = getDefaultGroup(),
-            userViewModel = userViewModel
+            userViewModel = userViewModel,
+            groupViewModel = GroupViewModel()
         )
 
     }

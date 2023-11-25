@@ -20,9 +20,13 @@ class UserViewModel(): ViewModel() {
     val users = mutableStateListOf<User>()
     var isLoading = mutableStateOf(false)
 
-    val activeUser = User("test")
+    val activeUser = mutableStateOf(User())
     init {
         findUsers()
+    }
+
+    fun setTheActiveUser(user: User) {
+        activeUser.value = user
     }
 
     fun findUsers () {

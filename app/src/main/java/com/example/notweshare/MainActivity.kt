@@ -35,8 +35,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
+import com.example.exampleapplication.viewmodels.GroupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.models.TabItem
 import com.example.notweshare.screens.HomeScreen
+import com.example.notweshare.screens.NewExpenseScreen
+import com.example.notweshare.screens.GroupDetailsScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
 
@@ -60,6 +64,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Navigation() {
+    val groupViewModel = GroupViewModel()
+    val userViewModel = UserViewModel()
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(
@@ -127,11 +133,15 @@ fun Navigation() {
         ) {
             with(navController) {
                 composable(Screen.HomeScreen.route) {
-                    HomeScreen(navigateToProfile = {
-                        navigate(
-                            Screen.ProfileScreen.route
-                        )
-                    })
+                    HomeScreen(
+                        navigateToGroupDetails = {
+                            navigate(
+                                Screen.GroupDetailsScreen.route
+                            )
+                        },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
                 }
                 composable(Screen.NewGroupScreen.route) {
                     NewGroupScreen(navigateToProfile = {
@@ -141,6 +151,24 @@ fun Navigation() {
                     })
                 }
                 composable(Screen.ProfileScreen.route) { ProfileScreen() }
+                composable(Screen.GroupDetailsScreen.route) {
+                    GroupDetailsScreen(navigateToNewExpense = {
+                        navigate(
+                            Screen.NewExpenseScreen.route
+                        )
+                    },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
+                }
+                composable(Screen.NewExpenseScreen.route) {
+                    NewExpenseScreen(navigateUp = {
+                        navigateUp()
+                    },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
+                }
             }
 
         }
@@ -154,6 +182,8 @@ sealed class Screen(val route: String) {
     object HomeScreen : Screen("HomeScreen")
     object NewGroupScreen : Screen("NewScreen")
     object ProfileScreen : Screen("ProfileScreen")
+    object GroupDetailsScreen : Screen("GroupDetailsScreen")
+    object NewExpenseScreen : Screen("NewExpenseScreen")
 }
 
 @Preview(showBackground = true)
