@@ -1,5 +1,6 @@
 package com.example.notweshare.backend
 
+import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
@@ -38,6 +39,10 @@ class FirestoreQueries {
             @JvmStatic fun postGroup(group: Group): Task<DocumentReference> {
                 val fbCollection = FirebaseFirestore.getInstance().collection("groups")
                 return fbCollection.add(group)
+            }
+            // Add expense to a group
+            @JvmStatic fun addExpenseToGroup(groupDocumentID: String, expense: Expense): Task<Void> {
+                return FirebaseFirestore.getInstance().collection("groups").document(groupDocumentID).update("expenses", expense)
             }
         }
     }
