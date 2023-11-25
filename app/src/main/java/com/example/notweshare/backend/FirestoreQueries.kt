@@ -41,8 +41,8 @@ class FirestoreQueries {
                 return fbCollection.add(group)
             }
             // Add expense to a group
-            @JvmStatic fun addExpenseToGroup(groupDocumentID: String, expense: Expense): Task<Void> {
-                return FirebaseFirestore.getInstance().collection("groups").document(groupDocumentID).update("expenses", expense)
+            @JvmStatic fun updateExpensesOnAGroup(groupDocumentID: String, expenses: MutableList<Expense>): Task<Void> {
+                return FirebaseFirestore.getInstance().collection("groups").document(groupDocumentID).update("expenses", expenses)
             }
         }
     }

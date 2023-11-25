@@ -91,9 +91,9 @@ class GroupViewModel(): ViewModel() {
         }
     }
 
-    fun addExpenseToGroup(groupDocumentID: String, expense: Expense) {
+    fun addExpenseToGroup(groupDocumentID: String, expenses: MutableList<Expense>) {
         viewModelScope.launch {
-            FirestoreQueries.GroupQueries.addExpenseToGroup(groupDocumentID, expense)
+            FirestoreQueries.GroupQueries.updateExpensesOnAGroup(groupDocumentID, expenses)
         }
     }
 }

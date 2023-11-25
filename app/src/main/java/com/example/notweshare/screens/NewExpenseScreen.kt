@@ -129,7 +129,8 @@ fun NewExpenseScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    groupViewModel.addExpenseToGroup(group.documentID, createExpense(expenseName, expenseAmount.toFloat(), selectedUsers, user))
+                    group.expenses.add(createExpense(expenseName, expenseAmount.toFloat(), selectedUsers, user))
+                    groupViewModel.addExpenseToGroup(group.documentID, group.expenses)
                     navigateUp()
                 }
             ) {
