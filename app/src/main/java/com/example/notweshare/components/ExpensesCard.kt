@@ -9,44 +9,53 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.notweshare.R
 import com.example.notweshare.models.Expense
 
 @Composable
 fun ExpensesCard(expense: Expense) {
+
+    val largePadding = dimensionResource(R.dimen.padding_large)
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val smallPadding = dimensionResource(R.dimen.padding_small)
+
     Row(
         modifier = Modifier
-            .padding(bottom = 10.dp)
+            .padding(horizontal = mediumPadding)
             .height(IntrinsicSize.Min)
             .fillMaxSize()
             .background(
                 color = Color.Gray,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(10.dp),
+            .padding(smallPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column() {
             Text(
                 text = "Amount: ${expense.expenseAmount}",
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.bodyLarge,
             )
             Text(
                 text = expense.createdAt.toString(),
-                fontSize = 15.sp
+                style = MaterialTheme.typography.bodySmall,
             )
         }
         Text(
             text = expense.name,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

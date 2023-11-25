@@ -10,33 +10,41 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.notweshare.R
 
 @Composable
 fun GroupDetailsMemberCard(member: String) {
+
+    val largePadding = dimensionResource(R.dimen.padding_large)
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val smallPadding = dimensionResource(R.dimen.padding_small)
+
     Row(
         modifier = Modifier
-            .padding(bottom = 10.dp)
+            .padding(horizontal = mediumPadding)
             .height(IntrinsicSize.Min)
             .fillMaxSize()
             .background(
                 color = Color.Gray,
                 shape = RoundedCornerShape(10.dp)
             )
-            .padding(10.dp),
+            .padding(smallPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(.6f),
             text = member,
-            fontSize = 24.sp,
+            style = MaterialTheme.typography.bodyLarge,
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -47,7 +55,7 @@ fun GroupDetailsMemberCard(member: String) {
                 text = "200 kr.",
                 color = Color.Red,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(end = 5.dp)
+                modifier = Modifier.padding(end = smallPadding)
             )
             Button(
                 onClick = { /*TODO*/ }
