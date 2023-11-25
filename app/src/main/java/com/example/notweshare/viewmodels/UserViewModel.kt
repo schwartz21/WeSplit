@@ -26,7 +26,6 @@ class UserViewModel(): ViewModel() {
     }
 
     fun findUsers () {
-        println("finding users###################3")
         isLoading.value = true
         users.clear()
         viewModelScope.launch {
