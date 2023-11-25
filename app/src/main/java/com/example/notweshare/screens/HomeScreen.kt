@@ -22,20 +22,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.GroupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.components.GroupCard
 import com.example.notweshare.models.getDefaultGroup
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
 import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navigateToProfile: () -> Unit,
-    groupViewModel: GroupViewModel = koinViewModel(),
+    navigateToGroupDetails: () -> Unit,
+    groupViewModel: GroupViewModel,
+    userViewModel: UserViewModel,
 ) {
     val isRefreshing by remember { mutableStateOf(false) }
 
@@ -62,7 +63,9 @@ fun HomeScreen(
                         items(items = groupViewModel.groups) { group ->
                             GroupCard(
                                 group,
-                                onNavigateToProfile = navigateToProfile
+                                userViewModel = userViewModel,
+                                groupViewModel = groupViewModel,
+                                onNavigateToGroupDetails = navigateToGroupDetails,
                             )
                         }
                     }

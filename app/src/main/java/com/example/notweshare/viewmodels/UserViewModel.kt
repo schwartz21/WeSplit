@@ -20,16 +20,34 @@ class UserViewModel(): ViewModel() {
     val users = mutableStateListOf<User>()
     var isLoading = mutableStateOf(false)
 
-    val activeUser = User("test")
+    val activeUser = mutableStateOf(User())
+
+    // Will be removed once login screen works
     init {
         findUsers()
     }
 
+    fun setTheActiveUser(user: User) {
+        activeUser.value = user
+    }
+
     fun findUsers () {
+        isLoading.value = true
+        viewModelScope.launch {
+            fetchUsers(FirestoreQueries.UserQueries.allUsers()) { foundUsers ->
+                users.clear()
+                users.addAll(foundUsers)
+                isLoading.value = false
+                setTheActiveUser(foundUsers[0]) // Will be removed once we have login
+            }
+        }
+    }
+
+    fun findUserWithPhoneNumber (phoneNumber: String) {
         isLoading.value = true
         users.clear()
         viewModelScope.launch {
-            fetchUsers(FirestoreQueries.UserQueries.allUsers()) { foundUsers ->
+            fetchUsers(FirestoreQueries.UserQueries.userWithPhoneNumber(phoneNumber)) { foundUsers ->
                 users.clear()
                 users.addAll(foundUsers)
                 isLoading.value = false

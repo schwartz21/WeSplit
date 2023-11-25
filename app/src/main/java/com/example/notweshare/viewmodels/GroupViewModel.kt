@@ -6,10 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notweshare.backend.FirestoreQueries
+import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.launch
 
@@ -18,16 +20,21 @@ class GroupViewModel(): ViewModel() {
     //mutatable state such that Compose can observe it.
     val groups = mutableStateListOf<Group>()
     var isLoading = mutableStateOf(false)
+    val selectedGroup = mutableStateOf(Group())
 
     init {
         findGroups()
+    }
+
+    fun setTheSelectedGroup(group: Group) {
+        selectedGroup.value = group
     }
 
     fun findGroups () {
         isLoading.value = true
         groups.clear()
         viewModelScope.launch {
-            fetchGroups() { foundGroups ->
+            fetchGroups(FirestoreQueries.GroupQueries.allGroups()) { foundGroups ->
                 groups.clear()
                 groups.addAll(foundGroups)
                 isLoading.value = false
@@ -39,7 +46,7 @@ class GroupViewModel(): ViewModel() {
         isLoading.value = true
         groups.clear()
         viewModelScope.launch {
-            fetchGroupsWithMember(memberDocumentID) { foundGroups ->
+            fetchGroups(FirestoreQueries.GroupQueries.groupsWithMember(memberDocumentID)) { foundGroups ->
                 groups.clear()
                 groups.addAll(foundGroups)
                 isLoading.value = false
@@ -47,41 +54,10 @@ class GroupViewModel(): ViewModel() {
         }
     }
 
-    private fun fetchGroups(callback: (MutableList<Group>) -> Unit) {
+    private fun fetchGroups(queryCondition: Query, callback: (MutableList<Group>) -> Unit) {
         var groupArray: MutableList<Group> = mutableListOf<Group>()
 
-        listener = FirestoreQueries.GroupQueries.allGroups().addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(
-                value: QuerySnapshot?,
-                error: FirebaseFirestoreException?
-            ) {
-                groupArray = mutableListOf()
-
-                if (error != null) {
-                    Log.e("Firestore error", error.message.toString())
-                    callback(mutableListOf())
-                }
-
-                value?.let { actualValue ->
-                    for (document in actualValue.documents) {
-                        Log.d("Success", document.toString())
-
-                        document.toObject(Group::class.java)?.let { foundObject ->
-                            foundObject.documentID = document.id
-                            groupArray.add(foundObject)
-                        }
-                    }
-                }
-
-                callback(groupArray)
-            }
-        })
-    }
-
-    private fun fetchGroupsWithMember (memberDocumentID: String, callback: (MutableList<Group>) -> Unit) {
-        var groupArray: MutableList<Group> = mutableListOf<Group>()
-
-        listener = FirestoreQueries.GroupQueries.groupsWithMember(memberDocumentID).addSnapshotListener(object : EventListener<QuerySnapshot> {
+        listener = queryCondition.addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
                 error: FirebaseFirestoreException?
@@ -112,6 +88,12 @@ class GroupViewModel(): ViewModel() {
     fun postGroup(group: Group) {
         viewModelScope.launch {
             FirestoreQueries.GroupQueries.postGroup(group)
+        }
+    }
+
+    fun addExpenseToGroup(groupDocumentID: String, expense: Expense) {
+        viewModelScope.launch {
+            FirestoreQueries.GroupQueries.addExpenseToGroup(groupDocumentID, expense)
         }
     }
 }
