@@ -165,8 +165,6 @@ private fun createGroup(
     groupViewModel.postGroup(newGroup)
 }
 
-// -- For later --
-// Validate if the phone number exists in the database
 private fun validatePhoneNumber(phoneNumber: String): Boolean {
     return phoneNumber.isNotEmpty()
 }
