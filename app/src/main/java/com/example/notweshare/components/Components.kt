@@ -30,13 +30,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.exampleapplication.viewmodels.GroupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel
 
 val componentShape = RoundedCornerShape(50.dp)
 
 @Composable
-fun TextFieldComponent(labelValue: String) {
+fun TextFieldComponent(labelValue: String, input: String): String {
     val textValue = remember {
-        mutableStateOf("")
+        mutableStateOf(input)
     }
 
     OutlinedTextField(
@@ -60,13 +62,14 @@ fun TextFieldComponent(labelValue: String) {
             textValue.value = it
         }
     )
+    return textValue.value
 }
 
 @Composable
-fun PasswordTextFieldComponent(labelValue: String) {
+fun PasswordTextFieldComponent(labelValue: String, input: String): String {
 
     val passwordTextValue = remember {
-        mutableStateOf("")
+        mutableStateOf(input)
     }
     val passwordVisibility = remember {
         mutableStateOf(false)
@@ -115,35 +118,5 @@ fun PasswordTextFieldComponent(labelValue: String) {
             PasswordVisualTransformation()
         }
     )
-}
-
-@Composable
-fun ButtonComponent(textValue: String) {
-    val minHeight = 48.dp
-
-    Button(onClick = {},
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(minHeight),
-        contentPadding = PaddingValues(),
-        colors = ButtonDefaults.buttonColors(Color.Transparent)
-    ) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(minHeight)
-                .background(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(50.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = textValue,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
+    return passwordTextValue.value
 }

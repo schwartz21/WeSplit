@@ -88,38 +88,41 @@ fun Navigation() {
 
     Scaffold(
         bottomBar = {
+            if (userViewModel.activeUser.value.documentID != "g") {
             BottomAppBar(
                 contentColor = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(tabBarHeight)
             ) {
-                tabs.forEachIndexed { index, tab ->
-                    val tint =
-                        ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
-                    IconButton(
-                        onClick = {
-                            // This is the variable that must be changed to change the selected tab
-                            selectedTabIndex = index
-                            navController.navigate(tab.route)
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Bottom
+
+                    tabs.forEachIndexed { index, tab ->
+                        val tint =
+                            ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
+                        IconButton(
+                            onClick = {
+                                // This is the variable that must be changed to change the selected tab
+                                selectedTabIndex = index
+                                navController.navigate(tab.route)
+                            },
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Image(
-                                colorFilter = tint,
-                                painter = painterResource(tab.icon),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(
-                                text = tab.title,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-                            )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Bottom
+                            ) {
+                                Image(
+                                    colorFilter = tint,
+                                    painter = painterResource(tab.icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = tab.title,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                                )
+                            }
                         }
                     }
                 }
@@ -150,7 +153,7 @@ fun Navigation() {
                         userViewModel = userViewModel
                     )
                 }
-                composable(Screen.LoginScreen.route) {
+                composable(Screen.RegisterScreen.route) {
                     RegisterScreen(
                         navigateToHomeScreen = {
                             navigate(

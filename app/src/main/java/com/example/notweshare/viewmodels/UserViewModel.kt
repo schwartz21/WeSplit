@@ -22,11 +22,6 @@ class UserViewModel(): ViewModel() {
 
     val activeUser = mutableStateOf(User())
 
-    // Will be removed once login screen works
-    init {
-        findUsers()
-    }
-
     fun setTheActiveUser(user: User) {
         activeUser.value = user
     }
@@ -38,7 +33,6 @@ class UserViewModel(): ViewModel() {
                 users.clear()
                 users.addAll(foundUsers)
                 isLoading.value = false
-                setTheActiveUser(foundUsers[0]) // Will be removed once we have login
             }
         }
     }

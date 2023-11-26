@@ -3,18 +3,30 @@ package com.example.notweshare.screens
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -26,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
-import com.example.notweshare.components.ButtonComponent
 import com.example.notweshare.components.PasswordTextFieldComponent
 import com.example.notweshare.components.TextFieldComponent
 
@@ -38,6 +49,9 @@ fun RegisterScreen(
 ) {
     val questionText = "Already a user? "
     val clickableText = "Login"
+
+    var phoneNumber by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     val annotatedString = buildAnnotatedString {
         append(questionText)
@@ -70,11 +84,11 @@ fun RegisterScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            TextFieldComponent("Full name...")
-            TextFieldComponent("Phone number...")
-            TextFieldComponent("Email...")
-            PasswordTextFieldComponent("Password...")
-            PasswordTextFieldComponent("Confirm password...")
+            TextFieldComponent("Full name...", "")
+            TextFieldComponent("Phone number...", "")
+            TextFieldComponent("Email...", "")
+            PasswordTextFieldComponent("Password...", "")
+            PasswordTextFieldComponent("Confirm password...", "")
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
@@ -84,7 +98,45 @@ fun RegisterScreen(
             })
 
             Spacer(modifier = Modifier.height(10.dp))
-            ButtonComponent(textValue = "Register")
+            val minHeight = 48.dp
+
+            Button(
+                onClick = {
+                    if (validateRegister(phoneNumber, password, userViewModel)) {
+                        groupViewModel.findGroupsWithMember(phoneNumber)
+                        navigateToHomeScreen()
+                    } else {
+                        // Display password or phonenumber is incorrect
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(minHeight),
+                contentPadding = PaddingValues(),
+                colors = ButtonDefaults.buttonColors(Color.Transparent)
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(minHeight)
+                        .background(
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(50.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Login",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
     }
+}
+
+private fun validateRegister(phoneNumber: String, password: String, userViewModel: UserViewModel): Boolean {
+    return true
 }
