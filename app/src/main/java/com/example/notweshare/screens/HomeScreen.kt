@@ -35,6 +35,7 @@ import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToGroupDetails: () -> Unit,
+    navigateToNewGroup: () -> Unit,
     groupViewModel: GroupViewModel,
     userViewModel: UserViewModel,
 ) {
@@ -77,9 +78,10 @@ fun HomeScreen(
                     )
                     ElevatedButton(
                         onClick = {
-                            groupViewModel.postGroup(
-                                getDefaultGroup()
-                            )
+                                  navigateToNewGroup()
+                            //groupViewModel.postGroup(
+                            //    getDefaultGroup()
+                            //)
                         },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
