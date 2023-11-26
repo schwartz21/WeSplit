@@ -1,6 +1,5 @@
 package com.example.notweshare.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,8 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,8 +23,6 @@ import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
-import kotlinx.coroutines.flow.MutableStateFlow
-import java.util.Date
 
 @Composable
 fun NewGroupScreen(
@@ -36,8 +33,7 @@ fun NewGroupScreen(
     var groupName by remember { mutableStateOf("") }
     var addMemberByPhoneNumber by remember { mutableStateOf("") }
 
-    val _memberList = remember { MutableStateFlow(listOf<String>()) }
-    val memberList by remember { _memberList }.collectAsState()
+    val memberList = remember { mutableStateListOf<String>() }
 
     var errorAddGroupMemberMessage by remember { mutableStateOf("") }
     var errorAddGroupMessage by remember { mutableStateOf("") }
@@ -47,16 +43,25 @@ fun NewGroupScreen(
     val smallPadding = dimensionResource(R.dimen.padding_small)
 
     // Add members to a member list
-    fun addItem(item: String): String {
-        val newList = ArrayList(memberList)
-        if (!newList.contains(item)) {
-            newList.add(item)
-        } else {
-            return "This member is already added."
+    fun addItem(item: String) {
+        if(userViewModel.activeUser.value.documentID.equals(item)){
+            errorAddGroupMemberMessage = "You are automatically added to the group."
+            addMemberByPhoneNumber = ""
+            return
         }
-        _memberList.value = newList
-        addMemberByPhoneNumber = ""
-        return ""
+        userViewModel.findUserWithDocumentID(item){ user ->
+            if (user.documentID != "g") {
+                if (!memberList.contains(item)) {
+                    memberList.add(item)
+                    addMemberByPhoneNumber = ""
+                } else {
+                    errorAddGroupMemberMessage = "This member is already added."
+                    addMemberByPhoneNumber = ""
+                }
+            } else {
+                errorAddGroupMemberMessage = "This member does not exist."
+            }
+        }
     }
 
     Column(
@@ -93,7 +98,7 @@ fun NewGroupScreen(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 if (validatePhoneNumber(addMemberByPhoneNumber)) {
-                    errorAddGroupMemberMessage = addItem(addMemberByPhoneNumber)
+                    addItem(addMemberByPhoneNumber)
                 } else {
                     return@Button
                 }
