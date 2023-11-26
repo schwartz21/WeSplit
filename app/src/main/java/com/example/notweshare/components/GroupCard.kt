@@ -42,7 +42,7 @@ fun GroupCard(
     GradientCard(
         onClickFunction = {
             groupViewModel.setTheSelectedGroup(group) // Set selected group to be the group that was clicked
-            userViewModel.findUsersWithDocumentIDs(group.members) // Update list of users to be the users from the group
+            userViewModel.findUsersWithDocumentIDs(group.members) {} // Update list of users to be the users from the group
             onNavigateToGroupDetails()
         },
         text = group.name ?: "unknown group name"

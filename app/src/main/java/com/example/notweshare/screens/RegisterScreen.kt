@@ -105,10 +105,25 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    errorMessages = validateAndRegister(fullName, phoneNumber, email, password, confirmPassword, userViewModel)
-                    if (errorMessages == "") {
-                        groupViewModel.findGroupsWithMember(phoneNumber)
-                        navigateToHomeScreen()
+                    if (password != confirmPassword) {
+                        errorMessages = "Passwords do not match"
+                        return@Button
+                    } else if (fullName == "" || phoneNumber == "" || email == "" || password == "" || confirmPassword == "") {
+                        errorMessages = "Please fill in all fields"
+                        return@Button
+                    } else if (!phoneNumber.matches(Regex("[0-9]+"))) {
+                        errorMessages = "Phone number can only contain numbers"
+                        return@Button
+                    }
+                    userViewModel.findUserWithDocumentID(phoneNumber) { user ->
+                        println("User is $user")
+                        if (user.documentID == phoneNumber) {
+                            errorMessages = "User already exists"
+                        } else {
+                            registerNewUser(fullName, phoneNumber, email, password, userViewModel)
+                            groupViewModel.findGroupsWithMember(phoneNumber)
+                            navigateToHomeScreen()
+                        }
                     }
                 },
                 modifier = Modifier
@@ -139,41 +154,6 @@ fun RegisterScreen(
             Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
         }
     }
-}
-
-/**
- * Validates the user input and registers the user if the input is valid
- * @param fullName The full name of the user
- * @param phoneNumber The phone number of the user
- * @param email The email of the user
- * @param password The password of the user
- * @param confirmPassword The password confirmation of the user
- * @param userViewModel The user view model
- * @return An error message if the input is invalid, otherwise an empty string
- */
-private fun validateAndRegister(fullName: String, phoneNumber: String, email: String, password: String, confirmPassword: String, userViewModel: UserViewModel): String {
-    if (fullName == "" || phoneNumber == "" || email == "" || password == "" || confirmPassword == "") {
-
-        return "Please fill in all fields"
-    }
-
-    // Check if phone number consists only of numbers
-    if (!phoneNumber.matches(Regex("[0-9]+"))) {
-        return "Phone number can only contain numbers"
-    }
-
-    if (password != confirmPassword) {
-        return "Passwords do not match"
-    }
-
-    userViewModel.findUserWithDocumentID(phoneNumber)
-    if (userViewModel.users.isNotEmpty()) {
-        return "User already exists"
-    }
-
-    registerNewUser(fullName, phoneNumber, email, password, userViewModel)
-
-    return ""
 }
 
 private fun registerNewUser(fullName: String, phoneNumber: String, email: String, password: String, userViewModel: UserViewModel) {
