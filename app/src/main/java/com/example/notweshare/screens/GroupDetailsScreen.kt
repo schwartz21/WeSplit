@@ -63,7 +63,7 @@ fun GroupDetailsScreen(
             ) {
                 Text(
                     text = "Add new expense",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
             }
