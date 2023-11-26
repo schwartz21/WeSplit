@@ -1,0 +1,46 @@
+@startjson
+{
+    "name": "Test Group",
+    "members": [
+        "12345678",
+        "88888888"
+    ],
+    "expenses": [
+        {
+            "name": "Burgers",
+            "expenseAmount": 320,
+            "members": [
+                {
+                    "memberId": "12345678",
+                    "payed": true
+                },
+                {
+                    "memberId": "88888888",
+                    "payed": false
+                }
+            ],
+            "owner": "12345678",
+            "createdAt": "November 25..."
+        },
+        {
+            "name": "CDs",
+            "expenseAmount": 200,
+            "members": [
+                {
+                    "memberId": "12345678",
+                    "payed": true
+                },
+                {
+                    "memberId": "88888888",
+                    "payed": false
+                }
+            ],
+            "owner": "12345678",
+            "createdAt": "November 25...."
+        }
+    ],
+    "expired": false,
+    "createdBy": "88888888",
+    "createdAt":"November 10..."
+}
+@endjson

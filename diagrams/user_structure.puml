@@ -1,0 +1,9 @@
+@startjson
+{
+    "name": "John Smith",
+    "phoneNumber": "12345678",
+    "email":"example@sdu.dk",
+    "password": "myPassword",
+    "createdAt":"November 10..."
+}
+@endjson
