@@ -97,7 +97,7 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
-                    .firstOrNull()?.also { navigateToLogin }
+                    .firstOrNull()?.also { navigateToLogin() }
             })
 
             Spacer(modifier = Modifier.height(10.dp))
