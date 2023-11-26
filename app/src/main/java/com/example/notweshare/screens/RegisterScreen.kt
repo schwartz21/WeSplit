@@ -116,7 +116,6 @@ fun RegisterScreen(
                         return@Button
                     }
                     userViewModel.findUserWithDocumentID(phoneNumber) { user ->
-                        println("User is $user")
                         if (user.documentID == phoneNumber) {
                             errorMessages = "User already exists"
                         } else {
