@@ -98,7 +98,10 @@ fun NewGroupScreen(
                     return@Button
                 }
             }) {
-            Text(text = "Add member")
+            Text(
+                text = "Add member",
+                style = MaterialTheme.typography.titleMedium,
+            )
         }
         Spacer(modifier = Modifier.padding(smallPadding))
         LazyColumn(content = {
@@ -129,7 +132,10 @@ fun NewGroupScreen(
                 }
             }
         ) {
-            Text(text = "Create the new group")
+            Text(
+                text = "Create the new group",
+                style = MaterialTheme.typography.titleMedium,
+            )
         }
         Text(
             text = errorAddGroupMessage,
