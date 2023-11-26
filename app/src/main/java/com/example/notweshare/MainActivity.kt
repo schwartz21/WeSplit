@@ -75,7 +75,6 @@ fun Navigation() {
     )
 
 
-
     val tabBarHeight = with(LocalDensity.current) {
         65.sp.toDp()
     }
@@ -144,27 +143,33 @@ fun Navigation() {
                     )
                 }
                 composable(Screen.NewGroupScreen.route) {
-                    NewGroupScreen(navigateToProfile = {
-                        navigate(
-                            Screen.ProfileScreen.route
-                        )
-                    })
+                    NewGroupScreen(
+                        navigateToGroups = {
+                            navigate(
+                                Screen.HomeScreen.route
+                            )
+                        },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
                 }
                 composable(Screen.ProfileScreen.route) { ProfileScreen() }
                 composable(Screen.GroupDetailsScreen.route) {
-                    GroupDetailsScreen(navigateToNewExpense = {
-                        navigate(
-                            Screen.NewExpenseScreen.route
-                        )
-                    },
+                    GroupDetailsScreen(
+                        navigateToNewExpense = {
+                            navigate(
+                                Screen.NewExpenseScreen.route
+                            )
+                        },
                         groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
                 }
                 composable(Screen.NewExpenseScreen.route) {
-                    NewExpenseScreen(navigateUp = {
-                        navigateUp()
-                    },
+                    NewExpenseScreen(
+                        navigateUp = {
+                            navigateUp()
+                        },
                         groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
