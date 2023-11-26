@@ -92,9 +92,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
-                    .firstOrNull()?.also { span ->
-                        Log.d("ClickableText", "{$span}")
-                    }
+                    .firstOrNull()?.also { navigateToRegister() }
             })
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -162,6 +160,8 @@ private fun validateLogin(phoneNumber: String, password: String, userViewModel: 
         println("Password needed to be " + userViewModel.users[0].password + " and password was " + password)
         return false
     }
+
+    userViewModel.setTheActiveUser(userViewModel.users[0])
 
     return true
 }

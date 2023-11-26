@@ -49,34 +49,22 @@ class UserViewModel(): ViewModel() {
         }
     }
 
-
-    private fun fetchUser(queryCondition: Query, callback: (User) -> Unit) {
-        listener = queryCondition.addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(
-                value: QuerySnapshot?,
-                error: FirebaseFirestoreException?
-            ) {
-                var user: User? = null
-
-                if (error != null) {
-                    Log.e("Firestore error", error.message.toString())
-                    callback(User())
-                }
-
-                value?.let { actualValue ->
-                    for (document in actualValue.documents) {
-                        Log.d("Success", document.toString())
-
-                        document.toObject(User::class.java)?.let { foundObject ->
-                            foundObject.documentID = document.id
-                            user = foundObject
-                        }
-                    }
-                }
-
-                callback(user ?: User())
+    //Find users with document id
+    fun findUserWithDocumentID (userDocumentID: String) {
+        isLoading.value = true
+        viewModelScope.launch {
+            fetchUsers(FirestoreQueries.UserQueries.userWithDocumentID(userDocumentID)) { foundUsers ->
+                users.clear()
+                users.addAll(foundUsers)
+                isLoading.value = false
             }
-        })
+        }
+    }
+
+    fun postUser(user: User) {
+        viewModelScope.launch {
+            FirestoreQueries.UserQueries.postUser(user)
+        }
     }
 
     private fun fetchUsers(queryCondition: Query, callback: (MutableList<User>) -> Unit) {

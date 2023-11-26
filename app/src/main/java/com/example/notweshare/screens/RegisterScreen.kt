@@ -1,6 +1,5 @@
 package com.example.notweshare.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,18 +39,24 @@ import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.components.PasswordTextFieldComponent
 import com.example.notweshare.components.TextFieldComponent
+import com.example.notweshare.models.User
 
 @Composable
 fun RegisterScreen(
     navigateToHomeScreen: () -> Unit,
+    navigateToLogin: () -> Unit,
     groupViewModel: GroupViewModel,
     userViewModel: UserViewModel,
 ) {
     val questionText = "Already a user? "
     val clickableText = "Login"
 
+    var fullName by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var errorMessages by remember { mutableStateOf("") }
 
     val annotatedString = buildAnnotatedString {
         append(questionText)
@@ -84,17 +89,15 @@ fun RegisterScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            TextFieldComponent("Full name...", "")
-            TextFieldComponent("Phone number...", "")
-            TextFieldComponent("Email...", "")
-            PasswordTextFieldComponent("Password...", "")
-            PasswordTextFieldComponent("Confirm password...", "")
+            fullName = TextFieldComponent("Full name...", "")
+            phoneNumber = TextFieldComponent("Phone number...", "")
+            email = TextFieldComponent("Email...", "")
+            password = PasswordTextFieldComponent("Password...", "")
+            confirmPassword = PasswordTextFieldComponent("Confirm password...", "")
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
-                    .firstOrNull()?.also { span ->
-                        Log.d("ClickableText", "{$span}")
-                    }
+                    .firstOrNull()?.also { navigateToLogin }
             })
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -102,11 +105,10 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    if (validateRegister(phoneNumber, password, userViewModel)) {
+                    errorMessages = validateAndRegister(fullName, phoneNumber, email, password, confirmPassword, userViewModel)
+                    if (errorMessages == "") {
                         groupViewModel.findGroupsWithMember(phoneNumber)
                         navigateToHomeScreen()
-                    } else {
-                        // Display password or phonenumber is incorrect
                     }
                 },
                 modifier = Modifier
@@ -127,16 +129,55 @@ fun RegisterScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Login",
+                        text = "Register",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
+
+            Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
         }
     }
 }
 
-private fun validateRegister(phoneNumber: String, password: String, userViewModel: UserViewModel): Boolean {
-    return true
+/**
+ * Validates the user input and registers the user if the input is valid
+ * @param fullName The full name of the user
+ * @param phoneNumber The phone number of the user
+ * @param email The email of the user
+ * @param password The password of the user
+ * @param confirmPassword The password confirmation of the user
+ * @param userViewModel The user view model
+ * @return An error message if the input is invalid, otherwise an empty string
+ */
+private fun validateAndRegister(fullName: String, phoneNumber: String, email: String, password: String, confirmPassword: String, userViewModel: UserViewModel): String {
+    if (fullName == "" || phoneNumber == "" || email == "" || password == "" || confirmPassword == "") {
+
+        return "Please fill in all fields"
+    }
+
+    // Check if phonenumber is only numbers
+    if (!phoneNumber.matches(Regex("[0-9]+"))) {
+        return "Phone number can only contain numbers"
+    }
+
+    if (password != confirmPassword) {
+        return "Passwords do not match"
+    }
+
+    userViewModel.findUserWithDocumentID(phoneNumber)
+    if (userViewModel.users.isNotEmpty()) {
+        return "User already exists"
+    }
+
+    registerNewUser(fullName, phoneNumber, email, password, userViewModel)
+
+    return ""
+}
+
+private fun registerNewUser(fullName: String, phoneNumber: String, email: String, password: String, userViewModel: UserViewModel) {
+    val user = User(fullName, phoneNumber, email, password, documentID = phoneNumber)
+    userViewModel.postUser(user)
+    userViewModel.setTheActiveUser(user)
 }

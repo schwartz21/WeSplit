@@ -160,6 +160,11 @@ fun Navigation() {
                                 Screen.HomeScreen.route
                             )
                         },
+                        navigateToLogin = {
+                            navigate(
+                                Screen.LoginScreen.route
+                            )
+                        },
                         groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
