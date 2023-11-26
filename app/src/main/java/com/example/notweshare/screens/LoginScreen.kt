@@ -55,7 +55,6 @@ fun LoginScreen(
     var errorMessages by remember { mutableStateOf("") }
 
 
-    println("phone number is $phoneNumber and password is $password")
 
     val annotatedString = buildAnnotatedString {
         append(questionText)
