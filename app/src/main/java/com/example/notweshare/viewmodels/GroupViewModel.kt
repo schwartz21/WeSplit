@@ -22,10 +22,6 @@ class GroupViewModel(): ViewModel() {
     var isLoading = mutableStateOf(false)
     val selectedGroup = mutableStateOf(Group())
 
-    init {
-        findGroups()
-    }
-
     fun setTheSelectedGroup(group: Group) {
         selectedGroup.value = group
     }
