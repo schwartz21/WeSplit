@@ -157,6 +157,7 @@ fun NewExpenseScreen(
                 Text(
                     text = "Add expense",
                     fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
             Text(
