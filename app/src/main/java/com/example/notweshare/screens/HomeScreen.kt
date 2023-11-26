@@ -83,10 +83,17 @@ fun HomeScreen(
                             //    getDefaultGroup()
                             //)
                         },
-                        modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(1f).padding(horizontal = mediumPadding + smallPadding, vertical = smallPadding).height(50.dp),
-                        border = BorderStroke(smallPadding/4, MaterialTheme.colorScheme.primary),
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth(1f)
+                            .padding(
+                                horizontal = mediumPadding + smallPadding,
+                                vertical = smallPadding
+                            )
+                            .height(50.dp),
+                        border = BorderStroke(smallPadding / 4, MaterialTheme.colorScheme.primary),
 
-                    ) {
+                        ) {
                         Text(text = "Create Group", style = MaterialTheme.typography.titleMedium)
 //                        Text(text = "Create Group")
                     }
