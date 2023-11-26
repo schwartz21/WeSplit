@@ -37,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
-import com.example.notweshare.components.PasswordTextFieldComponent
-import com.example.notweshare.components.TextFieldComponent
+import com.example.notweshare.components.passwordTextFieldComponent
+import com.example.notweshare.components.textFieldComponent
 import com.example.notweshare.models.User
 
 @Composable
@@ -89,11 +89,11 @@ fun RegisterScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            fullName = TextFieldComponent("Full name...", "")
-            phoneNumber = TextFieldComponent("Phone number...", "")
-            email = TextFieldComponent("Email...", "")
-            password = PasswordTextFieldComponent("Password...", "")
-            confirmPassword = PasswordTextFieldComponent("Confirm password...", "")
+            fullName = textFieldComponent("Full name...", "")
+            phoneNumber = textFieldComponent("Phone number...", "")
+            email = textFieldComponent("Email...", "")
+            password = passwordTextFieldComponent("Password...", "")
+            confirmPassword = passwordTextFieldComponent("Confirm password...", "")
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
@@ -157,7 +157,7 @@ private fun validateAndRegister(fullName: String, phoneNumber: String, email: St
         return "Please fill in all fields"
     }
 
-    // Check if phonenumber is only numbers
+    // Check if phone number consists only of numbers
     if (!phoneNumber.matches(Regex("[0-9]+"))) {
         return "Phone number can only contain numbers"
     }

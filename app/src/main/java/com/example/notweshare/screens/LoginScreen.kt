@@ -1,6 +1,5 @@
 package com.example.notweshare.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
-import com.example.notweshare.components.PasswordTextFieldComponent
-import com.example.notweshare.components.TextFieldComponent
+import com.example.notweshare.components.passwordTextFieldComponent
+import com.example.notweshare.components.textFieldComponent
 
 @Composable
 fun LoginScreen(
@@ -87,8 +86,8 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            phoneNumber = TextFieldComponent("Phone number", phoneNumber)
-            password = PasswordTextFieldComponent("Password", password)
+            phoneNumber = textFieldComponent("Phone number", phoneNumber)
+            password = passwordTextFieldComponent("Password", password)
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
@@ -104,7 +103,7 @@ fun LoginScreen(
                         groupViewModel.findGroupsWithMember(phoneNumber)
                         navigateToHomeScreen()
                     } else {
-                        // Display password or phonenumber is incorrect
+                        // Display that password or phone number is incorrect
                     }
                 },
                 modifier = Modifier
