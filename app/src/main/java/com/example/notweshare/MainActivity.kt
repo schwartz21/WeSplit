@@ -43,6 +43,8 @@ import com.example.notweshare.screens.NewExpenseScreen
 import com.example.notweshare.screens.GroupDetailsScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
+import com.example.notweshare.screens.LoginScreen
+import com.example.notweshare.screens.RegisterScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,12 +128,39 @@ fun Navigation() {
     ) {
         NavHost(
             navController,
-            startDestination = Screen.HomeScreen.route,
+            startDestination = Screen.LoginScreen.route,
             modifier = Modifier.height(
                 contentHeight
             )
         ) {
             with(navController) {
+                composable(Screen.LoginScreen.route) {
+                    LoginScreen(
+                        navigateToRegister = {
+                            navigate(
+                                Screen.RegisterScreen.route
+                            )
+                        },
+                        navigateToHomeScreen = {
+                            navigate(
+                                Screen.HomeScreen.route
+                            )
+                        },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
+                }
+                composable(Screen.LoginScreen.route) {
+                    RegisterScreen(
+                        navigateToHomeScreen = {
+                            navigate(
+                                Screen.HomeScreen.route
+                            )
+                        },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
+                }
                 composable(Screen.HomeScreen.route) {
                     HomeScreen(
                         navigateToGroupDetails = {
@@ -184,6 +213,8 @@ sealed class Screen(val route: String) {
     object ProfileScreen : Screen("ProfileScreen")
     object GroupDetailsScreen : Screen("GroupDetailsScreen")
     object NewExpenseScreen : Screen("NewExpenseScreen")
+    object LoginScreen : Screen("LoginScreen")
+    object RegisterScreen : Screen("RegisterScreen")
 }
 
 @Preview(showBackground = true)

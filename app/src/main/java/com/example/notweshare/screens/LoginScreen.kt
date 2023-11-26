@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,25 +22,27 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.notweshare.ui.theme.backgroundColor
-import com.example.notweshare.ui.theme.highlightColor
-import com.example.notweshare.ui.theme.textColor
+import com.example.exampleapplication.viewmodels.GroupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.components.ButtonComponent
 import com.example.notweshare.components.PasswordTextFieldComponent
 import com.example.notweshare.components.TextFieldComponent
 
-@Preview
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navigateToRegister: () -> Unit,
+    navigateToHomeScreen: () -> Unit,
+    groupViewModel: GroupViewModel,
+    userViewModel: UserViewModel,
+    ) {
     val questionText = "Not a user? "
     val clickableText = "Register"
 
     val annotatedString = buildAnnotatedString {
         append(questionText)
-        withStyle(style = SpanStyle(color = highlightColor)) {
+        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
             pushStringAnnotation(tag = clickableText, annotation = clickableText)
             append(clickableText)
         }
@@ -48,7 +51,7 @@ fun LoginScreen() {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(MaterialTheme.colorScheme.background)
             .padding(28.dp)
     ) {
         Column(modifier = Modifier.fillMaxSize(),
@@ -64,7 +67,7 @@ fun LoginScreen() {
                     fontStyle = FontStyle.Normal,
                     textAlign = TextAlign.Center
                 ),
-                color = textColor
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Spacer(modifier = Modifier.height(10.dp))

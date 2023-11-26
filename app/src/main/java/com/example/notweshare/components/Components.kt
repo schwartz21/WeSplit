@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -29,9 +30,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.notweshare.ui.theme.highlightColor
-import com.example.notweshare.ui.theme.textColor
-import com.example.notweshare.ui.theme.textFieldColor
 
 val componentShape = RoundedCornerShape(50.dp)
 
@@ -48,12 +46,12 @@ fun TextFieldComponent(labelValue: String) {
             Text(text = labelValue)
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = textFieldColor,
-            unfocusedContainerColor = textFieldColor,
-            disabledContainerColor = textFieldColor,
-            cursorColor = textFieldColor,
-            focusedBorderColor = highlightColor,
-            focusedLabelColor = textColor,
+            focusedContainerColor = MaterialTheme.colorScheme.background,
+            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+            disabledContainerColor = MaterialTheme.colorScheme.onBackground,
+            cursorColor = MaterialTheme.colorScheme.onBackground,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            focusedLabelColor = MaterialTheme.colorScheme.onBackground,
         ),
         shape = componentShape,
         keyboardOptions = KeyboardOptions.Default,
@@ -81,12 +79,12 @@ fun PasswordTextFieldComponent(labelValue: String) {
             Text(text = labelValue)
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = textFieldColor,
-            unfocusedContainerColor = textFieldColor,
-            disabledContainerColor = textFieldColor,
-            cursorColor = textFieldColor,
-            focusedBorderColor = highlightColor,
-            focusedLabelColor = textColor,
+            focusedContainerColor = MaterialTheme.colorScheme.background,
+            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+            disabledContainerColor = MaterialTheme.colorScheme.background,
+            cursorColor = MaterialTheme.colorScheme.onBackground,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            focusedLabelColor = MaterialTheme.colorScheme.onBackground,
         ),
         shape = componentShape,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -136,7 +134,7 @@ fun ButtonComponent(textValue: String) {
                 .fillMaxWidth()
                 .heightIn(minHeight)
                 .background(
-                    color = highlightColor,
+                    color = MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(50.dp)
                 ),
             contentAlignment = Alignment.Center
