@@ -1,6 +1,6 @@
 package com.example.notweshare
 
-import NotificationJobIntentService
+import com.example.notweshare.notification.NotificationJobIntentService
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
         }
     }
     private fun startNotificationService() {
-        // Create an intent to start the NotificationJobIntentService
+        // Create an intent to start the com.example.notweshare.notification.NotificationJobIntentService
         val intent = Intent(this, NotificationJobIntentService::class.java)
         intent.putExtra("title", "Notification Title")
         intent.putExtra("body", "Notification Body")

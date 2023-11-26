@@ -1,3 +1,5 @@
+package com.example.notweshare.notification
+
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -27,7 +29,7 @@ class NotificationJobIntentService : JobIntentService() {
     private fun sendFCMMessage(title: String?, body: String?) {
         try {
             // The FCM token of the target device
-            val recipientToken = "RECIPIENT_DEVICE_FCM_TOKEN"
+            val recipientToken = "foUVV2vTTAmVDnXrg8m6vb:APA91bGVqyPpOr7xacmoR3m1Hl-kHMP0vWQG-eQy1BK2edcGjePpDaQ4KaypcdH4hzEL6YqmVqXaiELkZa36G8nCkgYX-q7vyZ6pObRHS-cRTdCDM3Vh6l_pmYgVuflLvBFFvP9i9dQP"
 
             // Create a RemoteMessage
             val message = RemoteMessage.Builder(recipientToken)
