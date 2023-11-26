@@ -26,17 +26,6 @@ class UserViewModel(): ViewModel() {
         activeUser.value = user
     }
 
-    fun findUsers () {
-        isLoading.value = true
-        viewModelScope.launch {
-            fetchUsers(FirestoreQueries.UserQueries.allUsers()) { foundUsers ->
-                users.clear()
-                users.addAll(foundUsers)
-                isLoading.value = false
-            }
-        }
-    }
-
     // Find users within a list of user document IDs
     fun findUsersWithDocumentIDs (userDocumentIDs: MutableList<String>) {
         isLoading.value = true
@@ -45,6 +34,9 @@ class UserViewModel(): ViewModel() {
                 users.clear()
                 users.addAll(foundUsers)
                 isLoading.value = false
+                if (users.isEmpty()) {
+                    users.add(User())
+                }
             }
         }
     }
@@ -57,6 +49,10 @@ class UserViewModel(): ViewModel() {
                 users.clear()
                 users.addAll(foundUsers)
                 isLoading.value = false
+                if (users.isEmpty()) {
+                    users.add(User())
+                }
+                println(" users are ${users.toList()}")
             }
         }
     }
@@ -92,7 +88,6 @@ class UserViewModel(): ViewModel() {
                         }
                     }
                 }
-
                 callback(userArray)
             }
         })

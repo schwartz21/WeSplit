@@ -37,8 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
-import com.example.notweshare.components.passwordTextFieldComponent
-import com.example.notweshare.components.textFieldComponent
+import com.example.notweshare.components.passwordTextFieldCard
+import com.example.notweshare.components.textFieldCard
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun LoginScreen(
@@ -52,6 +53,8 @@ fun LoginScreen(
 
     var phoneNumber by remember { mutableStateOf("")}
     var password by remember { mutableStateOf("")}
+    var errorMessages by remember { mutableStateOf("") }
+
 
     println("phone number is $phoneNumber and password is $password")
 
@@ -86,8 +89,8 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            phoneNumber = textFieldComponent("Phone number", phoneNumber)
-            password = passwordTextFieldComponent("Password", password)
+            phoneNumber = textFieldCard("Phone number", phoneNumber)
+            password = passwordTextFieldCard("Password", password)
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
@@ -99,11 +102,10 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    if (validateLogin(phoneNumber, password, userViewModel)) {
+                    errorMessages = validateLogin(phoneNumber, password, userViewModel)
+                    if (errorMessages == "") {
                         groupViewModel.findGroupsWithMember(phoneNumber)
                         navigateToHomeScreen()
-                    } else {
-                        // Display that password or phone number is incorrect
                     }
                 },
                 modifier = Modifier
@@ -130,37 +132,39 @@ fun LoginScreen(
                     )
                 }
             }
+            Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
+
         }
     }
 }
 
-private fun validateLogin(phoneNumber: String, password: String, userViewModel: UserViewModel): Boolean {
-    var ids: MutableList<String> = mutableListOf()
-    ids.add(phoneNumber)
+private fun validateLogin(phoneNumber: String, password: String, userViewModel: UserViewModel): String {
 
     if (phoneNumber == "" || password == "") {
-        println("Returning false")
-        return false
+        return "Please fill out all fields"
     }
 
-    userViewModel.findUsersWithDocumentIDs(ids)
-    println("Fetching users...")
-    println("Users right after fetch: ")
-    println(userViewModel.users)
+    // Fetch user with id and then check stuff
+    userViewModel.findUserWithDocumentID(phoneNumber)
 
-    if (userViewModel.users.isEmpty()) {
-        println("Returning false with users:")
-        println(userViewModel.users)
-        return false
+//    while (userViewModel.users.isEmpty()) {
+//        println("Waiting for users to be fetched...")
+//        runBlocking {
+//            kotlinx.coroutines.delay(1000)
+//        }
+//    }
+
+    println("User is ${userViewModel.users[0]}")
+
+    if (userViewModel.users[0].documentID == "g") {
+        return "Password or Phone number is incorrect"
     }
 
     if (userViewModel.users[0].password != password) {
-        println("Returning false because of password mismatch")
-        println("Password needed to be " + userViewModel.users[0].password + " and password was " + password)
-        return false
+        return "Password or Phone number is incorrect"
     }
 
     userViewModel.setTheActiveUser(userViewModel.users[0])
 
-    return true
+    return ""
 }

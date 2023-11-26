@@ -20,7 +20,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun passwordTextFieldComponent(labelValue: String, input: String): String {
+fun passwordTextFieldCard(labelValue: String, input: String): String {
 
     val passwordTextValue = remember {
         mutableStateOf(input)

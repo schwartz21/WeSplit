@@ -37,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
-import com.example.notweshare.components.passwordTextFieldComponent
-import com.example.notweshare.components.textFieldComponent
+import com.example.notweshare.components.passwordTextFieldCard
+import com.example.notweshare.components.textFieldCard
 import com.example.notweshare.models.User
 
 @Composable
@@ -89,11 +89,11 @@ fun RegisterScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            fullName = textFieldComponent("Full name...", "")
-            phoneNumber = textFieldComponent("Phone number...", "")
-            email = textFieldComponent("Email...", "")
-            password = passwordTextFieldComponent("Password...", "")
-            confirmPassword = passwordTextFieldComponent("Confirm password...", "")
+            fullName = textFieldCard("Full name...", "")
+            phoneNumber = textFieldCard("Phone number...", "")
+            email = textFieldCard("Email...", "")
+            password = passwordTextFieldCard("Password...", "")
+            confirmPassword = passwordTextFieldCard("Confirm password...", "")
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
