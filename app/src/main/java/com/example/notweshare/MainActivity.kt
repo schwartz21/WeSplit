@@ -138,6 +138,11 @@ fun Navigation() {
                                 Screen.GroupDetailsScreen.route
                             )
                         },
+                        navigateToNewGroup = {
+                            navigate(
+                                Screen.NewGroupScreen.route
+                            )
+                        },
                         groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
