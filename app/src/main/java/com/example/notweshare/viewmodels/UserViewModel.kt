@@ -43,7 +43,6 @@ class UserViewModel(): ViewModel() {
                 users.addAll(foundUsers)
                 isLoading.value = false
                 if (users.isEmpty()) { users.add(User()) }
-                println(" users are ${users.toList()}")
                 callback(users[0])
             }
         }
