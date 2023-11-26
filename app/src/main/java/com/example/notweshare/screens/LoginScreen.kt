@@ -121,7 +121,6 @@ fun LoginScreen(
                             groupViewModel.findGroupsWithMember(phoneNumber)
                             navigateToHomeScreen()
                         }
-                        println("User is $user")
                     }
                 },
                 modifier = Modifier
