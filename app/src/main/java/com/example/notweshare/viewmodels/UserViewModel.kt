@@ -29,7 +29,6 @@ class UserViewModel(): ViewModel() {
                 users.clear()
                 users.addAll(foundUsers)
                 isLoading.value = false
-                println(" users are ${users.toList()}")
             }
         }
     }
