@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
+import com.example.notweshare.components.textFieldCard
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -66,7 +67,7 @@ fun ProfileScreen(userViewModel: UserViewModel) {
             Button(
                 onClick = {
                     // Update userDocument in Firestore
-                    val userRef = FirebaseFirestore.getInstance().collection("users").document(userViewModel.activeUser.value.documentID)
+                    val userRef = FirebaseFirestore.getInstance().collection("users").document(userViewModel.activeUser.value.phoneNumber)
 
                     userRef
                         .update("phoneNumber", userViewModel.activeUser.value.phoneNumber, "email", userViewModel.activeUser.value.email)
@@ -170,22 +171,7 @@ fun ProfileItem(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
-            OutlinedTextField(
-                value = description,
-                onValueChange = onValueChange,
-                modifier = Modifier.width(screenWidth / 1.7f),
-                textStyle = MaterialTheme.typography.bodyMedium,
-                shape = RoundedCornerShape(50.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.background,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    disabledContainerColor = MaterialTheme.colorScheme.onBackground,
-                    cursorColor = MaterialTheme.colorScheme.onBackground,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                ),
-                keyboardOptions = KeyboardOptions.Default,
-            )
+            textFieldCard(labelValue = title, input = description)
         }
     }
     return phoneNumber
