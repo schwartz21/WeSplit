@@ -2,9 +2,11 @@ package com.example.notweshare.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -23,9 +26,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
@@ -63,6 +70,24 @@ fun NewExpenseScreen(
             .padding(largePadding)
             .fillMaxWidth()
     ) {
+        // Icon button navigating back
+        // Align button all the way to the left
+        item {
+            Box (contentAlignment = Alignment.CenterStart, modifier = Modifier.padding(0.dp)) {
+                IconButton(
+                    onClick = {
+                        navigateUp()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.backarrow),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
+            }
+        }
         item {
             //add expense headline
             Text(
@@ -216,3 +241,4 @@ private fun returnNameFromId(id: String, userViewModel: UserViewModel): String {
     }
     return name
 }
+
