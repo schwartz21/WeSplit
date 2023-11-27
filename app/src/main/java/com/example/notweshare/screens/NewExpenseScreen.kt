@@ -145,7 +145,6 @@ fun NewExpenseScreen(
             }
         }
         item {
-            Spacer(modifier = Modifier.padding(smallPadding))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
