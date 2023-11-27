@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.example.notweshare.R
 import com.example.notweshare.models.Expense
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ExpensesCard(expense: Expense) {
@@ -42,7 +41,7 @@ fun ExpensesCard(expense: Expense) {
             modifier = Modifier
                 .height(IntrinsicSize.Min)
                 .fillMaxSize()
-                .padding(horizontal = smallPadding, vertical = mediumPadding),
+                .padding(horizontal = mediumPadding, vertical = smallPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column() {
