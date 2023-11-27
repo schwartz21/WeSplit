@@ -32,7 +32,11 @@ class NotificationService (private val context: Context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
 
+<<<<<<< HEAD
         val doMagic = PendingIntent.getBroadcast(
+=======
+        val fuck = PendingIntent.getBroadcast(
+>>>>>>> ca992e84d75e20e1c143ba62aa2c143d3f239156
             context,
             2,  // Use a unique request code
             Intent(context, NotificationDismissReceiver::class.java),
@@ -47,7 +51,11 @@ class NotificationService (private val context: Context) {
             .setContentText("you owe $amountOfMoneyOwed to $name in group: $groupName ")
             .setContentIntent(activityPendingIntent)
             .addAction(R.drawable.notification, "DISMISS", dismissIntent)  // Add dismiss action
+<<<<<<< HEAD
             .addAction(R.drawable.notification, "THIS Button does nothing", doMagic )
+=======
+            .addAction(R.drawable.notification, "FUCK YOU", fuck)
+>>>>>>> ca992e84d75e20e1c143ba62aa2c143d3f239156
             .setStyle(bigTextStyle)
             .build()
 
