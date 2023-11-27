@@ -42,7 +42,7 @@ fun TextFieldCard(labelValue: String, input: String): String {
         ),
         shape = textFieldShape,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Phone,
+            keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         ),
         keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
