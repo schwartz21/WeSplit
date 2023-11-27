@@ -170,9 +170,6 @@ private fun validateGroupName(groupName: String): Boolean {
 }
 
 private fun validateGroup(groupName: String, memberList: List<String>): String {
-    if (!vaidatePhoneNumberIsNumbers(groupName)) {
-        return "Phone number can only be numbers."
-    }
     if (!validateGroupName(groupName)) {
         return "Invalid group name."
     }
