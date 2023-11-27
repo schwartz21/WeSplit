@@ -1,5 +1,6 @@
 package com.example.notweshare.screens
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
@@ -36,18 +39,20 @@ fun NewGroupScreen(
     var errorAddGroupMemberMessage by remember { mutableStateOf("") }
     var errorAddGroupMessage by remember { mutableStateOf("") }
 
+    val focusManager = LocalFocusManager.current
+
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val smallPadding = dimensionResource(R.dimen.padding_small)
 
     // Add members to a member list
     fun addItem(item: String) {
-        if(userViewModel.activeUser.value.documentID.equals(item)){
+        if (userViewModel.activeUser.value.documentID.equals(item)) {
             errorAddGroupMemberMessage = "You are automatically added to the group."
             addMemberByPhoneNumber = ""
             return
         }
-        userViewModel.findUserWithDocumentID(item){ user ->
+        userViewModel.findUserWithDocumentID(item) { user ->
             if (user.documentID.isNotEmpty()) {
                 if (!memberList.contains(item)) {
                     memberList.add(item)
@@ -64,6 +69,7 @@ fun NewGroupScreen(
 
     Column(
         modifier = Modifier
+            .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
             .padding(mediumPadding)
             .fillMaxWidth(),
     ) {
@@ -74,7 +80,8 @@ fun NewGroupScreen(
         Spacer(modifier = Modifier.padding(smallPadding))
         groupName = TextFieldCard(labelValue = "Group name", input = groupName)
         Spacer(modifier = Modifier.padding(smallPadding))
-        addMemberByPhoneNumber = TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber)
+        addMemberByPhoneNumber =
+            TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber)
         if (errorAddGroupMemberMessage.isNotEmpty()) {
             Text(
                 text = errorAddGroupMemberMessage,
