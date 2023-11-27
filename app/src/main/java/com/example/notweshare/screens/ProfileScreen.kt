@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
+import com.example.notweshare.backend.FirestoreQueries
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.notweshare.components.TextFieldCard
@@ -62,6 +63,9 @@ fun ProfileScreen(userViewModel: UserViewModel) {
             Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = {
+                    Log.d(TAG, userViewModel.activeUser.value.phoneNumber)
+                    Log.d(TAG, userViewModel.activeUser.value.email)
+
                     // Update userDocument in Firestore
                     val userRef = FirebaseFirestore.getInstance().collection("users").document(userViewModel.activeUser.value.phoneNumber)
 
@@ -69,6 +73,8 @@ fun ProfileScreen(userViewModel: UserViewModel) {
                         .update("phoneNumber", userViewModel.activeUser.value.phoneNumber, "email", userViewModel.activeUser.value.email)
                         .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
                         .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
+
+//                    FirestoreQueries.UserQueries.updateUser(userViewModel.activeUser.value)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
