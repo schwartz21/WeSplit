@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
+import com.example.notweshare.R
 import com.example.notweshare.components.passwordTextFieldCard
 import com.example.notweshare.components.TextFieldCard
 
@@ -44,6 +46,11 @@ fun LoginScreen(
     navigateToRegister: () -> Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
+
+    val largePadding = dimensionResource(R.dimen.padding_large)
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val smallPadding = dimensionResource(R.dimen.padding_small)
+
     val questionText = "Not a user? "
     val clickableText = "Register"
 
@@ -62,7 +69,7 @@ fun LoginScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(28.dp),
+            .padding(largePadding),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -73,10 +80,8 @@ fun LoginScreen(
                 text = "Login",
                 modifier = Modifier
                     .fillMaxWidth(),
-                style = TextStyle(
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontStyle = FontStyle.Normal,
+                style = MaterialTheme.typography.displayLarge.copy(
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 ),
                 color = MaterialTheme.colorScheme.onBackground
@@ -132,25 +137,14 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .heightIn(minHeight),
                 contentPadding = PaddingValues(),
-                colors = ButtonDefaults.buttonColors(Color.Transparent)
+                shape=RoundedCornerShape(50.dp),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
             ) {
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(minHeight)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(50.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Login",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(
+                    text = "Login",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
             Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
 

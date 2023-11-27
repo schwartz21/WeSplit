@@ -64,7 +64,7 @@ fun NewExpenseScreen(
 
     LazyColumn(
         modifier = Modifier
-            .padding(mediumPadding)
+            .padding(largePadding)
             .fillMaxWidth()
     ) {
         // Icon button navigating back

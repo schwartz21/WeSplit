@@ -64,7 +64,7 @@ fun NewGroupScreen(
 
     Column(
         modifier = Modifier
-            .padding(mediumPadding)
+            .padding(largePadding)
             .fillMaxWidth(),
     ) {
         Text(

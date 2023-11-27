@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
+import com.example.notweshare.R
 import com.example.notweshare.components.passwordTextFieldCard
 import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.User
@@ -63,20 +65,23 @@ fun RegisterScreen(
         }
     }
 
+    val largePadding = dimensionResource(R.dimen.padding_large)
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(28.dp)
+            .padding(largePadding)
     ) {
-        Column(modifier = Modifier.fillMaxSize(),
+        Column(
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "Register",
                 modifier = Modifier
                     .fillMaxWidth(),
-                style = TextStyle (
+                style = TextStyle(
                     fontSize = 48.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontStyle = FontStyle.Normal,
@@ -92,10 +97,16 @@ fun RegisterScreen(
             password = passwordTextFieldCard("Password...", "")
             confirmPassword = passwordTextFieldCard("Confirm password...", "")
             Spacer(modifier = Modifier.height(1.dp))
-            ClickableText(text = annotatedString, onClick = { offset ->
-                annotatedString.getStringAnnotations(offset, offset)
-                    .firstOrNull()?.also { navigateToLogin() }
-            })
+            ClickableText(
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center
+                ),
+                text = annotatedString, onClick = { offset ->
+                    annotatedString.getStringAnnotations(offset, offset)
+                        .firstOrNull()?.also { navigateToLogin() }
+                })
 
             Spacer(modifier = Modifier.height(10.dp))
             val minHeight = 48.dp
@@ -151,7 +162,12 @@ fun RegisterScreen(
     }
 }
 
-private fun registerNewUser(fullName: String, phoneNumber: String, email: String, password: String) {
+private fun registerNewUser(
+    fullName: String,
+    phoneNumber: String,
+    email: String,
+    password: String
+) {
     val user = User(fullName, phoneNumber, email, password, documentID = phoneNumber)
     userViewModel.postUser(user)
     userViewModel.setTheActiveUser(user)
