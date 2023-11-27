@@ -25,6 +25,7 @@ import com.example.compose.md_success
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
+import java.text.DecimalFormat
 import kotlin.math.abs
 
 @Composable
@@ -68,7 +69,7 @@ fun GroupDetailsMemberCard(group: Group, member: String, memberName: String) {
                 modifier = Modifier.fillMaxWidth(1f),
             ) {
                 Text(
-                    text = "$absContribution kr.",
+                    text = "${DecimalFormat("#.##").format(absContribution)} kr.",
                     color = paymentColor,
                     fontWeight = FontWeight.Bold,
                 )

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.notweshare.R
 import com.example.notweshare.models.Expense
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 @Composable
@@ -46,7 +47,7 @@ fun ExpensesCard(expense: Expense) {
         ) {
             Column() {
                 Text(
-                    text = "Amount: ${expense.expenseAmount}",
+                    text = "Amount: ${DecimalFormat("#.##").format(expense.expenseAmount)}",
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge,
                 )
