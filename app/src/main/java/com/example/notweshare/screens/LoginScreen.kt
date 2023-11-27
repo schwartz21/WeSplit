@@ -49,6 +49,7 @@ fun LoginScreen(
 
     val questionText = "Not a user? "
     val clickableText = "Register"
+    var screenActive = true
 
     val focusManager = LocalFocusManager.current
 
@@ -114,7 +115,8 @@ fun LoginScreen(
                     userViewModel.findUserWithDocumentID(phoneNumber) { user ->
                         if (user.documentID.isEmpty() || user.password != password) {
                             errorMessages = "Phone number or Password is incorrect"
-                        } else {
+                        } else if (screenActive) {
+                            screenActive = false
                             userViewModel.setTheActiveUser(user)
                             navigateToHomeScreen()
                         }

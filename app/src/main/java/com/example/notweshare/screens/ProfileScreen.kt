@@ -1,7 +1,6 @@
 package com.example.notweshare.screens
 
 import android.content.ContentValues.TAG
-import android.text.Editable
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,21 +32,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
-import com.example.notweshare.backend.FirestoreQueries
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.firebase.firestore.FirebaseFirestore
 import com.example.notweshare.components.TextFieldCard
 
 @Composable
-fun ProfileScreen(userViewModel: UserViewModel) {
+fun ProfileScreen() {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(MaterialTheme.colorScheme.primary)
+    val focusManager = LocalFocusManager.current
 
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val largePadding = dimensionResource(R.dimen.padding_large)
@@ -66,6 +66,7 @@ fun ProfileScreen(userViewModel: UserViewModel) {
                 onClick = {
                     Log.d(TAG, userViewModel.activeUser.value.phoneNumber)
                     Log.d(TAG, userViewModel.activeUser.value.email)
+                    focusManager.clearFocus()
 
                     // Update userDocument in Firestore
                     userViewModel.editUser(userViewModel.activeUser.value)
