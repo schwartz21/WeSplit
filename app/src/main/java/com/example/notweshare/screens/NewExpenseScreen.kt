@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.exampleapplication.viewmodels.GroupViewModel
@@ -104,6 +105,7 @@ fun NewExpenseScreen(
             if (phoneNumber != userViewModel.activeUser.value.phoneNumber) {
                 ListItem(
                     modifier = Modifier
+                        .clip(shape = RoundedCornerShape(mediumPadding))
                         .combinedClickable(
                             onClick = {
                                 if (isSelected) {
