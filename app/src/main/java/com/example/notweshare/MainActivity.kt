@@ -43,6 +43,8 @@ import com.example.notweshare.screens.NewExpenseScreen
 import com.example.notweshare.screens.GroupDetailsScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
+import com.example.notweshare.screens.LoginScreen
+import com.example.notweshare.screens.RegisterScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +77,6 @@ fun Navigation() {
     )
 
 
-
     val tabBarHeight = with(LocalDensity.current) {
         65.sp.toDp()
     }
@@ -86,38 +87,41 @@ fun Navigation() {
 
     Scaffold(
         bottomBar = {
+            if (userViewModel.activeUser.value.documentID != "g") {
             BottomAppBar(
                 contentColor = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(tabBarHeight)
             ) {
-                tabs.forEachIndexed { index, tab ->
-                    val tint =
-                        ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
-                    IconButton(
-                        onClick = {
-                            // This is the variable that must be changed to change the selected tab
-                            selectedTabIndex = index
-                            navController.navigate(tab.route)
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Bottom
+
+                    tabs.forEachIndexed { index, tab ->
+                        val tint =
+                            ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
+                        IconButton(
+                            onClick = {
+                                // This is the variable that must be changed to change the selected tab
+                                selectedTabIndex = index
+                                navController.navigate(tab.route)
+                            },
+                            modifier = Modifier.weight(1f)
                         ) {
-                            Image(
-                                colorFilter = tint,
-                                painter = painterResource(tab.icon),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(
-                                text = tab.title,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-                            )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Bottom
+                            ) {
+                                Image(
+                                    colorFilter = tint,
+                                    painter = painterResource(tab.icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = tab.title,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                                )
+                            }
                         }
                     }
                 }
@@ -126,12 +130,44 @@ fun Navigation() {
     ) {
         NavHost(
             navController,
-            startDestination = Screen.HomeScreen.route,
+            startDestination = Screen.LoginScreen.route,
             modifier = Modifier.height(
                 contentHeight
             )
         ) {
             with(navController) {
+                composable(Screen.LoginScreen.route) {
+                    LoginScreen(
+                        navigateToRegister = {
+                            navigate(
+                                Screen.RegisterScreen.route
+                            )
+                        },
+                        navigateToHomeScreen = {
+                            navigate(
+                                Screen.HomeScreen.route
+                            )
+                        },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
+                }
+                composable(Screen.RegisterScreen.route) {
+                    RegisterScreen(
+                        navigateToHomeScreen = {
+                            navigate(
+                                Screen.HomeScreen.route
+                            )
+                        },
+                        navigateToLogin = {
+                            navigate(
+                                Screen.LoginScreen.route
+                            )
+                        },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
+                }
                 composable(Screen.HomeScreen.route) {
                     HomeScreen(
                         navigateToGroupDetails = {
@@ -139,32 +175,43 @@ fun Navigation() {
                                 Screen.GroupDetailsScreen.route
                             )
                         },
+                        navigateToNewGroup = {
+                            navigate(
+                                Screen.NewGroupScreen.route
+                            )
+                        },
                         groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
                 }
                 composable(Screen.NewGroupScreen.route) {
-                    NewGroupScreen(navigateToProfile = {
-                        navigate(
-                            Screen.ProfileScreen.route
-                        )
-                    })
+                    NewGroupScreen(
+                        navigateToGroups = {
+                            navigate(
+                                Screen.HomeScreen.route
+                            )
+                        },
+                        groupViewModel = groupViewModel,
+                        userViewModel = userViewModel
+                    )
                 }
                 composable(Screen.ProfileScreen.route) { ProfileScreen() }
                 composable(Screen.GroupDetailsScreen.route) {
-                    GroupDetailsScreen(navigateToNewExpense = {
-                        navigate(
-                            Screen.NewExpenseScreen.route
-                        )
-                    },
+                    GroupDetailsScreen(
+                        navigateToNewExpense = {
+                            navigate(
+                                Screen.NewExpenseScreen.route
+                            )
+                        },
                         groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
                 }
                 composable(Screen.NewExpenseScreen.route) {
-                    NewExpenseScreen(navigateUp = {
-                        navigateUp()
-                    },
+                    NewExpenseScreen(
+                        navigateUp = {
+                            navigateUp()
+                        },
                         groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
@@ -184,6 +231,8 @@ sealed class Screen(val route: String) {
     object ProfileScreen : Screen("ProfileScreen")
     object GroupDetailsScreen : Screen("GroupDetailsScreen")
     object NewExpenseScreen : Screen("NewExpenseScreen")
+    object LoginScreen : Screen("LoginScreen")
+    object RegisterScreen : Screen("RegisterScreen")
 }
 
 @Preview(showBackground = true)

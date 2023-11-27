@@ -35,6 +35,7 @@ import eu.bambooapps.material3.pullrefresh.rememberPullRefreshState
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToGroupDetails: () -> Unit,
+    navigateToNewGroup: () -> Unit,
     groupViewModel: GroupViewModel,
     userViewModel: UserViewModel,
 ) {
@@ -77,14 +78,22 @@ fun HomeScreen(
                     )
                     ElevatedButton(
                         onClick = {
-                            groupViewModel.postGroup(
-                                getDefaultGroup()
-                            )
+                                  navigateToNewGroup()
+                            //groupViewModel.postGroup(
+                            //    getDefaultGroup()
+                            //)
                         },
-                        modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(1f).padding(horizontal = mediumPadding + smallPadding, vertical = smallPadding).height(50.dp),
-                        border = BorderStroke(smallPadding/4, MaterialTheme.colorScheme.primary),
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth(1f)
+                            .padding(
+                                horizontal = mediumPadding + smallPadding,
+                                vertical = smallPadding
+                            )
+                            .height(50.dp),
+                        border = BorderStroke(smallPadding / 4, MaterialTheme.colorScheme.primary),
 
-                    ) {
+                        ) {
                         Text(text = "Create Group", style = MaterialTheme.typography.titleMedium)
 //                        Text(text = "Create Group")
                     }

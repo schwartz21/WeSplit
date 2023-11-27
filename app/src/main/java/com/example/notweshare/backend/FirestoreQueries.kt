@@ -2,6 +2,7 @@ package com.example.notweshare.backend
 
 import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
+import com.example.notweshare.models.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
 
@@ -21,6 +22,11 @@ class FirestoreQueries {
             // Find users within the list of user document IDs
             @JvmStatic fun usersWithDocumentIDs(userDocumentIDs: MutableList<String>): Query {
                 return FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath).whereIn(FieldPath.documentId(), userDocumentIDs)
+            }
+            // Post a new user
+            @JvmStatic fun postUser(user: User): Task<Void> {
+                val fbCollection = FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath)
+                return fbCollection.document(user.phoneNumber).set(user)
             }
         }
     }
