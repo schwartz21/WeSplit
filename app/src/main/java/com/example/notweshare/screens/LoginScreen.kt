@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.components.passwordTextFieldCard
-import com.example.notweshare.components.textFieldCard
+import com.example.notweshare.components.TextFieldCard
 
 @Composable
 fun LoginScreen(
@@ -87,7 +87,7 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            phoneNumber = textFieldCard("Phone number", phoneNumber)
+            phoneNumber = TextFieldCard("Phone number", phoneNumber)
             password = passwordTextFieldCard("Password", password)
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
