@@ -108,12 +108,17 @@ fun LoginScreen(
 
             Button(
                 onClick = {
+                    // Set errormessages to "" so that it doesn't show the error message from the previous login attempt
+                    errorMessages = ""
+
+                    // Check if any of the fields are empty
                     if (phoneNumber == "" || password == "") {
                         errorMessages = "Please fill out all fields"
                         return@Button
                     }
+
                     userViewModel.findUserWithDocumentID(phoneNumber) { user ->
-                        if (user.documentID == "g" || user.password != password) {
+                        if (user.documentID.isEmpty() || user.password != password) {
                             errorMessages = "Phone number or Password is incorrect"
                         } else {
                             userViewModel.setTheActiveUser(user)
@@ -121,6 +126,7 @@ fun LoginScreen(
                             navigateToHomeScreen()
                         }
                     }
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()

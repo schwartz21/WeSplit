@@ -87,7 +87,7 @@ fun Navigation() {
 
     Scaffold(
         bottomBar = {
-            if (userViewModel.activeUser.value.documentID != "g") {
+            if (userViewModel.activeUser.value.documentID.isNotEmpty()) {
             BottomAppBar(
                 contentColor = Color.White,
                 modifier = Modifier

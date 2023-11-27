@@ -50,7 +50,7 @@ fun NewGroupScreen(
             return
         }
         userViewModel.findUserWithDocumentID(item){ user ->
-            if (user.documentID != "g") {
+            if (user.documentID.isNotEmpty()) {
                 if (!memberList.contains(item)) {
                     memberList.add(item)
                     addMemberByPhoneNumber = ""

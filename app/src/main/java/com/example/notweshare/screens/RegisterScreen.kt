@@ -108,7 +108,7 @@ fun RegisterScreen(
                     if (password != confirmPassword) {
                         errorMessages = "Passwords do not match"
                         return@Button
-                    } else if (fullName == "" || phoneNumber == "" || email == "" || password == "" || confirmPassword == "") {
+                    } else if (fullName == "" || phoneNumber == "" || email == "" || password == "") {
                         errorMessages = "Please fill in all fields"
                         return@Button
                     } else if (!phoneNumber.matches(Regex("[0-9]+"))) {

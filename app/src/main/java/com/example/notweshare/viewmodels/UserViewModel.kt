@@ -33,7 +33,11 @@ class UserViewModel(): ViewModel() {
         }
     }
 
-    //Find users with document id
+    /**
+     * Find a user with a document ID
+     * @param userDocumentID: The document ID of the user to find
+     * @param callback: A callback function to execute after the user is found. If no user is found with that document id, returns the default user
+     */
     fun findUserWithDocumentID (userDocumentID: String, callback: (User) -> Unit) {
         isLoading.value = true
         viewModelScope.launch {
@@ -41,6 +45,7 @@ class UserViewModel(): ViewModel() {
                 users.clear()
                 users.addAll(foundUsers)
                 isLoading.value = false
+                // To ensure that the callback is executed, even if the user is not found
                 if (users.isEmpty()) { users.add(User()) }
                 callback(users[0])
             }

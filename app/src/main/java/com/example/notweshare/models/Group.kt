@@ -16,7 +16,7 @@ data class Group(
     var createdBy: String = "",
     var createdAt: Date? = Date(),
 
-    var documentID: String = "g",
+    var documentID: String = "",
 ) : Serializable
 
 fun getTotalExpense(group: Group): Float {
