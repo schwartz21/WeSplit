@@ -44,7 +44,6 @@ import com.example.notweshare.components.textFieldCard
 fun LoginScreen(
     navigateToRegister: () -> Unit,
     navigateToHomeScreen: () -> Unit,
-    groupViewModel: GroupViewModel,
     userViewModel: UserViewModel,
 ) {
     val questionText = "Not a user? "
@@ -122,7 +121,6 @@ fun LoginScreen(
                             errorMessages = "Phone number or Password is incorrect"
                         } else {
                             userViewModel.setTheActiveUser(user)
-                            groupViewModel.findGroupsWithMember(phoneNumber)
                             navigateToHomeScreen()
                         }
                     }

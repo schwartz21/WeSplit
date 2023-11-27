@@ -144,17 +144,20 @@ fun Navigation() {
                             )
                         },
                         navigateToHomeScreen = {
+                            // Find groups with the user as a member
+                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
                             navigate(
                                 Screen.HomeScreen.route
                             )
                         },
-                        groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
                 }
                 composable(Screen.RegisterScreen.route) {
                     RegisterScreen(
                         navigateToHomeScreen = {
+                            // Find groups with the user as a member
+                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
                             navigate(
                                 Screen.HomeScreen.route
                             )
@@ -164,7 +167,6 @@ fun Navigation() {
                                 Screen.LoginScreen.route
                             )
                         },
-                        groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
                 }

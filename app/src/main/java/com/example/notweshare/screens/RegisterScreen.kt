@@ -45,7 +45,6 @@ import com.example.notweshare.models.User
 fun RegisterScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToLogin: () -> Unit,
-    groupViewModel: GroupViewModel,
     userViewModel: UserViewModel,
 ) {
     val questionText = "Already a user? "
@@ -120,7 +119,6 @@ fun RegisterScreen(
                             errorMessages = "User already exists"
                         } else {
                             registerNewUser(fullName, phoneNumber, email, password, userViewModel)
-                            groupViewModel.findGroupsWithMember(phoneNumber)
                             navigateToHomeScreen()
                         }
                     }
