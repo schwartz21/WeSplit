@@ -1,6 +1,7 @@
 package com.example.notweshare.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -15,13 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun passwordTextFieldCard(labelValue: String, input: String): String {
-
+    val focusManager = LocalFocusManager.current
     val passwordTextValue = remember {
         mutableStateOf(input)
     }
@@ -44,7 +47,11 @@ fun passwordTextFieldCard(labelValue: String, input: String): String {
             focusedLabelColor = MaterialTheme.colorScheme.onBackground,
         ),
         shape = textFieldShape,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done
+            ),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         value = passwordTextValue.value,
         onValueChange = {
             passwordTextValue.value = it
