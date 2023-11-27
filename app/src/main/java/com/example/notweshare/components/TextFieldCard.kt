@@ -37,9 +37,7 @@ fun TextFieldCard(labelValue: String, input: String): String {
         shape = textFieldShape,
         keyboardOptions = KeyboardOptions.Default,
         value = textValue.value,
-        onValueChange = {
-            textValue.value = it
-        }
+        onValueChange = { textValue.value = it},
     )
     return textValue.value
 }

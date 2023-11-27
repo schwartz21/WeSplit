@@ -16,6 +16,11 @@ import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.launch
 
 class GroupViewModel(): ViewModel() {
+
+    companion object {
+        val groupViewModel = GroupViewModel()
+    }
+
     var listener: ListenerRegistration? = null
     //mutatable state such that Compose can observe it.
     val groups = mutableStateListOf<Group>()
@@ -51,7 +56,7 @@ class GroupViewModel(): ViewModel() {
     }
 
     private fun fetchGroups(queryCondition: Query, callback: (MutableList<Group>) -> Unit) {
-        var groupArray: MutableList<Group> = mutableListOf<Group>()
+        var groupArray: MutableList<Group>
 
         listener = queryCondition.addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(

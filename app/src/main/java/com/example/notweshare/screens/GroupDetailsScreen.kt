@@ -1,5 +1,6 @@
 package com.example.notweshare.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,8 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
 import com.example.notweshare.components.ExpensesCard
 import com.example.notweshare.components.GroupCard
@@ -23,9 +24,8 @@ import com.example.notweshare.components.GroupDetailsMemberCard
 
 @Composable
 fun GroupDetailsScreen(
+    context: Context,
     navigateToNewExpense: () -> Unit,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel,
 ) {
     val group = groupViewModel.selectedGroup.value
 
@@ -35,10 +35,10 @@ fun GroupDetailsScreen(
 
     LazyColumn() {
         item {
-            GroupCard(group, userViewModel = userViewModel, groupViewModel = groupViewModel)
+            GroupCard(group)
         }
         items(items = group.members) { member ->
-            GroupDetailsMemberCard(group, member, returnNameFromId(member, userViewModel))
+            GroupDetailsMemberCard(context, group, member, returnNameFromId(member))
             Spacer(modifier = Modifier.padding(smallPadding))
         }
         item {
@@ -76,7 +76,7 @@ fun GroupDetailsScreen(
     }
 }
 
-private fun returnNameFromId(id: String, userViewModel: UserViewModel): String {
+private fun returnNameFromId(id: String): String {
     var name = "Unknown User"
     userViewModel.users.forEach {
         if (it.documentID == id) {

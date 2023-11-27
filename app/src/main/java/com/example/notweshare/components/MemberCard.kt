@@ -1,6 +1,7 @@
 package com.example.notweshare.components
 
 import androidx.compose.foundation.clickable
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -22,15 +23,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.compose.md_success
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
+import com.example.notweshare.notification.NotificationService
+import org.koin.core.component.getScopeName
 import java.text.DecimalFormat
 import kotlin.math.abs
 
 @Composable
-fun GroupDetailsMemberCard(group: Group, member: String, memberName: String) {
+fun GroupDetailsMemberCard(context: Context, group: Group, member: String, memberName: String) {
 
+    val userViewModel = userViewModel
+    val notification = NotificationService(context)
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val smallPadding = dimensionResource(R.dimen.padding_small)
@@ -41,13 +47,13 @@ fun GroupDetailsMemberCard(group: Group, member: String, memberName: String) {
 
     val paymentColor = when {
         userOwes -> MaterialTheme.colorScheme.error
-        !userOwes -> md_success
+        !userOwes -> MaterialTheme.colorScheme.surfaceVariant
         else -> MaterialTheme.colorScheme.onSurface
     }
 
     Surface(
         modifier = Modifier.padding(horizontal = mediumPadding),
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(mediumPadding),
         shadowElevation = 4.dp,
     ) {

@@ -34,7 +34,7 @@ fun GradientCard(
 
     Surface(
         modifier = Modifier.padding(mediumPadding),
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(mediumPadding),
         shadowElevation = 4.dp,
         onClick = onClickFunction

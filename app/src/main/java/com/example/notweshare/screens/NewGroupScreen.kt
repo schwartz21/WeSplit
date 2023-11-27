@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,16 +18,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
+import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.Group
 
 @Composable
 fun NewGroupScreen(
     navigateToGroups: () -> Unit,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel
 ) {
     var groupName by remember { mutableStateOf("") }
     var addMemberByPhoneNumber by remember { mutableStateOf("") }
@@ -50,7 +48,7 @@ fun NewGroupScreen(
             return
         }
         userViewModel.findUserWithDocumentID(item){ user ->
-            if (user.documentID != "g") {
+            if (user.documentID.isNotEmpty()) {
                 if (!memberList.contains(item)) {
                     memberList.add(item)
                     addMemberByPhoneNumber = ""
@@ -66,40 +64,31 @@ fun NewGroupScreen(
 
     Column(
         modifier = Modifier
-            .padding(largePadding)
+            .padding(mediumPadding)
             .fillMaxWidth(),
     ) {
         Text(
             text = "Create a new group",
             style = MaterialTheme.typography.headlineLarge,
         )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = groupName,
-            onValueChange = { groupName = it },
-            label = { Text(text = "Group name") },
-        )
         Spacer(modifier = Modifier.padding(smallPadding))
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = addMemberByPhoneNumber,
-            onValueChange = { value ->
-                addMemberByPhoneNumber = value.filter { it.isDigit() }
-            },
-            label = { Text(text = "Add member by phone number") },
-        )
+        groupName = TextFieldCard(labelValue = "Group name", input = groupName)
+        Spacer(modifier = Modifier.padding(smallPadding))
+        addMemberByPhoneNumber = TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber)
         if (errorAddGroupMemberMessage.isNotEmpty()) {
             Text(
                 text = errorAddGroupMemberMessage,
                 color = MaterialTheme.colorScheme.error,
             )
         }
+        Spacer(modifier = Modifier.padding(smallPadding))
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 if (validatePhoneNumber(addMemberByPhoneNumber)) {
                     addItem(addMemberByPhoneNumber)
                 } else {
+                    errorAddGroupMemberMessage = "Invalid phone number."
                     return@Button
                 }
             }) {
@@ -128,8 +117,6 @@ fun NewGroupScreen(
                     createGroup(
                         groupName,
                         memberList.toMutableList(),
-                        groupViewModel,
-                        userViewModel
                     )
                     navigateToGroups()
                 } else {
@@ -153,8 +140,6 @@ fun NewGroupScreen(
 private fun createGroup(
     groupName: String,
     memberList: MutableList<String>,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel
 ) {
     val newMemberList = memberList
     newMemberList.add(userViewModel.activeUser.value.phoneNumber)
@@ -169,11 +154,18 @@ private fun validatePhoneNumber(phoneNumber: String): Boolean {
     return phoneNumber.isNotEmpty()
 }
 
+private fun vaidatePhoneNumberIsNumbers(phoneNumber: String): Boolean {
+    return phoneNumber.matches(Regex("[0-9]+"))
+}
+
 private fun validateGroupName(groupName: String): Boolean {
     return groupName.isNotEmpty()
 }
 
 private fun validateGroup(groupName: String, memberList: List<String>): String {
+    if (!vaidatePhoneNumberIsNumbers(groupName)) {
+        return "Phone number can only be numbers."
+    }
     if (!validateGroupName(groupName)) {
         return "Invalid group name."
     }
