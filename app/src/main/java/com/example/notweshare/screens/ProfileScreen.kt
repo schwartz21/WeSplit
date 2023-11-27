@@ -63,9 +63,9 @@ fun ProfileScreen(userViewModel: UserViewModel) {
                 .fillMaxSize()
                 .padding(largePadding)
         ) {
-            ProfileHeader()
+            ProfileHeader(userViewModel = userViewModel)
             Spacer(modifier = Modifier.height(16.dp))
-            ProfileDetails()
+            ProfileDetails(userViewModel = userViewModel)
             Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = {
@@ -88,14 +88,13 @@ fun ProfileScreen(userViewModel: UserViewModel) {
 }
 
 @Composable
-fun ProfileHeader() {
+fun ProfileHeader(userViewModel: UserViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val userViewModel = UserViewModel()
 
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
@@ -117,8 +116,7 @@ fun ProfileHeader() {
 }
 
 @Composable
-fun ProfileDetails() {
-    val userViewModel = UserViewModel()
+fun ProfileDetails(userViewModel: UserViewModel) {
     var phoneNumber by remember { mutableStateOf(userViewModel.activeUser.value.phoneNumber) }
     var email by remember { mutableStateOf(userViewModel.activeUser.value.email) }
 
