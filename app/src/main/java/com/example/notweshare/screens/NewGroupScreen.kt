@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
+import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.Group
 
 @Composable
@@ -73,33 +74,24 @@ fun NewGroupScreen(
             text = "Create a new group",
             style = MaterialTheme.typography.headlineLarge,
         )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = groupName,
-            onValueChange = { groupName = it },
-            label = { Text(text = "Group name") },
-        )
         Spacer(modifier = Modifier.padding(smallPadding))
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = addMemberByPhoneNumber,
-            onValueChange = { value ->
-                addMemberByPhoneNumber = value.filter { it.isDigit() }
-            },
-            label = { Text(text = "Add member by phone number") },
-        )
+        TextFieldCard(labelValue = "Group name", input = groupName)
+        Spacer(modifier = Modifier.padding(smallPadding))
+        addMemberByPhoneNumber = TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber)
         if (errorAddGroupMemberMessage.isNotEmpty()) {
             Text(
                 text = errorAddGroupMemberMessage,
                 color = MaterialTheme.colorScheme.error,
             )
         }
+        Spacer(modifier = Modifier.padding(smallPadding))
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 if (validatePhoneNumber(addMemberByPhoneNumber)) {
                     addItem(addMemberByPhoneNumber)
                 } else {
+                    errorAddGroupMemberMessage = "Invalid phone number."
                     return@Button
                 }
             }) {
