@@ -39,7 +39,6 @@ fun GroupDetailsScreen(
         }
         items(items = group.members) { member ->
             GroupDetailsMemberCard(context, group, member, returnNameFromId(member))
-            //GroupDetailsMemberCard(context,group, member, returnNameFromId(member, userViewModel))
             Spacer(modifier = Modifier.padding(smallPadding))
         }
         item {

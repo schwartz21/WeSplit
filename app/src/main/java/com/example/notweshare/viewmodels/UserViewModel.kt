@@ -67,6 +67,12 @@ class UserViewModel(): ViewModel() {
         }
     }
 
+    fun editUser(user: User) {
+        viewModelScope.launch {
+            FirestoreQueries.UserQueries.updateUser(user)
+        }
+    }
+
     private fun fetchUsers(queryCondition: Query, callback: (MutableList<User>) -> Unit) {
         var userArray: MutableList<User>
 

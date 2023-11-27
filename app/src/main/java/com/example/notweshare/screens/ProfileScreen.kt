@@ -68,14 +68,7 @@ fun ProfileScreen(userViewModel: UserViewModel) {
                     Log.d(TAG, userViewModel.activeUser.value.email)
 
                     // Update userDocument in Firestore
-                    val userRef = FirebaseFirestore.getInstance().collection("users").document(userViewModel.activeUser.value.phoneNumber)
-
-                    userRef
-                        .update("phoneNumber", userViewModel.activeUser.value.phoneNumber, "email", userViewModel.activeUser.value.email)
-                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
-                        .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
-
-//                    FirestoreQueries.UserQueries.updateUser(userViewModel.activeUser.value)
+                    userViewModel.editUser(userViewModel.activeUser.value)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
