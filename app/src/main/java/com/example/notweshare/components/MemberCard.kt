@@ -1,5 +1,6 @@
 package com.example.notweshare.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -54,7 +54,7 @@ fun GroupDetailsMemberCard(group: Group, member: String, memberName: String) {
             modifier = Modifier
                 .height(IntrinsicSize.Min)
                 .fillMaxSize()
-                .padding(smallPadding),
+                .padding(horizontal = mediumPadding, vertical = smallPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
@@ -68,22 +68,20 @@ fun GroupDetailsMemberCard(group: Group, member: String, memberName: String) {
                 modifier = Modifier.fillMaxWidth(1f),
             ) {
                 Text(
-                    text = absContribution.toString(),
+                    text = "$absContribution kr.",
                     color = paymentColor,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(end = smallPadding)
                 )
                 if (userOwes)
-                    IconButton(
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.notification),
-                            contentDescription = "Pay",
-                            tint = paymentColor,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(id = R.drawable.notification),
+                        contentDescription = "Pay",
+                        tint = paymentColor,
+                        modifier = Modifier
+                            .size(36.dp)
+                            .padding(start = smallPadding/2)
+                            .clickable { /*TODO*/ }
+                    )
             }
         }
     }
