@@ -71,8 +71,8 @@ fun Navigation() {
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(
-        TabItem("Home", Screen.HomeScreen.route, R.drawable.home),
-        TabItem("Groups", Screen.NewGroupScreen.route, R.drawable.group),
+        TabItem("Groups", Screen.HomeScreen.route, R.drawable.group),
+        TabItem("Create Group", Screen.NewGroupScreen.route, R.drawable.square_add),
         TabItem("Profile", Screen.ProfileScreen.route, R.drawable.profile)
     )
 
@@ -94,7 +94,6 @@ fun Navigation() {
                     .fillMaxWidth()
                     .height(tabBarHeight)
             ) {
-
                     tabs.forEachIndexed { index, tab ->
                         val tint =
                             ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
