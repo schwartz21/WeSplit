@@ -89,6 +89,7 @@ fun Navigation() {
         bottomBar = {
             if (userViewModel.activeUser.value.documentID != "g") {
                 BottomAppBar(
+                    containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     contentColor = Color.White,
                     modifier = Modifier
                         .fillMaxWidth()

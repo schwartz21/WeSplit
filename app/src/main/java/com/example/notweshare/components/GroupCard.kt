@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.compose.AppTheme
-import com.example.compose.md_success
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
@@ -79,7 +78,7 @@ fun DoubleStack(
 
     val paymentColor = when {
         owed -> MaterialTheme.colorScheme.error
-        positiveIsGreen && !owed -> md_success
+        positiveIsGreen && !owed -> MaterialTheme.colorScheme.surfaceVariant
         else -> MaterialTheme.colorScheme.onSurface
     }
 
