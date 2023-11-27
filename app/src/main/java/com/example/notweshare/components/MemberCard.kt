@@ -81,7 +81,7 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
                 )
                 if (userOwes)
                     IconButton(
-                        onClick = { notification.showNotification(userViewModel.activeUser.get, userContribution.toString(), group.name) }
+                        onClick = { notification.showNotification(userViewModel.activeUser.value.name, userContribution.toString(), group.name) }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.notification),
