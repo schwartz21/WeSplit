@@ -15,16 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,9 +38,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
-import com.example.notweshare.components.textFieldCard
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.notweshare.components.TextFieldCard
 
 @Composable
 fun ProfileScreen(userViewModel: UserViewModel) {
@@ -171,7 +167,7 @@ fun ProfileItem(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
-            textFieldCard(labelValue = title, input = description)
+            TextFieldCard(labelValue = title, input = description)
         }
     }
     return phoneNumber
