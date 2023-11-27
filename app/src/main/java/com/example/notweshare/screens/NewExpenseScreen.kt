@@ -208,7 +208,7 @@ private fun validateExpense(
     }
     // Check if expense amount is a float with regex
     if (!expenseAmount.matches(Regex("[0-9]+(\\.[0-9]+)?"))) {
-        return "Please fill in a valid expense amount"
+        return "Expense amount is not a valid number"
     }
     if (selectedUsers.isEmpty()) {
         return "Please select at least one group member"
