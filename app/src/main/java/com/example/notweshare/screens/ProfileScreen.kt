@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
@@ -24,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,25 +40,21 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
-import com.example.notweshare.components.GradientCard
-//import com.example.notweshare.components.TextFieldCard
+import com.example.notweshare.components.textFieldCard
+import com.example.notweshare.components.textFieldShape
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(userViewModel: UserViewModel) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(MaterialTheme.colorScheme.primary)
 
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val largePadding = dimensionResource(R.dimen.padding_large)
 
-
     Column(modifier = Modifier.fillMaxSize()) {
-//        GradientCard(text = "John Doe") {
-//            Text(text = "Phone 1")
-//            Text(text = "Something else")
-//        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -79,7 +76,6 @@ fun ProfileScreen() {
             }
         }
     }
-
 }
 
 @Composable
@@ -90,6 +86,8 @@ fun ProfileHeader() {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val userViewModel = UserViewModel()
+
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = null,
@@ -102,7 +100,7 @@ fun ProfileHeader() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "John Doe",
+            text = userViewModel.activeUser.value.name,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
@@ -111,8 +109,9 @@ fun ProfileHeader() {
 
 @Composable
 fun ProfileDetails() {
-    var phoneNumber by remember { mutableStateOf("+1 234 567 890") }
-    var email by remember { mutableStateOf("john.doe@example.com") }
+    val userViewModel = UserViewModel()
+    var phoneNumber by remember { mutableStateOf(userViewModel.activeUser.value.phoneNumber) }
+    var email by remember { mutableStateOf(userViewModel.activeUser.value.email) }
 
     Column {
         phoneNumber = ProfileItem(
@@ -175,11 +174,19 @@ fun ProfileItem(
             OutlinedTextField(
                 value = description,
                 onValueChange = onValueChange,
-                modifier = Modifier.width(screenWidth / 1.6f).border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
+                modifier = Modifier.width(screenWidth / 1.7f),
                 textStyle = MaterialTheme.typography.bodyMedium,
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(50.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.onBackground,
+                    cursorColor = MaterialTheme.colorScheme.onBackground,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                ),
+                keyboardOptions = KeyboardOptions.Default,
             )
-//            phoneNumber = TextFieldCard(labelValue =title , input =description )
         }
     }
     return phoneNumber

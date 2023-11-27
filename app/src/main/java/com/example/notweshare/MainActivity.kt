@@ -195,7 +195,9 @@ fun Navigation() {
                         userViewModel = userViewModel
                     )
                 }
-                composable(Screen.ProfileScreen.route) { ProfileScreen() }
+                composable(Screen.ProfileScreen.route) { ProfileScreen(
+                    userViewModel = userViewModel
+                ) }
                 composable(Screen.GroupDetailsScreen.route) {
                     GroupDetailsScreen(
                         navigateToNewExpense = {
