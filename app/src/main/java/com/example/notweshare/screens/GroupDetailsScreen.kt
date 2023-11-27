@@ -39,10 +39,6 @@ fun GroupDetailsScreen(
         }
         items(items = group.members) { member ->
             GroupDetailsMemberCard(context, group, member, returnNameFromId(member))
-<<<<<<< HEAD
-=======
-            //GroupDetailsMemberCard(context,group, member, returnNameFromId(member, userViewModel))
->>>>>>> ca992e84d75e20e1c143ba62aa2c143d3f239156
             Spacer(modifier = Modifier.padding(smallPadding))
         }
         item {
