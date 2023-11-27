@@ -103,18 +103,17 @@ fun LoginScreen(
                 true -> {
                     Text(text = "Loading...", color = MaterialTheme.colorScheme.onBackground)
                 }
-
-                false -> {
-                    Text(text = "Not loading", color = MaterialTheme.colorScheme.onBackground)
-                }
+                false -> {}
             }
 
             Button(
                 onClick = {
+                    if (phoneNumber == "" || password == "") {
+                        errorMessages = "Please fill out all fields"
+                        return@Button
+                    }
                     userViewModel.findUserWithDocumentID(phoneNumber) { user ->
-                        if (phoneNumber == "" || password == "") {
-                            errorMessages = "Please fill out all fields"
-                        } else if (user.documentID == "g" || user.password != password) {
+                        if (user.documentID == "g" || user.password != password) {
                             errorMessages = "Phone number or Password is incorrect"
                         } else {
                             userViewModel.setTheActiveUser(user)
