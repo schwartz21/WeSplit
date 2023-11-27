@@ -92,25 +92,9 @@ fun NewExpenseScreen(
         }
         item {
             //add expense name and expense amount
-            expenseName = TextFieldCard(labelValue = "Expense name", input = expenseName, onValueChange = { expenseName = it })
-//            OutlinedTextField(
-//                modifier = Modifier.fillMaxWidth(),
-//                shape = RoundedCornerShape(mediumPadding),
-//                value = expenseName,
-//                onValueChange = { expenseName = it },
-//                label = { Text(text = "Expense name") },
-//            )
+            expenseName = TextFieldCard(labelValue = "Expense name", input = expenseName)
             Spacer(modifier = Modifier.padding(smallPadding))
-            expenseAmount = TextFieldCard(labelValue = "Expense amount", input = expenseAmount, onValueChange = { value -> expenseAmount = value.filter { it.isDigit() }})
-//            OutlinedTextField(
-//                modifier = Modifier.fillMaxWidth(),
-//                shape = RoundedCornerShape(mediumPadding),
-//                value = expenseAmount,
-//                onValueChange = { value ->
-//                    expenseAmount = value.filter { it.isDigit() }
-//                },
-//                label = { Text(text = "Expense amount") },
-//            )
+            expenseAmount = TextFieldCard(labelValue = "Expense amount", input = expenseAmount)
             Spacer(modifier = Modifier.padding(smallPadding))
         }
         item {
@@ -221,6 +205,10 @@ private fun validateExpense(
     }
     if (expenseAmount == "") {
         return "Please fill in expense amount"
+    }
+    // Check if expense amount is a float with regex
+    if (!expenseAmount.matches(Regex("[0-9]+(\\.[0-9]+)?"))) {
+        return "Please fill in a valid expense amount"
     }
     if (selectedUsers.isEmpty()) {
         return "Please select at least one group member"

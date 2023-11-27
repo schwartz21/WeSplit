@@ -72,9 +72,9 @@ fun NewGroupScreen(
             style = MaterialTheme.typography.headlineLarge,
         )
         Spacer(modifier = Modifier.padding(smallPadding))
-        groupName = TextFieldCard(labelValue = "Group name", input = groupName, onValueChange = { groupName = it })
+        groupName = TextFieldCard(labelValue = "Group name", input = groupName)
         Spacer(modifier = Modifier.padding(smallPadding))
-        addMemberByPhoneNumber = TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber, onValueChange = { value -> addMemberByPhoneNumber = value.filter { it.isDigit() }})
+        addMemberByPhoneNumber = TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber)
         if (errorAddGroupMemberMessage.isNotEmpty()) {
             Text(
                 text = errorAddGroupMemberMessage,
@@ -154,11 +154,18 @@ private fun validatePhoneNumber(phoneNumber: String): Boolean {
     return phoneNumber.isNotEmpty()
 }
 
+private fun vaidatePhoneNumberIsNumbers(phoneNumber: String): Boolean {
+    return phoneNumber.matches(Regex("[0-9]+"))
+}
+
 private fun validateGroupName(groupName: String): Boolean {
     return groupName.isNotEmpty()
 }
 
 private fun validateGroup(groupName: String, memberList: List<String>): String {
+    if (!vaidatePhoneNumberIsNumbers(groupName)) {
+        return "Phone number can only be numbers."
+    }
     if (!validateGroupName(groupName)) {
         return "Invalid group name."
     }
