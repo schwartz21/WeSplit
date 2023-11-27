@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -170,9 +171,9 @@ fun ProfileItem(
                 onValueChange = onValueChange,
                 modifier = Modifier.width(screenWidth / 2),
                 textStyle = MaterialTheme.typography.bodyMedium,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
+                colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                 )
             )
         }

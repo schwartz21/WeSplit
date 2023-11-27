@@ -2,7 +2,9 @@ package com.example.notweshare.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
+import com.example.notweshare.components.GradientCard
 import com.example.notweshare.components.GroupCard
 import eu.bambooapps.material3.pullrefresh.PullRefreshIndicator
 import eu.bambooapps.material3.pullrefresh.pullRefresh
@@ -30,7 +34,7 @@ fun HomeScreen(
     val isRefreshing by remember { mutableStateOf(false) }
 
     val state = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {
-        groupViewModel.findGroupsWithMember("test")
+        groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
     })
 
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -67,7 +71,8 @@ fun HomeScreen(
         }
 
         true -> {
-            Text(text = "is loading")
+            GradientCard(text = "Loading") {
+            }
         }
     }
 }

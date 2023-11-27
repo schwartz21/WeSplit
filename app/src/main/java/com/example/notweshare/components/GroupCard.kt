@@ -13,9 +13,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.compose.AppTheme
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
@@ -36,10 +35,10 @@ fun GroupCard(
     GradientCard(
         onClickFunction = {
             groupViewModel.setTheSelectedGroup(group) // Set selected group to be the group that was clicked
-            userViewModel.findUsersWithDocumentIDs(group.members) {} // Update list of users to be the users from the group
+            userViewModel.findUsersWithDocumentIDs(group.members) // Update list of users to be the users from the group
             onNavigateToGroupDetails()
         },
-        text = group.name ?: "unknown group name"
+        text = group.name
     ) {
         DoubleStack(
             topItem = DecimalFormat("#.##").format(getTotalExpense(group)),

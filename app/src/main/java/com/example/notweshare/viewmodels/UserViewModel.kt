@@ -31,7 +31,7 @@ class UserViewModel(): ViewModel() {
     }
 
     // Find users within a list of user document IDs
-    fun findUsersWithDocumentIDs (userDocumentIDs: MutableList<String>, callback: (MutableList<User>) -> Unit) {
+    fun findUsersWithDocumentIDs (userDocumentIDs: MutableList<String>) {
         isLoading.value = true
         viewModelScope.launch {
             fetchUsers(FirestoreQueries.UserQueries.usersWithDocumentIDs(userDocumentIDs)) { foundUsers ->
@@ -68,7 +68,7 @@ class UserViewModel(): ViewModel() {
     }
 
     private fun fetchUsers(queryCondition: Query, callback: (MutableList<User>) -> Unit) {
-        var userArray: MutableList<User> = mutableListOf<User>()
+        var userArray: MutableList<User>
 
         listener = queryCondition.addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(

@@ -56,7 +56,7 @@ class GroupViewModel(): ViewModel() {
     }
 
     private fun fetchGroups(queryCondition: Query, callback: (MutableList<Group>) -> Unit) {
-        var groupArray: MutableList<Group> = mutableListOf<Group>()
+        var groupArray: MutableList<Group>
 
         listener = queryCondition.addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
