@@ -1,9 +1,7 @@
 package com.example.notweshare.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -52,6 +49,7 @@ fun RegisterScreen(
 ) {
     val questionText = "Already a user? "
     val clickableText = "Login"
+
     val focusManager = LocalFocusManager.current
 
     var fullName by remember { mutableStateOf("") }
@@ -101,19 +99,8 @@ fun RegisterScreen(
             email = TextFieldCard("Email...", "")
             password = passwordTextFieldCard("Password...", "")
             confirmPassword = passwordTextFieldCard("Confirm password...", "")
-            Spacer(modifier = Modifier.height(1.dp))
-            ClickableText(
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center
-                ),
-                text = annotatedString, onClick = { offset ->
-                    annotatedString.getStringAnnotations(offset, offset)
-                        .firstOrNull()?.also { navigateToLogin() }
-                })
-
             Spacer(modifier = Modifier.height(10.dp))
+
             val minHeight = 48.dp
 
             Button(
@@ -150,6 +137,18 @@ fun RegisterScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
+
+            Spacer(modifier = Modifier.height(3.dp))
+            ClickableText(
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center
+                ),
+                text = annotatedString, onClick = { offset ->
+                    annotatedString.getStringAnnotations(offset, offset)
+                        .firstOrNull()?.also { navigateToLogin() }
+                })
 
             Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
         }

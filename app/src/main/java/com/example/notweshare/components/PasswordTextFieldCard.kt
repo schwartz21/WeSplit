@@ -77,5 +77,6 @@ fun passwordTextFieldCard(labelValue: String, input: String): String {
             PasswordVisualTransformation()
         }
     )
+
     return passwordTextValue.value
 }
