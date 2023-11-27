@@ -72,9 +72,9 @@ fun NewGroupScreen(
             style = MaterialTheme.typography.headlineLarge,
         )
         Spacer(modifier = Modifier.padding(smallPadding))
-        groupName = TextFieldCard(labelValue = "Group name", input = groupName)
+        groupName = TextFieldCard(labelValue = "Group name", input = groupName, onValueChange = { groupName = it })
         Spacer(modifier = Modifier.padding(smallPadding))
-        addMemberByPhoneNumber = TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber)
+        addMemberByPhoneNumber = TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber, onValueChange = { value -> addMemberByPhoneNumber = value.filter { it.isDigit() }})
         if (errorAddGroupMemberMessage.isNotEmpty()) {
             Text(
                 text = errorAddGroupMemberMessage,

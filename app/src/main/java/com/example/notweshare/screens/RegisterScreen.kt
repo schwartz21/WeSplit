@@ -86,11 +86,11 @@ fun RegisterScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            fullName = TextFieldCard("Full name...", "")
-            phoneNumber = TextFieldCard("Phone number...", "")
-            email = TextFieldCard("Email...", "")
-            password = passwordTextFieldCard("Password...", "")
-            confirmPassword = passwordTextFieldCard("Confirm password...", "")
+            fullName = TextFieldCard("Full name...", "", onValueChange = { fullName = it })
+            phoneNumber = TextFieldCard("Phone number...", "", onValueChange = { value -> phoneNumber = value.filter { it.isDigit() }})
+            email = TextFieldCard("Email...", "", onValueChange = { email = it })
+            password = passwordTextFieldCard("Password...", "", onValueChange = { password = it })
+            confirmPassword = passwordTextFieldCard("Confirm password...", "", onValueChange = { confirmPassword = it })
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)

@@ -83,8 +83,8 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            phoneNumber = TextFieldCard("Phone number", phoneNumber)
-            password = passwordTextFieldCard("Password", password)
+            phoneNumber = TextFieldCard("Phone number", phoneNumber, onValueChange = { value -> phoneNumber = value.filter { it.isDigit() }})
+            password = passwordTextFieldCard("Password", password, onValueChange = { password = it })
             Spacer(modifier = Modifier.height(1.dp))
             ClickableText(text = annotatedString, onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)

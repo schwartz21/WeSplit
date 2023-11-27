@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 
 val textFieldShape = RoundedCornerShape(16.dp)
 @Composable
-fun TextFieldCard(labelValue: String, input: String): String {
+fun TextFieldCard(labelValue: String, input: String, onValueChange: (String) -> Unit): String {
     val textValue = remember {
         mutableStateOf(input)
     }
@@ -37,9 +37,7 @@ fun TextFieldCard(labelValue: String, input: String): String {
         shape = textFieldShape,
         keyboardOptions = KeyboardOptions.Default,
         value = textValue.value,
-        onValueChange = {
-            textValue.value = it
-        }
+        onValueChange = onValueChange
     )
     return textValue.value
 }

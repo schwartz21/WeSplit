@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
+import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.Expense
 import com.example.notweshare.models.ExpenseMember
 import com.example.notweshare.models.User
@@ -91,23 +92,25 @@ fun NewExpenseScreen(
         }
         item {
             //add expense name and expense amount
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(mediumPadding),
-                value = expenseName,
-                onValueChange = { expenseName = it },
-                label = { Text(text = "Expense name") },
-            )
+            expenseName = TextFieldCard(labelValue = "Expense name", input = expenseName, onValueChange = { expenseName = it })
+//            OutlinedTextField(
+//                modifier = Modifier.fillMaxWidth(),
+//                shape = RoundedCornerShape(mediumPadding),
+//                value = expenseName,
+//                onValueChange = { expenseName = it },
+//                label = { Text(text = "Expense name") },
+//            )
             Spacer(modifier = Modifier.padding(smallPadding))
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(mediumPadding),
-                value = expenseAmount,
-                onValueChange = { value ->
-                    expenseAmount = value.filter { it.isDigit() }
-                },
-                label = { Text(text = "Expense amount") },
-            )
+            expenseAmount = TextFieldCard(labelValue = "Expense amount", input = expenseAmount, onValueChange = { value -> expenseAmount = value.filter { it.isDigit() }})
+//            OutlinedTextField(
+//                modifier = Modifier.fillMaxWidth(),
+//                shape = RoundedCornerShape(mediumPadding),
+//                value = expenseAmount,
+//                onValueChange = { value ->
+//                    expenseAmount = value.filter { it.isDigit() }
+//                },
+//                label = { Text(text = "Expense amount") },
+//            )
             Spacer(modifier = Modifier.padding(smallPadding))
         }
         item {

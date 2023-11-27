@@ -20,7 +20,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun passwordTextFieldCard(labelValue: String, input: String): String {
+fun passwordTextFieldCard(labelValue: String, input: String, onValueChange: (String) -> Unit): String {
 
     val passwordTextValue = remember {
         mutableStateOf(input)
@@ -46,9 +46,7 @@ fun passwordTextFieldCard(labelValue: String, input: String): String {
         shape = textFieldShape,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         value = passwordTextValue.value,
-        onValueChange = {
-            passwordTextValue.value = it
-        },
+        onValueChange = { passwordTextValue.value = it },
         trailingIcon = {
             val iconImage = if (passwordVisibility.value) {
                 Icons.Filled.Visibility
