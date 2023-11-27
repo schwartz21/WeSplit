@@ -11,7 +11,6 @@ import com.example.notweshare.MainActivity
 
 class NotificationService (private val context: Context) {
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
     fun showNotification(counter: Int) {
         val activityIntent = Intent(context, MainActivity::class.java)
         val activityPendingIntent = PendingIntent.getActivity(

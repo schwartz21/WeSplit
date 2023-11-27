@@ -9,3 +9,6 @@ class NotificationReceiver : BroadcastReceiver() {
         service.showNotification(++Counter.value)
     }
 }
+object Counter {
+    var value = 0
+}
