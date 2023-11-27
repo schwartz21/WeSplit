@@ -75,7 +75,7 @@ fun NewGroupScreen(
             style = MaterialTheme.typography.headlineLarge,
         )
         Spacer(modifier = Modifier.padding(smallPadding))
-        TextFieldCard(labelValue = "Group name", input = groupName)
+        groupName = TextFieldCard(labelValue = "Group name", input = groupName)
         Spacer(modifier = Modifier.padding(smallPadding))
         addMemberByPhoneNumber = TextFieldCard(labelValue = "Add member by phone number", input = addMemberByPhoneNumber)
         if (errorAddGroupMemberMessage.isNotEmpty()) {
