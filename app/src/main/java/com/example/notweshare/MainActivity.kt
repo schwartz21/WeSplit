@@ -35,8 +35,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.models.TabItem
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewExpenseScreen
@@ -47,6 +47,7 @@ import com.example.notweshare.screens.LoginScreen
 import com.example.notweshare.screens.RegisterScreen
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -66,8 +67,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Navigation() {
-    val groupViewModel = GroupViewModel()
-    val userViewModel = UserViewModel()
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(
@@ -87,8 +86,9 @@ fun Navigation() {
 
     Scaffold(
         bottomBar = {
-            if (userViewModel.activeUser.value.documentID != "g") {
+            if (userViewModel.activeUser.value.documentID.isNotEmpty()) {
                 BottomAppBar(
+                    containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     contentColor = Color.White,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -143,17 +143,19 @@ fun Navigation() {
                             )
                         },
                         navigateToHomeScreen = {
+                            // Find groups with the user as a member
+                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
                             navigate(
                                 Screen.HomeScreen.route
                             )
                         },
-                        groupViewModel = groupViewModel,
-                        userViewModel = userViewModel
                     )
                 }
                 composable(Screen.RegisterScreen.route) {
                     RegisterScreen(
                         navigateToHomeScreen = {
+                            // Find groups with the user as a member
+                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
                             navigate(
                                 Screen.HomeScreen.route
                             )
@@ -163,8 +165,6 @@ fun Navigation() {
                                 Screen.LoginScreen.route
                             )
                         },
-                        groupViewModel = groupViewModel,
-                        userViewModel = userViewModel
                     )
                 }
                 composable(Screen.HomeScreen.route) {
@@ -174,13 +174,6 @@ fun Navigation() {
                                 Screen.GroupDetailsScreen.route
                             )
                         },
-                        navigateToNewGroup = {
-                            navigate(
-                                Screen.NewGroupScreen.route
-                            )
-                        },
-                        groupViewModel = groupViewModel,
-                        userViewModel = userViewModel
                     )
                 }
                 composable(Screen.NewGroupScreen.route) {
@@ -190,8 +183,6 @@ fun Navigation() {
                                 Screen.HomeScreen.route
                             )
                         },
-                        groupViewModel = groupViewModel,
-                        userViewModel = userViewModel
                     )
                 }
                 composable(Screen.ProfileScreen.route) { ProfileScreen(
@@ -204,8 +195,6 @@ fun Navigation() {
                                 Screen.NewExpenseScreen.route
                             )
                         },
-                        groupViewModel = groupViewModel,
-                        userViewModel = userViewModel
                     )
                 }
                 composable(Screen.NewExpenseScreen.route) {
@@ -213,8 +202,6 @@ fun Navigation() {
                         navigateUp = {
                             navigateUp()
                         },
-                        groupViewModel = groupViewModel,
-                        userViewModel = userViewModel
                     )
                 }
             }
