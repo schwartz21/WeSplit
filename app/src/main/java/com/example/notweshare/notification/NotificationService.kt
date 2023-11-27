@@ -17,12 +17,14 @@ class NotificationService (private val context: Context) {
             context,
             1,
             activityIntent,
+            //flag to control version
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
         val incrementIntent = PendingIntent.getBroadcast(
             context,
             2,
             Intent(context, NotificationReceiver::class.java),
+            //flag to control version
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
         val notification = NotificationCompat.Builder(context, COUNTER_CHANNEL_ID)
@@ -39,6 +41,8 @@ class NotificationService (private val context: Context) {
 
         notificationManager.notify(1, notification)
     }
+
+
 
     companion object {
         const val COUNTER_CHANNEL_ID = "counter_channel"
