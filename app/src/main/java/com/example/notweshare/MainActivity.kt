@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.exampleapplication.routes.Screen
+import com.example.notweshare.notification.NotificationService
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.ProfileScreen
@@ -28,11 +29,14 @@ import com.example.notweshare.ui.theme.NotWeShareTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val noti = NotificationService(applicationContext)
         setContent {
             NotWeShareTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Navigation("for the Android 2")
+                }
+                Button(onClick = { noti.showNotification() }) {
                 }
             }
         }
