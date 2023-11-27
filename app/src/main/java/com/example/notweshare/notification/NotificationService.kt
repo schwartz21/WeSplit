@@ -12,7 +12,7 @@ import com.example.notweshare.MainActivity
 
 class NotificationService (private val context: Context) {
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    fun showNotification() {
+    fun showNotification(name: String, amountOfMoneyOwed: String, groupName: String) {
 
         val activityIntent = Intent(context, MainActivity::class.java)
 
@@ -23,16 +23,10 @@ class NotificationService (private val context: Context) {
             //flag to control version
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
-        val incrementIntent = PendingIntent.getBroadcast(
-            context,
-            2,
-            Intent(context, NotificationReceiver::class.java),
-            //flag to control version
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-        )
+
         val dismissIntent = PendingIntent.getBroadcast(
             context,
-            3,  // Use a unique request code
+            1,  // Use a unique request code
             Intent(context, NotificationDismissReceiver::class.java),
             // flag to control version
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
@@ -40,8 +34,8 @@ class NotificationService (private val context: Context) {
 
         val notification = NotificationCompat.Builder(context, COUNTER_CHANNEL_ID)
             .setSmallIcon(R.drawable.baseline_airplanemode_active_24)
-            .setContentTitle("Money Debt")
-            .setContentText("Spent to much dough?")
+            .setContentTitle("$groupName")
+            .setContentText("you owe $amountOfMoneyOwed to $name")
             .setContentIntent(activityPendingIntent)
             .addAction(R.drawable.baseline_airplanemode_active_24, "DISMISS", dismissIntent)  // Add dismiss action
             .build()

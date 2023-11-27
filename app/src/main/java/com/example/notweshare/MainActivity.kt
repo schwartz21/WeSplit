@@ -43,7 +43,6 @@ import com.example.compose.AppTheme
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.models.TabItem
-import com.example.exampleapplication.routes.Screen
 import com.example.notweshare.notification.NotificationService
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewExpenseScreen
@@ -66,8 +65,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation()
-                }
-                Button(onClick = { noti.showNotification() }) {
                 }
             }
         }
@@ -212,6 +209,7 @@ fun Navigation() {
                                 Screen.NewExpenseScreen.route
                             )
                         },
+                        context = context,
                         groupViewModel = groupViewModel,
                         userViewModel = userViewModel
                     )
