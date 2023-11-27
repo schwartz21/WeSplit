@@ -1,8 +1,7 @@
 package com.example.notweshare.screens
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -23,14 +22,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
@@ -48,11 +46,11 @@ fun LoginScreen(
 ) {
 
     val largePadding = dimensionResource(R.dimen.padding_large)
-    val mediumPadding = dimensionResource(R.dimen.padding_medium)
-    val smallPadding = dimensionResource(R.dimen.padding_small)
 
     val questionText = "Not a user? "
     val clickableText = "Register"
+
+    val focusManager = LocalFocusManager.current
 
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -69,6 +67,7 @@ fun LoginScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
+            .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
             .padding(largePadding),
         color = MaterialTheme.colorScheme.background
     ) {
@@ -90,19 +89,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(10.dp))
             phoneNumber = TextFieldCard("Phone number", phoneNumber)
             password = passwordTextFieldCard("Password", password)
-            Spacer(modifier = Modifier.height(1.dp))
-            ClickableText(
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center),
-                text = annotatedString,
-                onClick = { offset ->
-                annotatedString.getStringAnnotations(offset, offset)
-                    .firstOrNull()?.also { navigateToRegister() }
-            })
-
             Spacer(modifier = Modifier.height(10.dp))
+
             val minHeight = 48.dp
 
             when (userViewModel.isLoading.value) {
@@ -114,7 +102,7 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    // Set errormessages to "" so that it doesn't show the error message from the previous login attempt
+                    // Set error messages to "" so that it doesn't show the error message from the previous login attempt
                     errorMessages = ""
 
                     // Check if any of the fields are empty
@@ -146,6 +134,19 @@ fun LoginScreen(
                     fontWeight = FontWeight.Bold
                 )
             }
+
+            Spacer(modifier = Modifier.height(3.dp))
+            ClickableText(
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center),
+                text = annotatedString,
+                onClick = { offset ->
+                    annotatedString.getStringAnnotations(offset, offset)
+                        .firstOrNull()?.also { navigateToRegister() }
+                })
+
             Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
 
         }
