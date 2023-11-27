@@ -41,7 +41,7 @@ class NotificationService (private val context: Context) {
         )
         val bigTextStyle = NotificationCompat.BigTextStyle()
             .bigText("you owe $amountOfMoneyOwed to $name in group: $groupName ")
-        val notification = NotificationCompat.Builder(context, COUNTER_CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.notification)
             .setContentTitle("$nameOfDeptPerson!!!!!")
             .setContentText("you owe $amountOfMoneyOwed to $name in group: $groupName ")
@@ -57,6 +57,6 @@ class NotificationService (private val context: Context) {
 
 
     companion object {
-        const val COUNTER_CHANNEL_ID = "counter_channel"
+        const val CHANNEL_ID = "channel"
     }
 }
