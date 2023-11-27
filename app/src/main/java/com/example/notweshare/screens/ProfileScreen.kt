@@ -117,20 +117,19 @@ fun ProfileHeader(userViewModel: UserViewModel) {
 @Composable
 fun ProfileDetails(userViewModel: UserViewModel) {
     Column {
-        ProfileItem(
+        userViewModel.activeUser.value.phoneNumber = ProfileItem(
             icon = Icons.Default.Phone,
             title = "Phone",
-            description = userViewModel.activeUser.value.phoneNumber,
+            value = userViewModel.activeUser.value.phoneNumber,
             onValueChange = { userViewModel.activeUser.value.phoneNumber = it }
         )
 
-        ProfileItem(
+        userViewModel.activeUser.value.email = ProfileItem(
             icon = Icons.Default.Email,
             title = "Email",
-            description = userViewModel.activeUser.value.email,
+            value = userViewModel.activeUser.value.email,
             onValueChange = { userViewModel.activeUser.value.email = it }
         )
-
     }
 }
 
@@ -138,13 +137,13 @@ fun ProfileDetails(userViewModel: UserViewModel) {
 fun ProfileItem(
     icon: ImageVector,
     title: String,
-    description: String,
+    value: String,
     onValueChange: (String) -> Unit
 ): String {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
-    var phoneNumber by remember { mutableStateOf("") }
+    var userInfo by remember { mutableStateOf(value) }
 
     Row(
         modifier = Modifier
@@ -173,8 +172,8 @@ fun ProfileItem(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
-            TextFieldCard(labelValue = title, input = description)
+            userInfo = TextFieldCard(labelValue = title, input = value)
         }
     }
-    return phoneNumber
+    return userInfo
 }
