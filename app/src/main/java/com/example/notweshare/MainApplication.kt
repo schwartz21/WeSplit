@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.notification.NotificationService
 import org.koin.android.ext.koin.androidContext
@@ -20,6 +21,7 @@ class MainApplication : Application() {
 
         val appModule = module {
             viewModel { UserViewModel() }
+            viewModel { GroupViewModel() }
         }
 
         startKoin {
