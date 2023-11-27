@@ -53,9 +53,7 @@ fun passwordTextFieldCard(labelValue: String, input: String): String {
             ),
         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         value = passwordTextValue.value,
-        onValueChange = {
-            passwordTextValue.value = it
-        },
+        onValueChange = { passwordTextValue.value = it},
         trailingIcon = {
             val iconImage = if (passwordVisibility.value) {
                 Icons.Filled.Visibility

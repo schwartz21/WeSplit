@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
@@ -38,8 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
+import com.example.notweshare.R
 import com.example.notweshare.components.passwordTextFieldCard
 import com.example.notweshare.components.TextFieldCard
 
@@ -47,9 +48,12 @@ import com.example.notweshare.components.TextFieldCard
 fun LoginScreen(
     navigateToRegister: () -> Unit,
     navigateToHomeScreen: () -> Unit,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel,
 ) {
+
+    val largePadding = dimensionResource(R.dimen.padding_large)
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val smallPadding = dimensionResource(R.dimen.padding_small)
+
     val questionText = "Not a user? "
     val clickableText = "Register"
     val focusManager = LocalFocusManager.current
@@ -57,8 +61,6 @@ fun LoginScreen(
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessages by remember { mutableStateOf("") }
-
-
 
     val annotatedString = buildAnnotatedString {
         append(questionText)
@@ -71,9 +73,9 @@ fun LoginScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(28.dp)
             .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
+            .padding(largePadding),
+        color = MaterialTheme.colorScheme.background
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -83,10 +85,8 @@ fun LoginScreen(
                 text = "Login",
                 modifier = Modifier
                     .fillMaxWidth(),
-                style = TextStyle(
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontStyle = FontStyle.Normal,
+                style = MaterialTheme.typography.displayLarge.copy(
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 ),
                 color = MaterialTheme.colorScheme.onBackground
@@ -96,7 +96,13 @@ fun LoginScreen(
             phoneNumber = TextFieldCard("Phone number", phoneNumber)
             password = passwordTextFieldCard("Password", password)
             Spacer(modifier = Modifier.height(1.dp))
-            ClickableText(text = annotatedString, onClick = { offset ->
+            ClickableText(
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center),
+                text = annotatedString,
+                onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
                     .firstOrNull()?.also { navigateToRegister() }
             })
@@ -108,49 +114,42 @@ fun LoginScreen(
                 true -> {
                     Text(text = "Loading...", color = MaterialTheme.colorScheme.onBackground)
                 }
-
-                false -> {
-                    Text(text = "Not loading", color = MaterialTheme.colorScheme.onBackground)
-                }
+                false -> {}
             }
 
             Button(
                 onClick = {
+                    // Set errormessages to "" so that it doesn't show the error message from the previous login attempt
+                    errorMessages = ""
+
+                    // Check if any of the fields are empty
+                    if (phoneNumber == "" || password == "") {
+                        errorMessages = "Please fill out all fields"
+                        return@Button
+                    }
+
                     userViewModel.findUserWithDocumentID(phoneNumber) { user ->
-                        if (phoneNumber == "" || password == "") {
-                            errorMessages = "Please fill out all fields"
-                        } else if (user.documentID == "g" || user.password != password) {
+                        if (user.documentID.isEmpty() || user.password != password) {
                             errorMessages = "Phone number or Password is incorrect"
                         } else {
                             userViewModel.setTheActiveUser(user)
-                            groupViewModel.findGroupsWithMember(phoneNumber)
                             navigateToHomeScreen()
                         }
                     }
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(minHeight),
                 contentPadding = PaddingValues(),
-                colors = ButtonDefaults.buttonColors(Color.Transparent)
+                shape=RoundedCornerShape(50.dp),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
             ) {
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(minHeight)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(50.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Login",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(
+                    text = "Login",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
             Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
 

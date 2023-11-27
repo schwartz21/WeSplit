@@ -1,5 +1,8 @@
 package com.example.notweshare.screens
 
+import android.content.ContentValues.TAG
+import android.text.Editable
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,18 +15,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,35 +33,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
-import com.example.notweshare.components.GradientCard
+import com.example.notweshare.backend.FirestoreQueries
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.firestore.FirebaseFirestore
+import com.example.notweshare.components.TextFieldCard
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(userViewModel: UserViewModel) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(MaterialTheme.colorScheme.primary)
 
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val largePadding = dimensionResource(R.dimen.padding_large)
+
     Column(modifier = Modifier.fillMaxSize()) {
-        GradientCard(text = "John Doe") {
-            Text(text = "Phone 1")
-            Text(text = "Something else")
-        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(largePadding)
         ) {
-            ProfileHeader()
+            ProfileHeader(userViewModel = userViewModel)
             Spacer(modifier = Modifier.height(16.dp))
-            ProfileDetails()
+            ProfileDetails(userViewModel = userViewModel)
             Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = {
-                    print("Save button clicked")
+                    Log.d(TAG, userViewModel.activeUser.value.phoneNumber)
+                    Log.d(TAG, userViewModel.activeUser.value.email)
+
+                    // Update userDocument in Firestore
+                    userViewModel.editUser(userViewModel.activeUser.value)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -72,17 +78,17 @@ fun ProfileScreen() {
             }
         }
     }
-
 }
 
 @Composable
-fun ProfileHeader() {
+fun ProfileHeader(userViewModel: UserViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = null,
@@ -95,7 +101,7 @@ fun ProfileHeader() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "John Doe",
+            text = userViewModel.activeUser.value.name,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
@@ -103,40 +109,38 @@ fun ProfileHeader() {
 }
 
 @Composable
-fun ProfileDetails() {
-    var phoneNumber by remember { mutableStateOf("+1 234 567 890") }
-    var email by remember { mutableStateOf("john.doe@example.com") }
+fun ProfileDetails(userViewModel: UserViewModel) {
+    Column {
+        userViewModel.activeUser.value.phoneNumber = ProfileItem(
+            icon = Icons.Default.Phone,
+            title = "Phone",
+            value = userViewModel.activeUser.value.phoneNumber,
+            isEditable = false,
+            onValueChange = { userViewModel.activeUser.value.phoneNumber = it }
+        )
 
-    LazyColumn {
-        item {
-            ProfileItem(
-                icon = Icons.Default.Phone,
-                title = "Phone",
-                description = phoneNumber,
-                onValueChange = { phoneNumber = it }
-            )
-        }
-        item {
-            ProfileItem(
-                icon = Icons.Default.Email,
-                title = "Email",
-                description = email,
-                onValueChange = { email = it }
-            )
-        }
+        userViewModel.activeUser.value.email = ProfileItem(
+            icon = Icons.Default.Email,
+            title = "Email",
+            value = userViewModel.activeUser.value.email,
+            isEditable = true,
+            onValueChange = { userViewModel.activeUser.value.email = it }
+        )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileItem(
     icon: ImageVector,
     title: String,
-    description: String,
+    value: String,
+    isEditable: Boolean,
     onValueChange: (String) -> Unit
-) {
+): String {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
+
+    var userInfo by remember { mutableStateOf(value) }
 
     Row(
         modifier = Modifier
@@ -165,16 +169,16 @@ fun ProfileItem(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
-            OutlinedTextField(
-                value = description,
-                onValueChange = onValueChange,
-                modifier = Modifier.width(screenWidth / 2),
-                textStyle = MaterialTheme.typography.bodyMedium,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.primary
+            if (isEditable) {
+                userInfo = TextFieldCard(labelValue = title, input = value)
+            } else {
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
                 )
-            )
+            }
         }
     }
+    return userInfo
 }

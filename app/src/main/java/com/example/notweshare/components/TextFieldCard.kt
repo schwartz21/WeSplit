@@ -47,9 +47,7 @@ fun TextFieldCard(labelValue: String, input: String): String {
         ),
         keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
         value = textValue.value,
-        onValueChange = {
-            textValue.value = it
-        }
+        onValueChange = { textValue.value = it},
     )
     return textValue.value
 }

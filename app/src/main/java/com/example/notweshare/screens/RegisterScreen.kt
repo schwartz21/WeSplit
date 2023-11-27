@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -38,8 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
+import com.example.notweshare.R
 import com.example.notweshare.components.passwordTextFieldCard
 import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.User
@@ -48,8 +49,6 @@ import com.example.notweshare.models.User
 fun RegisterScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToLogin: () -> Unit,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel,
 ) {
     val questionText = "Already a user? "
     val clickableText = "Login"
@@ -70,21 +69,24 @@ fun RegisterScreen(
         }
     }
 
+    val largePadding = dimensionResource(R.dimen.padding_large)
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(28.dp)
             .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
+            .padding(largePadding),
+        color=MaterialTheme.colorScheme.background
     ) {
-        Column(modifier = Modifier.fillMaxSize(),
+        Column(
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "Register",
                 modifier = Modifier
                     .fillMaxWidth(),
-                style = TextStyle (
+                style = TextStyle(
                     fontSize = 48.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontStyle = FontStyle.Normal,
@@ -100,10 +102,16 @@ fun RegisterScreen(
             password = passwordTextFieldCard("Password...", "")
             confirmPassword = passwordTextFieldCard("Confirm password...", "")
             Spacer(modifier = Modifier.height(1.dp))
-            ClickableText(text = annotatedString, onClick = { offset ->
-                annotatedString.getStringAnnotations(offset, offset)
-                    .firstOrNull()?.also { navigateToLogin() }
-            })
+            ClickableText(
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center
+                ),
+                text = annotatedString, onClick = { offset ->
+                    annotatedString.getStringAnnotations(offset, offset)
+                        .firstOrNull()?.also { navigateToLogin() }
+                })
 
             Spacer(modifier = Modifier.height(10.dp))
             val minHeight = 48.dp
@@ -113,7 +121,7 @@ fun RegisterScreen(
                     if (password != confirmPassword) {
                         errorMessages = "Passwords do not match"
                         return@Button
-                    } else if (fullName == "" || phoneNumber == "" || email == "" || password == "" || confirmPassword == "") {
+                    } else if (fullName == "" || phoneNumber == "" || email == "" || password == "") {
                         errorMessages = "Please fill in all fields"
                         return@Button
                     } else if (!phoneNumber.matches(Regex("[0-9]+"))) {
@@ -124,8 +132,7 @@ fun RegisterScreen(
                         if (user.documentID == phoneNumber) {
                             errorMessages = "User already exists"
                         } else {
-                            registerNewUser(fullName, phoneNumber, email, password, userViewModel)
-                            groupViewModel.findGroupsWithMember(phoneNumber)
+                            registerNewUser(fullName, phoneNumber, email, password)
                             navigateToHomeScreen()
                         }
                     }
@@ -134,25 +141,14 @@ fun RegisterScreen(
                     .fillMaxWidth()
                     .heightIn(minHeight),
                 contentPadding = PaddingValues(),
-                colors = ButtonDefaults.buttonColors(Color.Transparent)
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                shape = RoundedCornerShape(50.dp)
             ) {
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(minHeight)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(50.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Register",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(
+                    text = "Register",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
@@ -160,7 +156,12 @@ fun RegisterScreen(
     }
 }
 
-private fun registerNewUser(fullName: String, phoneNumber: String, email: String, password: String, userViewModel: UserViewModel) {
+private fun registerNewUser(
+    fullName: String,
+    phoneNumber: String,
+    email: String,
+    password: String
+) {
     val user = User(fullName, phoneNumber, email, password, documentID = phoneNumber)
     userViewModel.postUser(user)
     userViewModel.setTheActiveUser(user)
