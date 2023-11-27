@@ -16,6 +16,11 @@ import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.launch
 
 class GroupViewModel(): ViewModel() {
+
+    companion object {
+        val groupViewModel = GroupViewModel()
+    }
+
     var listener: ListenerRegistration? = null
     //mutatable state such that Compose can observe it.
     val groups = mutableStateListOf<Group>()

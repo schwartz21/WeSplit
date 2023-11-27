@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,8 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
 import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.Group
@@ -28,8 +27,6 @@ import com.example.notweshare.models.Group
 @Composable
 fun NewGroupScreen(
     navigateToGroups: () -> Unit,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel
 ) {
     var groupName by remember { mutableStateOf("") }
     var addMemberByPhoneNumber by remember { mutableStateOf("") }
@@ -120,8 +117,6 @@ fun NewGroupScreen(
                     createGroup(
                         groupName,
                         memberList.toMutableList(),
-                        groupViewModel,
-                        userViewModel
                     )
                     navigateToGroups()
                 } else {
@@ -145,8 +140,6 @@ fun NewGroupScreen(
 private fun createGroup(
     groupName: String,
     memberList: MutableList<String>,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel
 ) {
     val newMemberList = memberList
     newMemberList.add(userViewModel.activeUser.value.phoneNumber)

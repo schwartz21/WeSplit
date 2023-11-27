@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notweshare.backend.FirestoreQueries
-import com.example.notweshare.models.Group
 import com.example.notweshare.models.User
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.EventListener
@@ -16,6 +15,11 @@ import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.launch
 
 class UserViewModel(): ViewModel() {
+
+    companion object {
+        val userViewModel = UserViewModel()
+    }
+
     var listener: ListenerRegistration? = null
     val users = mutableStateListOf<User>()
     var isLoading = mutableStateOf(false)

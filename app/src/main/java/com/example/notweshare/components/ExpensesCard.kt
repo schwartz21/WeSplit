@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.example.notweshare.R
 import com.example.notweshare.models.Expense
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ExpensesCard(expense: Expense) {

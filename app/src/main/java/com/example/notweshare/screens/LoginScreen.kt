@@ -35,8 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.components.passwordTextFieldCard
 import com.example.notweshare.components.TextFieldCard
 
@@ -44,7 +43,6 @@ import com.example.notweshare.components.TextFieldCard
 fun LoginScreen(
     navigateToRegister: () -> Unit,
     navigateToHomeScreen: () -> Unit,
-    userViewModel: UserViewModel,
 ) {
     val questionText = "Not a user? "
     val clickableText = "Register"
@@ -52,8 +50,6 @@ fun LoginScreen(
     var phoneNumber by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessages by remember { mutableStateOf("") }
-
-
 
     val annotatedString = buildAnnotatedString {
         append(questionText)

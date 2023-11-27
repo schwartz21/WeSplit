@@ -31,8 +31,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Expense
 import com.example.notweshare.models.ExpenseMember
@@ -43,8 +43,6 @@ import com.example.notweshare.models.User
 @Composable
 fun NewExpenseScreen(
     navigateUp: () -> Unit,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel,
 ) {
     val group = groupViewModel.selectedGroup.value
     val user = userViewModel.activeUser.value
@@ -150,7 +148,7 @@ fun NewExpenseScreen(
                     },
                     headlineContent = {
                         Text(
-                            text = returnNameFromId(phoneNumber, userViewModel),
+                            text = returnNameFromId(phoneNumber),
                         )
                     },
                 )
@@ -227,7 +225,7 @@ private fun validateExpense(
     return ""
 }
 
-private fun returnNameFromId(id: String, userViewModel: UserViewModel): String {
+private fun returnNameFromId(id: String): String {
     var name = "Unknown User"
     userViewModel.users.forEach {
         if (it.documentID == id) {
