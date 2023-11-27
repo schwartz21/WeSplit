@@ -1,6 +1,7 @@
 package com.example.notweshare.screens
 
 import android.content.ContentValues.TAG
+import android.text.Editable
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -121,6 +122,7 @@ fun ProfileDetails(userViewModel: UserViewModel) {
             icon = Icons.Default.Phone,
             title = "Phone",
             value = userViewModel.activeUser.value.phoneNumber,
+            isEditable = false,
             onValueChange = { userViewModel.activeUser.value.phoneNumber = it }
         )
 
@@ -128,6 +130,7 @@ fun ProfileDetails(userViewModel: UserViewModel) {
             icon = Icons.Default.Email,
             title = "Email",
             value = userViewModel.activeUser.value.email,
+            isEditable = true,
             onValueChange = { userViewModel.activeUser.value.email = it }
         )
     }
@@ -138,6 +141,7 @@ fun ProfileItem(
     icon: ImageVector,
     title: String,
     value: String,
+    isEditable: Boolean,
     onValueChange: (String) -> Unit
 ): String {
     val configuration = LocalConfiguration.current
@@ -172,7 +176,15 @@ fun ProfileItem(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
-            userInfo = TextFieldCard(labelValue = title, input = value)
+            if (isEditable) {
+                userInfo = TextFieldCard(labelValue = title, input = value)
+            } else {
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
     return userInfo
