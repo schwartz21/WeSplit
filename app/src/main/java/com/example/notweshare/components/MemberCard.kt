@@ -1,5 +1,6 @@
 package com.example.notweshare.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -21,14 +22,20 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.compose.md_success
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
+import com.example.notweshare.notification.NotificationService
+import org.koin.core.component.getScopeName
 import kotlin.math.abs
 
 @Composable
-fun GroupDetailsMemberCard(group: Group, member: String, memberName: String) {
+fun GroupDetailsMemberCard(context: Context, group: Group, member: String, memberName: String) {
 
+    val userViewModel = userViewModel
+    val notification = NotificationService(context)
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val smallPadding = dimensionResource(R.dimen.padding_small)
@@ -74,7 +81,7 @@ fun GroupDetailsMemberCard(group: Group, member: String, memberName: String) {
                 )
                 if (userOwes)
                     IconButton(
-                        onClick = { /*TODO*/ }
+                        onClick = { notification.showNotification(userViewModel.activeUser.value.name, userContribution.toString(), group.name, memberName) }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.notification),

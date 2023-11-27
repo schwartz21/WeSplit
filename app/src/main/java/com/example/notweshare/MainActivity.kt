@@ -1,5 +1,9 @@
 package com.example.notweshare
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -38,6 +43,7 @@ import com.example.compose.AppTheme
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.models.TabItem
+import com.example.notweshare.notification.NotificationService
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewExpenseScreen
 import com.example.notweshare.screens.GroupDetailsScreen
@@ -50,6 +56,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val noti = NotificationService(applicationContext)
         setContent {
             AppTheme {
                 // A surface container using the 'background' color from the theme
@@ -195,6 +202,7 @@ fun Navigation() {
                                 Screen.NewExpenseScreen.route
                             )
                         },
+                        context = context,
                     )
                 }
                 composable(Screen.NewExpenseScreen.route) {

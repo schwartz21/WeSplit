@@ -1,5 +1,6 @@
 package com.example.notweshare.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,7 @@ import com.example.notweshare.components.GroupDetailsMemberCard
 
 @Composable
 fun GroupDetailsScreen(
+    context: Context,
     navigateToNewExpense: () -> Unit,
 ) {
     val group = groupViewModel.selectedGroup.value
@@ -36,7 +38,7 @@ fun GroupDetailsScreen(
             GroupCard(group)
         }
         items(items = group.members) { member ->
-            GroupDetailsMemberCard(group, member, returnNameFromId(member))
+            GroupDetailsMemberCard(context, group, member, returnNameFromId(member))
             Spacer(modifier = Modifier.padding(smallPadding))
         }
         item {
