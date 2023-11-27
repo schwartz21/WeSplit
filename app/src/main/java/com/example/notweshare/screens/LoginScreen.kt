@@ -91,7 +91,13 @@ fun LoginScreen(
             phoneNumber = TextFieldCard("Phone number", phoneNumber)
             password = passwordTextFieldCard("Password", password)
             Spacer(modifier = Modifier.height(1.dp))
-            ClickableText( style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onBackground), text = annotatedString, onClick = { offset ->
+            ClickableText(
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center),
+                text = annotatedString,
+                onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
                     .firstOrNull()?.also { navigateToRegister() }
             })
