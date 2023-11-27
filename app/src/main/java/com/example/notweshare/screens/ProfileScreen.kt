@@ -35,11 +35,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.notweshare.R
 import com.example.notweshare.components.GradientCard
+//import com.example.notweshare.components.TextFieldCard
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
@@ -47,15 +49,19 @@ fun ProfileScreen() {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(MaterialTheme.colorScheme.primary)
 
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val largePadding = dimensionResource(R.dimen.padding_large)
+
+
     Column(modifier = Modifier.fillMaxSize()) {
-        GradientCard(text = "John Doe") {
-            Text(text = "Phone 1")
-            Text(text = "Something else")
-        }
+//        GradientCard(text = "John Doe") {
+//            Text(text = "Phone 1")
+//            Text(text = "Something else")
+//        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(largePadding)
         ) {
             ProfileHeader()
             Spacer(modifier = Modifier.height(16.dp))
@@ -63,7 +69,7 @@ fun ProfileScreen() {
             Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = {
-                    print("Save button clicked")
+                    println("Save button clicked")
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,23 +114,21 @@ fun ProfileDetails() {
     var phoneNumber by remember { mutableStateOf("+1 234 567 890") }
     var email by remember { mutableStateOf("john.doe@example.com") }
 
-    LazyColumn {
-        item {
-            ProfileItem(
-                icon = Icons.Default.Phone,
-                title = "Phone",
-                description = phoneNumber,
-                onValueChange = { phoneNumber = it }
-            )
-        }
-        item {
-            ProfileItem(
-                icon = Icons.Default.Email,
-                title = "Email",
-                description = email,
-                onValueChange = { email = it }
-            )
-        }
+    Column {
+        phoneNumber = ProfileItem(
+            icon = Icons.Default.Phone,
+            title = "Phone",
+            description = phoneNumber,
+            onValueChange = { phoneNumber = it }
+        )
+
+        email = ProfileItem(
+            icon = Icons.Default.Email,
+            title = "Email",
+            description = email,
+            onValueChange = { email = it }
+        )
+
     }
 }
 
@@ -135,9 +139,11 @@ fun ProfileItem(
     title: String,
     description: String,
     onValueChange: (String) -> Unit
-) {
+): String {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
+
+    var phoneNumber by remember { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -173,6 +179,8 @@ fun ProfileItem(
                 textStyle = MaterialTheme.typography.bodyMedium,
                 shape = RoundedCornerShape(16.dp)
             )
+//            phoneNumber = TextFieldCard(labelValue =title , input =description )
         }
     }
+    return phoneNumber
 }
