@@ -1,5 +1,7 @@
 package com.example.notweshare.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,6 +47,7 @@ import com.example.notweshare.R
 import com.example.notweshare.components.textFieldCard
 import com.example.notweshare.components.textFieldShape
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun ProfileScreen(userViewModel: UserViewModel) {
@@ -66,7 +69,13 @@ fun ProfileScreen(userViewModel: UserViewModel) {
             Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = {
-                    println("Save button clicked")
+                    // Update userDocument in Firestore
+                    val userRef = FirebaseFirestore.getInstance().collection("users").document(userViewModel.activeUser.value.documentID)
+
+                    userRef
+                        .update("phoneNumber", userViewModel.activeUser.value.phoneNumber, "email", userViewModel.activeUser.value.email)
+                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -131,7 +140,6 @@ fun ProfileDetails() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileItem(
     icon: ImageVector,
