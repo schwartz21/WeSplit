@@ -88,12 +88,12 @@ fun Navigation() {
     Scaffold(
         bottomBar = {
             if (userViewModel.activeUser.value.documentID != "g") {
-            BottomAppBar(
-                contentColor = Color.White,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(tabBarHeight)
-            ) {
+                BottomAppBar(
+                    contentColor = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(tabBarHeight)
+                ) {
                     tabs.forEachIndexed { index, tab ->
                         val tint =
                             ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
