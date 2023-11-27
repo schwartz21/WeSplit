@@ -4,7 +4,6 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -44,8 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.R
-import com.example.notweshare.components.textFieldCard
-import com.example.notweshare.components.textFieldShape
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -117,22 +113,19 @@ fun ProfileHeader(userViewModel: UserViewModel) {
 
 @Composable
 fun ProfileDetails(userViewModel: UserViewModel) {
-    var phoneNumber by remember { mutableStateOf(userViewModel.activeUser.value.phoneNumber) }
-    var email by remember { mutableStateOf(userViewModel.activeUser.value.email) }
-
     Column {
-        phoneNumber = ProfileItem(
+        ProfileItem(
             icon = Icons.Default.Phone,
             title = "Phone",
-            description = phoneNumber,
-            onValueChange = { phoneNumber = it }
+            description = userViewModel.activeUser.value.phoneNumber,
+            onValueChange = { userViewModel.activeUser.value.phoneNumber = it }
         )
 
-        email = ProfileItem(
+        ProfileItem(
             icon = Icons.Default.Email,
             title = "Email",
-            description = email,
-            onValueChange = { email = it }
+            description = userViewModel.activeUser.value.email,
+            onValueChange = { userViewModel.activeUser.value.email = it }
         )
 
     }
