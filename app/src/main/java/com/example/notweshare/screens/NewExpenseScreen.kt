@@ -141,6 +141,7 @@ fun NewExpenseScreen(
                         )
                     },
                 )
+                Spacer(modifier = Modifier.padding(smallPadding))
             }
         }
         item {
