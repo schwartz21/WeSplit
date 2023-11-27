@@ -62,8 +62,8 @@ fun LoginScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(28.dp)
+            .padding(28.dp),
+        color = MaterialTheme.colorScheme.background
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -86,7 +86,13 @@ fun LoginScreen(
             phoneNumber = TextFieldCard("Phone number", phoneNumber)
             password = passwordTextFieldCard("Password", password)
             Spacer(modifier = Modifier.height(1.dp))
-            ClickableText(text = annotatedString, onClick = { offset ->
+            ClickableText(
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center),
+                text = annotatedString,
+                onClick = { offset ->
                 annotatedString.getStringAnnotations(offset, offset)
                     .firstOrNull()?.also { navigateToRegister() }
             })
