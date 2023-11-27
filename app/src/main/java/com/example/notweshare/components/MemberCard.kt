@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.compose.md_success
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
@@ -34,7 +34,7 @@ import kotlin.math.abs
 @Composable
 fun GroupDetailsMemberCard(context: Context, group: Group, member: String, memberName: String) {
 
-    val userViewModel = UserViewModel()
+    val userViewModel = userViewModel
     val notification = NotificationService(context)
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -46,13 +46,13 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
 
     val paymentColor = when {
         userOwes -> MaterialTheme.colorScheme.error
-        !userOwes -> md_success
+        !userOwes -> MaterialTheme.colorScheme.surfaceVariant
         else -> MaterialTheme.colorScheme.onSurface
     }
 
     Surface(
         modifier = Modifier.padding(horizontal = mediumPadding),
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(mediumPadding),
         shadowElevation = 4.dp,
     ) {
@@ -81,7 +81,7 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
                 )
                 if (userOwes)
                     IconButton(
-                        onClick = { notification.showNotification(userViewModel.activeUser.value.name, userContribution.toString(), group.name) }
+                        onClick = { notification.showNotification(userViewModel.activeUser.value.name, userContribution.toString(), group.name, memberName) }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.notification),

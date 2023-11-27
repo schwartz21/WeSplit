@@ -12,7 +12,7 @@ import com.example.notweshare.MainActivity
 
 class NotificationService (private val context: Context) {
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    fun showNotification(name: String, amountOfMoneyOwed: String, groupName: String) {
+    fun showNotification(name: String, amountOfMoneyOwed: String, groupName: String, nameOfDeptPerson: String) {
 
         val activityIntent = Intent(context, MainActivity::class.java)
 
@@ -32,12 +32,23 @@ class NotificationService (private val context: Context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
 
-        val notification = NotificationCompat.Builder(context, COUNTER_CHANNEL_ID)
-            .setSmallIcon(R.drawable.baseline_airplanemode_active_24)
-            .setContentTitle("$groupName")
-            .setContentText("you owe $amountOfMoneyOwed to $name")
+        val doMagic = PendingIntent.getBroadcast(
+            context,
+            2,  // Use a unique request code
+            Intent(context, NotificationDismissReceiver::class.java),
+            // flag to control version
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+        )
+        val bigTextStyle = NotificationCompat.BigTextStyle()
+            .bigText("you owe $amountOfMoneyOwed to $name in group: $groupName ")
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notification)
+            .setContentTitle("$nameOfDeptPerson!!!!!")
+            .setContentText("you owe $amountOfMoneyOwed to $name in group: $groupName ")
             .setContentIntent(activityPendingIntent)
-            .addAction(R.drawable.baseline_airplanemode_active_24, "DISMISS", dismissIntent)  // Add dismiss action
+            .addAction(R.drawable.notification, "DISMISS", dismissIntent)  // Add dismiss action
+            .addAction(R.drawable.notification, "THIS Button does nothing", doMagic )
+            .setStyle(bigTextStyle)
             .build()
 
         notificationManager.notify(1, notification)
@@ -46,6 +57,6 @@ class NotificationService (private val context: Context) {
 
 
     companion object {
-        const val COUNTER_CHANNEL_ID = "counter_channel"
+        const val CHANNEL_ID = "channel"
     }
 }

@@ -12,16 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.example.compose.AppTheme
-import com.example.compose.md_success
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
 import com.example.notweshare.models.Group
-import com.example.notweshare.models.User
-import com.example.notweshare.models.getDefaultGroup
 import com.example.notweshare.models.getMemberDebt
 import com.example.notweshare.models.getTotalExpense
 import com.example.notweshare.models.getTotalUnpaid
@@ -32,8 +27,6 @@ import kotlin.math.abs
 fun GroupCard(
     group: Group,
     onNavigateToGroupDetails: () -> Unit = {},
-    userViewModel: UserViewModel,
-    groupViewModel: GroupViewModel,
 ) {
     val userContribution = getMemberDebt(group, userViewModel.activeUser.value.documentID)
     val absContribution = abs(userContribution)
@@ -42,10 +35,10 @@ fun GroupCard(
     GradientCard(
         onClickFunction = {
             groupViewModel.setTheSelectedGroup(group) // Set selected group to be the group that was clicked
-            userViewModel.findUsersWithDocumentIDs(group.members) {} // Update list of users to be the users from the group
+            userViewModel.findUsersWithDocumentIDs(group.members) // Update list of users to be the users from the group
             onNavigateToGroupDetails()
         },
-        text = group.name ?: "unknown group name"
+        text = group.name
     ) {
         DoubleStack(
             topItem = DecimalFormat("#.##").format(getTotalExpense(group)),
@@ -79,13 +72,12 @@ fun DoubleStack(
 
     val paymentColor = when {
         owed -> MaterialTheme.colorScheme.error
-        positiveIsGreen && !owed -> md_success
+        positiveIsGreen && !owed -> MaterialTheme.colorScheme.surfaceVariant
         else -> MaterialTheme.colorScheme.onSurface
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
-//            modifier = Modifier.padding(),
             verticalAlignment = Alignment.Bottom
         ) {
             Text(
@@ -104,26 +96,8 @@ fun DoubleStack(
         }
         Spacer(modifier = Modifier.padding(smallPadding / 2))
         Text(
-//            modifier = Modifier.padding(smallPadding),
             text = bottomItem,
             style = MaterialTheme.typography.labelMedium
         )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GroupCardPreview() {
-    val userViewModel = UserViewModel()
-    userViewModel.users.add(User())
-
-    AppTheme {
-        GroupCard(
-            group = getDefaultGroup(),
-            userViewModel = userViewModel,
-            groupViewModel = GroupViewModel()
-        )
-
     }
 }

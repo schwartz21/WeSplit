@@ -35,8 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.exampleapplication.viewmodels.GroupViewModel
-import com.example.exampleapplication.viewmodels.UserViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.components.passwordTextFieldCard
 import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.User
@@ -45,8 +44,6 @@ import com.example.notweshare.models.User
 fun RegisterScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToLogin: () -> Unit,
-    groupViewModel: GroupViewModel,
-    userViewModel: UserViewModel,
 ) {
     val questionText = "Already a user? "
     val clickableText = "Login"
@@ -108,7 +105,7 @@ fun RegisterScreen(
                     if (password != confirmPassword) {
                         errorMessages = "Passwords do not match"
                         return@Button
-                    } else if (fullName == "" || phoneNumber == "" || email == "" || password == "" || confirmPassword == "") {
+                    } else if (fullName == "" || phoneNumber == "" || email == "" || password == "") {
                         errorMessages = "Please fill in all fields"
                         return@Button
                     } else if (!phoneNumber.matches(Regex("[0-9]+"))) {
@@ -119,8 +116,7 @@ fun RegisterScreen(
                         if (user.documentID == phoneNumber) {
                             errorMessages = "User already exists"
                         } else {
-                            registerNewUser(fullName, phoneNumber, email, password, userViewModel)
-                            groupViewModel.findGroupsWithMember(phoneNumber)
+                            registerNewUser(fullName, phoneNumber, email, password)
                             navigateToHomeScreen()
                         }
                     }
@@ -155,7 +151,7 @@ fun RegisterScreen(
     }
 }
 
-private fun registerNewUser(fullName: String, phoneNumber: String, email: String, password: String, userViewModel: UserViewModel) {
+private fun registerNewUser(fullName: String, phoneNumber: String, email: String, password: String) {
     val user = User(fullName, phoneNumber, email, password, documentID = phoneNumber)
     userViewModel.postUser(user)
     userViewModel.setTheActiveUser(user)
