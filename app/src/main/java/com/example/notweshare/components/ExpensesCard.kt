@@ -3,10 +3,12 @@ package com.example.notweshare.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,6 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.notweshare.R
 import com.example.notweshare.models.Expense
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ExpensesCard(expense: Expense) {
@@ -38,7 +42,7 @@ fun ExpensesCard(expense: Expense) {
             modifier = Modifier
                 .height(IntrinsicSize.Min)
                 .fillMaxSize()
-                .padding(smallPadding),
+                .padding(horizontal = smallPadding, vertical = mediumPadding),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column() {
@@ -48,10 +52,11 @@ fun ExpensesCard(expense: Expense) {
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
-                    text = expense.createdAt.toString(),
+                    text = SimpleDateFormat.getDateTimeInstance().format(expense.createdAt),
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
+            Spacer(modifier = Modifier.width(smallPadding))
             Text(
                 text = expense.name,
                 modifier = Modifier.fillMaxWidth(),

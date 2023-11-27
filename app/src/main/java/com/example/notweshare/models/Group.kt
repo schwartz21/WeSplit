@@ -107,7 +107,7 @@ data class Expense(
     var members: MutableMap<String, ExpenseMember> = mutableMapOf(),
     var owner: String = "",
 
-    var createdAt: Date? = Date(),
+    var createdAt: Date = Date(),
 ) : Serializable
 
 

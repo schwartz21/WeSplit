@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.GroupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.notweshare.components.passwordTextFieldCard
-import com.example.notweshare.components.textFieldCard
+import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.User
 
 @Composable
@@ -89,9 +89,9 @@ fun RegisterScreen(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            fullName = textFieldCard("Full name...", "")
-            phoneNumber = textFieldCard("Phone number...", "")
-            email = textFieldCard("Email...", "")
+            fullName = TextFieldCard("Full name...", "")
+            phoneNumber = TextFieldCard("Phone number...", "")
+            email = TextFieldCard("Email...", "")
             password = passwordTextFieldCard("Password...", "")
             confirmPassword = passwordTextFieldCard("Confirm password...", "")
             Spacer(modifier = Modifier.height(1.dp))
