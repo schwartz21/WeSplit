@@ -24,7 +24,7 @@ class NotificationService (private val context: Context) {
             context,
             1,
             openAppIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
         )
 
         val activityPendingIntent = PendingIntent.getActivity(
