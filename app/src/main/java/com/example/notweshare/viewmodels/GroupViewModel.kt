@@ -92,6 +92,13 @@ class GroupViewModel(): ViewModel() {
         }
     }
 
+    // Update group
+    fun updateGroup(group: Group) {
+        viewModelScope.launch {
+            FirestoreQueries.GroupQueries.updateGroup(group)
+        }
+    }
+
     fun addExpenseToGroup(groupDocumentID: String, expense: Expense) {
         val expenses = groups[selectedGroupIndex.value].expenses
         expenses.add(expense)

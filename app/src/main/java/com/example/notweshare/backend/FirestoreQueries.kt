@@ -55,6 +55,11 @@ class FirestoreQueries {
             @JvmStatic fun updateExpensesOnAGroup(groupDocumentID: String, expenses: MutableList<Expense>): Task<Void> {
                 return FirebaseFirestore.getInstance().collection("groups").document(groupDocumentID).update("expenses", expenses)
             }
+            // Update a group with a new group
+            @JvmStatic fun updateGroup(group: Group): Task<Void> {
+                val fbCollection = FirebaseFirestore.getInstance().collection("groups")
+                return fbCollection.document(group.documentID).update("name", group.name, "members", group.members, "expenses", group.expenses)
+            }
         }
     }
 }

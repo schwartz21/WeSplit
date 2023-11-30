@@ -22,8 +22,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
+import com.example.notweshare.models.Expense
+import com.example.notweshare.models.ExpenseMember
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
 import com.example.notweshare.notification.NotificationService
@@ -90,6 +93,16 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
         memberName = memberName,
         modifier = Modifier.padding(horizontal = mediumPadding)
     ) {
+        if (userOwes && member == userViewModel.activeUser.value.documentID)
+            Icon(
+                painter = painterResource(id = R.drawable.payup),
+                contentDescription = "Pay",
+                tint = paymentColor,
+                modifier = Modifier
+                    .size(28.dp)
+                    .padding(end = smallPadding / 2)
+                    .clickable { payMember(member, group) }
+            )
         Text(
             text = "${DecimalFormat("#.##").format(absContribution)} kr.",
             color = paymentColor,
@@ -113,4 +126,23 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
                     }
             )
     }
+}
+
+// Go through all expenses in the group with the member
+// If payed boolean is false, set to true
+private fun payMember(member: String, group: Group) {
+    val out = group.copy()
+    group.expenses.forEach() { expense ->
+        val expenseMembers = expense.members.values
+
+        for (i in 0..expenseMembers.size - 1) {
+            if (expenseMembers.elementAt(i).memberId == member && !expenseMembers.elementAt(i).payed) {
+                expenseMembers.elementAt(i).payed = true
+                expense.members.replace(i.toString(), expenseMembers.elementAt(i))
+            }
+        }
+    }
+
+    // Post new group
+    groupViewModel.updateGroup(out)
 }
