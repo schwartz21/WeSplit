@@ -4,8 +4,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import com.example.notweshare.R
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -13,7 +11,7 @@ import com.example.notweshare.MainActivity
 
 class NotificationService (private val context: Context) {
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    fun showNotification(name: String, amountOfMoneyOwed: String, groupName: String, nameOfDeptPerson: String) {
+    fun showNotification(name: String, amountOfMoneyOwed: String, groupName: String, nameOfOwingPerson: String) {
 
         val activityIntent = Intent(context, MainActivity::class.java)
 
@@ -43,15 +41,16 @@ class NotificationService (private val context: Context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
 
+        val notificationText = "Hi $nameOfOwingPerson, $name is asking you to pay the $amountOfMoneyOwed kr. that you owe in the group: $groupName "
 
         val bigTextStyle = NotificationCompat.BigTextStyle()
-            .bigText("$name requests you to pay the $amountOfMoneyOwed that you owe in the group: $groupName ")
+            .bigText(notificationText)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.notification)
             .setContentTitle("You owe money!")
-            .setContentText("$name is asking you to pay the $amountOfMoneyOwed kr. that you owe in the group: $groupName ")
+            .setContentText(notificationText)
             .setContentIntent(activityPendingIntent)
-            .addAction(R.drawable.notification, "Fuck that", dismissIntent)  // Add dismiss action
+            .addAction(R.drawable.notification, "Not now", dismissIntent)  // Add dismiss action
             .addAction(R.drawable.notification, "Pay up", pendingIntent )
             .setStyle(bigTextStyle)
             .build()
