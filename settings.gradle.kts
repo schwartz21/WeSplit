@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "NotWeShare"
 include(":app")
+include(":app:benchmark")

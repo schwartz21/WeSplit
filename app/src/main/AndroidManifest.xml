@@ -34,6 +34,7 @@
             </intent-filter>
         </activity>
         <receiver android:name=".notification.NotificationReceiver"/>
+        <profileable android:shell="true"/>
     </application>
 
 </manifest>
