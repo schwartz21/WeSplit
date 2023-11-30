@@ -41,6 +41,7 @@ import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.Expense
 import com.example.notweshare.models.ExpenseMember
 import com.example.notweshare.models.User
+import com.example.notweshare.models.returnNameFromId
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -48,7 +49,7 @@ import com.example.notweshare.models.User
 fun NewExpenseScreen(
     navigateUp: () -> Unit,
 ) {
-    val group = groupViewModel.selectedGroup.value
+    val group = groupViewModel.groups[groupViewModel.selectedGroupIndex.value]
     val user = userViewModel.activeUser.value
 
     var errorMessage by remember { mutableStateOf("") }
@@ -221,15 +222,5 @@ private fun validateExpense(
         return "Please select at least one group member"
     }
     return ""
-}
-
-private fun returnNameFromId(id: String): String {
-    var name = "Unknown User"
-    userViewModel.users.forEach {
-        if (it.documentID == id) {
-            name = it.name
-        }
-    }
-    return name
 }
 

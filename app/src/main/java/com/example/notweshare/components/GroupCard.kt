@@ -26,6 +26,7 @@ import kotlin.math.abs
 @Composable
 fun GroupCard(
     group: Group,
+    groupIndex: Int = 0,
     onNavigateToGroupDetails: () -> Unit = {},
 ) {
     val userContribution = getMemberDebt(group, userViewModel.activeUser.value.documentID)
@@ -34,7 +35,7 @@ fun GroupCard(
 
     GradientCard(
         onClickFunction = {
-            groupViewModel.setTheSelectedGroup(group) // Set selected group to be the group that was clicked
+            groupViewModel.setTheSelectedGroup(groupIndex) // Set selected group to be the group that was clicked
             userViewModel.findUsersWithDocumentIDs(group.members) // Update list of users to be the users from the group
             onNavigateToGroupDetails()
         },

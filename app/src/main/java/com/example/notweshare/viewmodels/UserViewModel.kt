@@ -14,7 +14,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.launch
 
-class UserViewModel(): ViewModel() {
+class UserViewModel() : ViewModel() {
 
     companion object {
         val userViewModel = UserViewModel()
@@ -31,7 +31,7 @@ class UserViewModel(): ViewModel() {
     }
 
     // Find users within a list of user document IDs
-    fun findUsersWithDocumentIDs (userDocumentIDs: MutableList<String>) {
+    fun findUsersWithDocumentIDs(userDocumentIDs: MutableList<String>) {
         isLoading.value = true
         viewModelScope.launch {
             fetchUsers(FirestoreQueries.UserQueries.usersWithDocumentIDs(userDocumentIDs)) { foundUsers ->
@@ -47,16 +47,30 @@ class UserViewModel(): ViewModel() {
      * @param userDocumentID: The document ID of the user to find
      * @param callback: A callback function to execute after the user is found. If no user is found with that document id, returns the default user
      */
-    fun findUserWithDocumentID (userDocumentID: String, callback: (User) -> Unit) {
+    fun findUserWithDocumentID(userDocumentID: String, callback: (User) -> Unit) {
         isLoading.value = true
         viewModelScope.launch {
             fetchUsers(FirestoreQueries.UserQueries.userWithDocumentID(userDocumentID)) { foundUsers ->
-                users.clear()
-                users.addAll(foundUsers)
+                var userDidNotExist = true
+
+                for (i in 0..users.size-1) {
+                    if (!users.isEmpty() && users[i].documentID == foundUsers[0].documentID) {
+                        users[i] = foundUsers[0]
+                        userDidNotExist = false
+                    }
+                }
+
+                if (userDidNotExist) {
+                    users.addAll(foundUsers)
+                }
                 isLoading.value = false
                 // To ensure that the callback is executed, even if the user is not found
-                if (users.isEmpty()) { users.add(User()) }
-                callback(users[0])
+                if (users.isEmpty()) {
+                    users.add(User())
+                    callback(users[0])
+                    return@fetchUsers
+                }
+                callback(foundUsers[0])
             }
         }
     }

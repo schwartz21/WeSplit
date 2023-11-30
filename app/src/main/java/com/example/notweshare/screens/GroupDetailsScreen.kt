@@ -20,6 +20,7 @@ import com.example.notweshare.R
 import com.example.notweshare.components.ExpensesCard
 import com.example.notweshare.components.GroupCard
 import com.example.notweshare.components.GroupDetailsMemberCard
+import com.example.notweshare.models.returnNameFromId
 
 
 @Composable
@@ -27,7 +28,7 @@ fun GroupDetailsScreen(
     context: Context,
     navigateToNewExpense: () -> Unit,
 ) {
-    val group = groupViewModel.selectedGroup.value
+    val group = groupViewModel.groups[groupViewModel.selectedGroupIndex.value]
 
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -74,14 +75,4 @@ fun GroupDetailsScreen(
             Spacer(modifier = Modifier.padding(smallPadding))
         }
     }
-}
-
-private fun returnNameFromId(id: String): String {
-    var name = "Unknown User"
-    userViewModel.users.forEach {
-        if (it.documentID == id) {
-            name = it.name
-        }
-    }
-    return name
 }

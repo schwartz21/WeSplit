@@ -1,5 +1,6 @@
 package com.example.notweshare.models
 
+import com.example.exampleapplication.viewmodels.UserViewModel
 import java.io.Serializable
 import java.util.*
 
@@ -25,3 +26,19 @@ data class User(
 
     var documentID: String = ""
 ): Serializable
+
+fun returnNameFromId(id: String): String {
+    val DEFAULT= "Unknown User"
+    var name = DEFAULT
+    UserViewModel.userViewModel.users.forEach {
+        if (it.documentID == id) {
+            name = it.name
+        }
+    }
+    if (name == DEFAULT){
+        UserViewModel.userViewModel.findUserWithDocumentID(id){
+            name = it.name
+        }
+    }
+    return name
+}

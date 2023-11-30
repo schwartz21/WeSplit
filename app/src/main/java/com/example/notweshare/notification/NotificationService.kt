@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import com.example.notweshare.R
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -40,14 +41,14 @@ class NotificationService (private val context: Context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
         val bigTextStyle = NotificationCompat.BigTextStyle()
-            .bigText("you owe $amountOfMoneyOwed to $name in group: $groupName ")
+            .bigText("$name requests you to pay the $amountOfMoneyOwed that you owe in the group: $groupName ")
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.notification)
-            .setContentTitle("$nameOfDeptPerson!!!!!")
-            .setContentText("you owe $amountOfMoneyOwed to $name in group: $groupName ")
+            .setContentTitle("You owe money!")
+            .setContentText("$name requests you to pay the $amountOfMoneyOwed that you owe in the group: $groupName ")
             .setContentIntent(activityPendingIntent)
-            .addAction(R.drawable.notification, "DISMISS", dismissIntent)  // Add dismiss action
-            .addAction(R.drawable.notification, "THIS Button does nothing", doMagic )
+            .addAction(R.drawable.notification, "Fuck that", dismissIntent)  // Add dismiss action
+            .addAction(R.drawable.notification, "Pay up", doMagic )
             .setStyle(bigTextStyle)
             .build()
 

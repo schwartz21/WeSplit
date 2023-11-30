@@ -25,10 +25,10 @@ class GroupViewModel(): ViewModel() {
     //mutatable state such that Compose can observe it.
     val groups = mutableStateListOf<Group>()
     var isLoading = mutableStateOf(false)
-    val selectedGroup = mutableStateOf(Group())
+    val selectedGroupIndex = mutableStateOf(0)
 
-    fun setTheSelectedGroup(group: Group) {
-        selectedGroup.value = group
+    fun setTheSelectedGroup(groupIndex: Int) {
+        selectedGroupIndex.value = groupIndex
     }
 
     fun findGroups () {
@@ -93,7 +93,7 @@ class GroupViewModel(): ViewModel() {
     }
 
     fun addExpenseToGroup(groupDocumentID: String, expense: Expense) {
-        val expenses = selectedGroup.value.expenses
+        val expenses = groups[selectedGroupIndex.value].expenses
         expenses.add(expense)
         viewModelScope.launch {
             FirestoreQueries.GroupQueries.updateExpensesOnAGroup(groupDocumentID, expenses)
