@@ -2,9 +2,9 @@ package com.example.notweshare.components
 
 import androidx.compose.foundation.clickable
 import android.content.Context
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,16 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
+import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
-import com.example.notweshare.models.Expense
-import com.example.notweshare.models.ExpenseMember
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
 import com.example.notweshare.notification.NotificationService
@@ -40,7 +38,12 @@ import kotlin.math.abs
 
 
 @Composable
-fun MemberCard(memberName: String, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun MemberCard(
+    memberName: String,
+    boldMemberName: Boolean = false,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val smallPadding = dimensionResource(R.dimen.padding_small)
@@ -60,8 +63,10 @@ fun MemberCard(memberName: String, modifier: Modifier = Modifier, content: @Comp
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(.6f),
-                text = memberName,
-                style = MaterialTheme.typography.bodyLarge,
+                text = if (boldMemberName) "You " else memberName,
+                style =  MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = if (boldMemberName) FontWeight.ExtraBold else FontWeight.Normal
+                ),
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -78,7 +83,7 @@ fun MemberCard(memberName: String, modifier: Modifier = Modifier, content: @Comp
 fun GroupDetailsMemberCard(context: Context, group: Group, member: String, memberName: String) {
 
     val userViewModel = userViewModel
-    val notification = NotificationService(context)
+    val notificationService = NotificationService(context)
 
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
@@ -94,8 +99,11 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
         else -> MaterialTheme.colorScheme.onSurface
     }
 
+    val memberIsActiveUser = (member == userViewModel.activeUser.value.documentID)
+
     MemberCard(
         memberName = memberName,
+        boldMemberName = memberIsActiveUser,
         modifier = Modifier.padding(horizontal = mediumPadding)
     ) {
         Text(
@@ -103,49 +111,50 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
             color = paymentColor,
             fontWeight = FontWeight.Bold,
         )
-        if (userOwes && member != userViewModel.activeUser.value.documentID) {
-            Surface (
-                modifier = Modifier.padding(start = smallPadding / 2),
-            ){
-                Icon(
-                    painter = painterResource(id = R.drawable.notification),
-                    contentDescription = "Pay",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clickable {
-                            notification.showNotification(
-                                userViewModel.activeUser.value.name,
-                                userContribution.toString(),
-                                group.name,
-                                memberName
-                            )
-                        }
-                        .background(
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            shape = RoundedCornerShape(smallPadding + smallPadding/2)
-                        )
-                )
-
-            }
-        } else if (userOwes && member == userViewModel.activeUser.value.documentID){
-            Icon(
-                painter = painterResource(id = R.drawable.payup),
-                contentDescription = "Pay",
-                tint = paymentColor,
-                modifier = Modifier
-                    .size(32.dp)
-                    .padding(end = smallPadding / 2)
-                    .clickable { payMember(member, group) }
-                    .padding(start = smallPadding / 4)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = CircleShape
+        if (userOwes && !memberIsActiveUser) {
+            CustomIconButton(
+                clickAction = {
+                    notificationService.showNotification(
+                        UserViewModel.userViewModel.activeUser.value.name,
+                        userContribution.toString(),
+                        group.name,
+                        memberName
                     )
-                    .shadow(elevation = 4.dp, shape = CircleShape)
+                }
             )
-
+        } else if (userOwes && memberIsActiveUser) {
+            CustomIconButton(
+                id = R.drawable.payup,
+                clickAction = { payMember(member, group) }
+            )
         }
+    }
+}
+
+@Composable
+private fun CustomIconButton(
+    @DrawableRes id: Int = R.drawable.notification,
+    clickAction: () -> Unit
+) {
+    val largePadding = dimensionResource(R.dimen.padding_large)
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val smallPadding = dimensionResource(R.dimen.padding_small)
+    Surface(
+        modifier = Modifier.padding(start = smallPadding / 2),
+        shape = RoundedCornerShape(smallPadding + smallPadding / 2),
+        color = MaterialTheme.colorScheme.primaryContainer,
+    ) {
+        Icon(
+            painter = painterResource(id = id),
+            contentDescription = "Pay",
+            tint = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .size(36.dp)
+                .clickable {
+                    clickAction()
+                }
+                .padding(smallPadding / 3) // must be after the background because this is used to make the icon smaller within the background
+        )
     }
 }
 

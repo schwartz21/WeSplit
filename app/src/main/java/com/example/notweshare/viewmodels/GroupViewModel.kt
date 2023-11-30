@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.notweshare.backend.FirestoreQueries
 import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
+import com.example.notweshare.models.User
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration

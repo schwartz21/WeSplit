@@ -45,7 +45,7 @@ class NotificationService (private val context: Context) {
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.notification)
             .setContentTitle("You owe money!")
-            .setContentText("$name requests you to pay the $amountOfMoneyOwed that you owe in the group: $groupName ")
+            .setContentText("$name is asking you to pay the $amountOfMoneyOwed kr. that you owe in the group: $groupName ")
             .setContentIntent(activityPendingIntent)
             .addAction(R.drawable.notification, "Fuck that", dismissIntent)  // Add dismiss action
             .addAction(R.drawable.notification, "Pay up", doMagic )

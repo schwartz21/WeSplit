@@ -38,9 +38,15 @@ fun GroupDetailsScreen(
         item {
             GroupCard(group)
         }
-        items(items = group.members) { member ->
-            GroupDetailsMemberCard(context, group, member, returnNameFromId(member))
+        item {
+            GroupDetailsMemberCard(context, group, userViewModel.activeUser.value.documentID, userViewModel.activeUser.value.name)
             Spacer(modifier = Modifier.padding(smallPadding))
+        }
+        items(items = group.members) { member ->
+            if (member != userViewModel.activeUser.value.documentID){
+                GroupDetailsMemberCard(context, group, member, returnNameFromId(member))
+                Spacer(modifier = Modifier.padding(smallPadding))
+            }
         }
         item {
             Text(
