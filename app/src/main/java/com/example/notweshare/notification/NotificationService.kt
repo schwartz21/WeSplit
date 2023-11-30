@@ -17,6 +17,16 @@ class NotificationService (private val context: Context) {
 
         val activityIntent = Intent(context, MainActivity::class.java)
 
+        val openAppIntent = Intent().apply {
+            setPackage("dk.danskebank.mobilepay");
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            1,
+            openAppIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val activityPendingIntent = PendingIntent.getActivity(
             context,
             1,
@@ -33,13 +43,7 @@ class NotificationService (private val context: Context) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
 
-        val doMagic = PendingIntent.getBroadcast(
-            context,
-            2,  // Use a unique request code
-            Intent(context, NotificationDismissReceiver::class.java),
-            // flag to control version
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
-        )
+
         val bigTextStyle = NotificationCompat.BigTextStyle()
             .bigText("$name requests you to pay the $amountOfMoneyOwed that you owe in the group: $groupName ")
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
