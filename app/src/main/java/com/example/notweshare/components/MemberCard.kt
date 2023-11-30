@@ -2,7 +2,9 @@ package com.example.notweshare.components
 
 import androidx.compose.foundation.clickable
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -93,22 +97,12 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
         memberName = memberName,
         modifier = Modifier.padding(horizontal = mediumPadding)
     ) {
-        if (userOwes && member == userViewModel.activeUser.value.documentID)
-            Icon(
-                painter = painterResource(id = R.drawable.payup),
-                contentDescription = "Pay",
-                tint = paymentColor,
-                modifier = Modifier
-                    .size(28.dp)
-                    .padding(end = smallPadding / 2)
-                    .clickable { payMember(member, group) }
-            )
         Text(
-            text = "${DecimalFormat("#.##").format(absContribution)} kr.",
+            text = "${DecimalFormat("#.##").format(absContribution)} kr. ",
             color = paymentColor,
             fontWeight = FontWeight.Bold,
         )
-        if (userOwes)
+        if (userOwes && member != userViewModel.activeUser.value.documentID)
             Icon(
                 painter = painterResource(id = R.drawable.notification),
                 contentDescription = "Pay",
@@ -124,6 +118,28 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
                             memberName
                         )
                     }
+                    .padding(smallPadding / 4)
+                    .background(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = CircleShape
+                    )
+                    .shadow(elevation = 4.dp, shape = CircleShape)
+            )
+        if (userOwes && member == userViewModel.activeUser.value.documentID)
+            Icon(
+                painter = painterResource(id = R.drawable.payup),
+                contentDescription = "Pay",
+                tint = paymentColor,
+                modifier = Modifier
+                    .size(32.dp)
+                    .padding(end = smallPadding / 2)
+                    .clickable { payMember(member, group) }
+                    .padding(start = smallPadding / 4)
+                    .background(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = CircleShape
+                    )
+                    .shadow(elevation = 4.dp, shape = CircleShape)
             )
     }
 }
