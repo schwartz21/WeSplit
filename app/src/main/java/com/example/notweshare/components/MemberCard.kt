@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -102,30 +103,32 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
             color = paymentColor,
             fontWeight = FontWeight.Bold,
         )
-        if (userOwes && member != userViewModel.activeUser.value.documentID)
-            Icon(
-                painter = painterResource(id = R.drawable.notification),
-                contentDescription = "Pay",
-                tint = paymentColor,
-                modifier = Modifier
-                    .size(36.dp)
-                    .padding(start = smallPadding / 2)
-                    .clickable {
-                        notification.showNotification(
-                            userViewModel.activeUser.value.name,
-                            userContribution.toString(),
-                            group.name,
-                            memberName
+        if (userOwes && member != userViewModel.activeUser.value.documentID) {
+            Surface (
+                modifier = Modifier.padding(start = smallPadding / 2),
+            ){
+                Icon(
+                    painter = painterResource(id = R.drawable.notification),
+                    contentDescription = "Pay",
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clickable {
+                            notification.showNotification(
+                                userViewModel.activeUser.value.name,
+                                userContribution.toString(),
+                                group.name,
+                                memberName
+                            )
+                        }
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(smallPadding + smallPadding/2)
                         )
-                    }
-                    .padding(smallPadding / 4)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = CircleShape
-                    )
-                    .shadow(elevation = 4.dp, shape = CircleShape)
-            )
-        if (userOwes && member == userViewModel.activeUser.value.documentID)
+                )
+
+            }
+        } else if (userOwes && member == userViewModel.activeUser.value.documentID){
             Icon(
                 painter = painterResource(id = R.drawable.payup),
                 contentDescription = "Pay",
@@ -141,6 +144,8 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
                     )
                     .shadow(elevation = 4.dp, shape = CircleShape)
             )
+
+        }
     }
 }
 
