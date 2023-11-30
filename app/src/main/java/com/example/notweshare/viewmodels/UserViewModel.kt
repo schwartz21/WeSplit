@@ -37,6 +37,11 @@ class UserViewModel() : ViewModel() {
             fetchUsers(FirestoreQueries.UserQueries.usersWithDocumentIDs(userDocumentIDs)) { foundUsers ->
                 users.clear()
                 users.addAll(foundUsers)
+                for (user in foundUsers){
+                    if (user.documentID == activeUser.value.documentID){
+                        setTheActiveUser(user)
+                    }
+                }
                 isLoading.value = false
             }
         }
@@ -57,6 +62,12 @@ class UserViewModel() : ViewModel() {
                     if (!users.isEmpty() && users[i].documentID == foundUsers[0].documentID) {
                         users[i] = foundUsers[0]
                         userDidNotExist = false
+                    }
+                }
+
+                for (user in foundUsers){
+                    if (user.documentID == activeUser.value.documentID){
+                        setTheActiveUser(user)
                     }
                 }
 

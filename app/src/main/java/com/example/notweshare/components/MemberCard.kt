@@ -30,28 +30,15 @@ import com.example.notweshare.notification.NotificationService
 import java.text.DecimalFormat
 import kotlin.math.abs
 
+
 @Composable
-fun GroupDetailsMemberCard(context: Context, group: Group, member: String, memberName: String) {
-
-    val userViewModel = userViewModel
-    val notification = NotificationService(context)
-
+fun MemberCard(memberName: String, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     val largePadding = dimensionResource(R.dimen.padding_large)
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val smallPadding = dimensionResource(R.dimen.padding_small)
 
-    val userContribution = getMemberDebt(group, member)
-    val absContribution = abs(userContribution)
-    val userOwes = userContribution > 0
-
-    val paymentColor = when {
-        userOwes -> MaterialTheme.colorScheme.error
-        !userOwes -> MaterialTheme.colorScheme.surfaceVariant
-        else -> MaterialTheme.colorScheme.onSurface
-    }
-
     Surface(
-        modifier = Modifier.padding(horizontal = mediumPadding),
+        modifier = modifier,
         color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(mediumPadding),
         shadowElevation = 4.dp,
@@ -73,29 +60,57 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.fillMaxWidth(1f),
             ) {
-                Text(
-                    text = "${DecimalFormat("#.##").format(absContribution)} kr.",
-                    color = paymentColor,
-                    fontWeight = FontWeight.Bold,
-                )
-                if (userOwes)
-                    Icon(
-                        painter = painterResource(id = R.drawable.notification),
-                        contentDescription = "Pay",
-                        tint = paymentColor,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .padding(start = smallPadding / 2)
-                            .clickable {
-                                notification.showNotification(
-                                    userViewModel.activeUser.value.name,
-                                    userContribution.toString(),
-                                    group.name,
-                                    memberName
-                                )
-                            }
-                    )
+                content()
             }
         }
+    }
+}
+
+@Composable
+fun GroupDetailsMemberCard(context: Context, group: Group, member: String, memberName: String) {
+
+    val userViewModel = userViewModel
+    val notification = NotificationService(context)
+
+    val largePadding = dimensionResource(R.dimen.padding_large)
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val smallPadding = dimensionResource(R.dimen.padding_small)
+
+    val userContribution = getMemberDebt(group, member)
+    val absContribution = abs(userContribution)
+    val userOwes = userContribution > 0
+
+    val paymentColor = when {
+        userOwes -> MaterialTheme.colorScheme.error
+        !userOwes -> MaterialTheme.colorScheme.surfaceVariant
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+
+    MemberCard(
+        memberName = memberName,
+        modifier = Modifier.padding(horizontal = mediumPadding)
+    ) {
+        Text(
+            text = "${DecimalFormat("#.##").format(absContribution)} kr.",
+            color = paymentColor,
+            fontWeight = FontWeight.Bold,
+        )
+        if (userOwes)
+            Icon(
+                painter = painterResource(id = R.drawable.notification),
+                contentDescription = "Pay",
+                tint = paymentColor,
+                modifier = Modifier
+                    .size(36.dp)
+                    .padding(start = smallPadding / 2)
+                    .clickable {
+                        notification.showNotification(
+                            userViewModel.activeUser.value.name,
+                            userContribution.toString(),
+                            group.name,
+                            memberName
+                        )
+                    }
+            )
     }
 }

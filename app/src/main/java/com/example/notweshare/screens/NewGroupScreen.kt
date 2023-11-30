@@ -24,8 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
+import com.example.notweshare.components.MemberCard
 import com.example.notweshare.components.TextFieldCard
 import com.example.notweshare.models.Group
+import com.example.notweshare.models.returnNameFromId
 
 @Composable
 fun NewGroupScreen(
@@ -47,6 +49,7 @@ fun NewGroupScreen(
 
     // Add members to a member list
     fun addItem(item: String) {
+        errorAddGroupMemberMessage = ""
         if (userViewModel.activeUser.value.documentID.equals(item)) {
             errorAddGroupMemberMessage = "You are automatically added to the group."
             addMemberByPhoneNumber = ""
@@ -92,6 +95,7 @@ fun NewGroupScreen(
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
+                errorAddGroupMemberMessage = ""
                 if (validatePhoneNumber(addMemberByPhoneNumber)) {
                     addItem(addMemberByPhoneNumber)
                 } else {
@@ -113,10 +117,14 @@ fun NewGroupScreen(
                 )
             }
             items(memberList) { item ->
-                Text(text = item)
+                MemberCard(
+                    memberName = returnNameFromId(item),
+                    modifier = Modifier.padding(vertical = smallPadding)
+                ) {
+                    Text(text = "+45 $item")
+                }
             }
         })
-        Spacer(modifier = Modifier.padding(smallPadding))
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
@@ -158,10 +166,10 @@ private fun createGroup(
 }
 
 private fun validatePhoneNumber(phoneNumber: String): Boolean {
-    return phoneNumber.isNotEmpty()
+    return phoneNumber.isNotEmpty() && validatePhoneNumberIsNumbers(phoneNumber)
 }
 
-private fun vaidatePhoneNumberIsNumbers(phoneNumber: String): Boolean {
+private fun validatePhoneNumberIsNumbers(phoneNumber: String): Boolean {
     return phoneNumber.matches(Regex("[0-9]+"))
 }
 
