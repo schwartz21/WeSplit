@@ -1,10 +1,7 @@
 package com.example.notweshare
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.os.Build
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -19,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -46,15 +42,15 @@ import com.example.compose.AppTheme
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.models.TabItem
-import com.example.notweshare.notification.NotificationService
 import com.example.notweshare.notification.NotificationJobIntentService
-import com.example.notweshare.screens.HomeScreen
-import com.example.notweshare.screens.NewExpenseScreen
+import com.example.notweshare.notification.NotificationService
 import com.example.notweshare.screens.GroupDetailsScreen
+import com.example.notweshare.screens.HomeScreen
+import com.example.notweshare.screens.LoginScreen
+import com.example.notweshare.screens.NewExpenseScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.PermissionDialog
 import com.example.notweshare.screens.ProfileScreen
-import com.example.notweshare.screens.LoginScreen
 import com.example.notweshare.screens.RegisterScreen
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
@@ -75,8 +71,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation()
-                    Button(onClick = { startNotificationService() }) {
-                        Text(text = "CLICK ME")
+                    Button(onClick = { /*TODO*/ }) {
+
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         PermissionDialog()
@@ -84,32 +80,35 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
 
-        private fun getFireBaseToken() {
-            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    //save this token to the user and store in DB for late use.
-                    //dont know if we should check if the token is the same as previous every time the app launches
-                    val token = task.result
-                    Log.d("NotificationService", token)
-                    println(token)
-                    // Send this token to your server to identify and target specific devices
-                } else {
-                    Log.e("FCM Token", "Failed to get token: ${task.exception}")
-                }
+    private fun getFireBaseToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                //save this token to the user and store in DB for late use.
+                //dont know if we should check if the token is the same as previous every time the app launches
+                val token = task.result
+                Log.d("NotificationService", token)
+                println(token)
+                // Send this token to your server to identify and target specific devices
+            } else {
+                Log.e("FCM Token", "Failed to get token: ${task.exception}")
             }
         }
-
-        private fun startNotificationService() {
-            // Create an intent to start the com.example.notweshare.notification.NotificationJobIntentService
-            val intent = Intent(this, NotificationJobIntentService::class.java)
-            intent.putExtra("title", "Notification Title")
-            intent.putExtra("body", "Notification Body")
-
-            // Enqueue the work to be done by the service
-            NotificationJobIntentService.enqueueWork(this, intent)
-        }
     }
+
+
+    private fun startNotificationService() {
+        // Create an intent to start the com.example.notweshare.notification.NotificationJobIntentService
+        val intent = Intent(this, NotificationJobIntentService::class.java)
+        intent.putExtra("title", "Notification Title")
+        intent.putExtra("body", "Notification Body")
+
+        // Enqueue the work to be done by the service
+        NotificationJobIntentService.enqueueWork(this, intent)
+    }
+}
+
 
     @Composable
     fun Navigation() {
@@ -267,7 +266,7 @@ class MainActivity : ComponentActivity() {
         object LoginScreen : Screen("LoginScreen")
         object RegisterScreen : Screen("RegisterScreen")
     }
-}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -275,3 +274,4 @@ fun GreetingPreview() {
         Navigation()
     }
 }
+
