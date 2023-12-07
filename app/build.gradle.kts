@@ -54,6 +54,7 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:3.4.6")
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-firestore:24.0.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.30.1")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.20.0")
     implementation("androidx.navigation:navigation-compose:2.7.5")

@@ -2,6 +2,7 @@ package com.example.notweshare
 
 import com.example.notweshare.notification.NotificationJobIntentService
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -37,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.notweshare.models.TabItem
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewGroupScreen
+import com.example.notweshare.screens.PermissionDialog
 import com.example.notweshare.screens.ProfileScreen
 import com.example.notweshare.ui.theme.NotWeShareTheme
 import com.google.firebase.FirebaseApp
@@ -52,8 +54,11 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Navigation("for the Android 2")
-                    Button(onClick= {startNotificationService()}){
-                        Text(text = "CLICK ME")
+//                    Button(onClick= {startNotificationService()}){
+//                        Text(text = "CLICK ME")
+//                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                        PermissionDialog()
                     }
                 }
             }
@@ -66,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 //save this token to the user and store in DB for late use.
                 //dont know if we should check if the token is the same as previous every time the app launches
                 val token = task.result
-                Log.d("FCM Token", token)
+                Log.d("NotificationService", token)
                 println(token)
                 // Send this token to your server to identify and target specific devices
             } else {
@@ -87,6 +92,9 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Navigation(name: String, modifier: Modifier = Modifier) {
+
+
+
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(

@@ -29,7 +29,7 @@ class NotificationJobIntentService : JobIntentService() {
     private fun sendFCMMessage(title: String?, body: String?) {
         try {
             // The FCM token of the target device
-            val recipientToken = "foUVV2vTTAmVDnXrg8m6vb:APA91bGVqyPpOr7xacmoR3m1Hl-kHMP0vWQG-eQy1BK2edcGjePpDaQ4KaypcdH4hzEL6YqmVqXaiELkZa36G8nCkgYX-q7vyZ6pObRHS-cRTdCDM3Vh6l_pmYgVuflLvBFFvP9i9dQP"
+            val recipientToken = "c5ROfnZGScuI_8OP2QLfxQ:APA91bGrLcDs9fp_yTwbsm23oZbsyC29_aZyrl6NVK4920hBn7xFW7_isT9MGU28azMXC0Oz3B521pBD9u9Flspp4MWBDpiTm0ths1xbONfrBK1XPBBixmqML8O-ksC_OXI_OqrnDPK8\n"
 
             // Create a RemoteMessage
             val message = RemoteMessage.Builder(recipientToken)

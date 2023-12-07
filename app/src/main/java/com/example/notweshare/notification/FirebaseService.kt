@@ -19,14 +19,16 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Handle the incoming message
         println("onMessageRecived")
-        val notificationData = remoteMessage.data
+        Log.d("NotificationService", "Notification received")
+        val notificationData = remoteMessage.notification
         // Extract relevant information from notificationData
-
         // Show a notification
-        showNotification(notificationData)
+        if (notificationData != null) {
+            showNotification(notificationData)
+        }
     }
 
-    private fun showNotification(notificationData: Map<String, String>) {
+    private fun showNotification(notificationData: RemoteMessage.Notification) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Create a notification channel for Android Oreo and higher
@@ -51,8 +53,8 @@ class FirebaseService : FirebaseMessagingService() {
         // Build the notification
         val notificationBuilder = NotificationCompat.Builder(this, "channel_id")
             .setSmallIcon(R.drawable.baseline_notifications_active_24)
-            .setContentTitle(notificationData["title"])
-            .setContentText(notificationData["body"])
+            .setContentTitle(notificationData.title)
+            .setContentText(notificationData.body)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
 
