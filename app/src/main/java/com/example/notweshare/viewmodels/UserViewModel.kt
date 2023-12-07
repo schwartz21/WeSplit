@@ -53,12 +53,20 @@ class UserViewModel() : ViewModel() {
      * @param callback: A callback function to execute after the user is found. If no user is found with that document id, returns the default user
      */
     fun findUserWithDocumentID(userDocumentID: String, callback: (User) -> Unit) {
+        println("Trying to fetch users")
         isLoading.value = true
         viewModelScope.launch {
             fetchUsers(FirestoreQueries.UserQueries.userWithDocumentID(userDocumentID)) { foundUsers ->
+
+                // If the user is not found, return the default user
+                if (foundUsers.isEmpty()) {
+                    callback(User())
+                    return@fetchUsers
+                }
+
                 var userDidNotExist = true
 
-                for (i in 0..users.size-1) {
+                for (i in 0..users.size - 1) {
                     if (!users.isEmpty() && users[i].documentID == foundUsers[0].documentID) {
                         users[i] = foundUsers[0]
                         userDidNotExist = false
@@ -74,13 +82,8 @@ class UserViewModel() : ViewModel() {
                 if (userDidNotExist) {
                     users.addAll(foundUsers)
                 }
+
                 isLoading.value = false
-                // To ensure that the callback is executed, even if the user is not found
-                if (users.isEmpty()) {
-                    users.add(User())
-                    callback(users[0])
-                    return@fetchUsers
-                }
                 callback(foundUsers[0])
             }
         }
