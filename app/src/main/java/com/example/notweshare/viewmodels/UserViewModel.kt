@@ -53,7 +53,6 @@ class UserViewModel() : ViewModel() {
      * @param callback: A callback function to execute after the user is found. If no user is found with that document id, returns the default user
      */
     fun findUserWithDocumentID(userDocumentID: String, callback: (User) -> Unit) {
-        println("Trying to fetch users")
         isLoading.value = true
         viewModelScope.launch {
             fetchUsers(FirestoreQueries.UserQueries.userWithDocumentID(userDocumentID)) { foundUsers ->
