@@ -71,8 +71,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation()
-                    Button(onClick = { /*TODO*/ }) {
-
+                    Button(onClick = {startNotificationService()}) {
+                        Text(text = "CLICK ME")
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         PermissionDialog()
