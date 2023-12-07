@@ -1,9 +1,5 @@
 package com.example.notweshare
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -57,6 +52,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val noti = NotificationService(applicationContext)
+
         setContent {
             AppTheme {
                 // A surface container using the 'background' color from the theme
@@ -65,7 +61,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation()
+                    LoginAndRegister()
                 }
             }
         }
@@ -93,87 +89,54 @@ fun Navigation() {
 
     Scaffold(
         bottomBar = {
-            if (userViewModel.activeUser.value.documentID.isNotEmpty()) {
-                BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    contentColor = Color.White,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(tabBarHeight)
-                ) {
-                    tabs.forEachIndexed { index, tab ->
-                        val tint =
-                            ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
-                        IconButton(
-                            onClick = {
-                                // This is the variable that must be changed to change the selected tab
-                                selectedTabIndex = index
-                                navController.navigate(tab.route)
-                            },
-                            modifier = Modifier.weight(1f)
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                contentColor = Color.White,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(tabBarHeight)
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    val tint =
+                        ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
+                    IconButton(
+                        onClick = {
+                            // This is the variable that must be changed to change the selected tab
+                            selectedTabIndex = index
+                            navController.navigate(tab.route)
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Bottom
                         ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Bottom
-                            ) {
-                                Image(
-                                    colorFilter = tint,
-                                    painter = painterResource(tab.icon),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Text(
-                                    text = tab.title,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-                                )
-                            }
+                            Image(
+                                colorFilter = tint,
+                                painter = painterResource(tab.icon),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Text(
+                                text = tab.title,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                            )
                         }
                     }
                 }
             }
+
         }
     ) {
         NavHost(
             navController,
-            startDestination = Screen.LoginScreen.route,
+            startDestination = Screen.HomeScreen.route,
             modifier = Modifier.height(
                 contentHeight
             )
         ) {
             with(navController) {
-                composable(Screen.LoginScreen.route) {
-                    LoginScreen(
-                        navigateToRegister = {
-                            navigate(
-                                Screen.RegisterScreen.route
-                            )
-                        },
-                        navigateToHomeScreen = {
-                            // Find groups with the user as a member
-                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
-                            navigate(
-                                Screen.HomeScreen.route
-                            )
-                        },
-                    )
-                }
-                composable(Screen.RegisterScreen.route) {
-                    RegisterScreen(
-                        navigateToHomeScreen = {
-                            // Find groups with the user as a member
-                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
-                            navigate(
-                                Screen.HomeScreen.route
-                            )
-                        },
-                        navigateToLogin = {
-                            navigate(
-                                Screen.LoginScreen.route
-                            )
-                        },
-                    )
-                }
                 composable(Screen.HomeScreen.route) {
                     HomeScreen(
                         navigateToGroupDetails = {
@@ -219,7 +182,63 @@ fun Navigation() {
     }
 }
 
+@Composable
+fun LoginAndRegister() {
+    val navController = rememberNavController()
+    Scaffold(
+    ) {
+        NavHost(
+            navController,
+            startDestination = Screen.LoginScreen.route,
+        ) {
+            with(navController) {
+                composable(Screen.LoginScreen.route) {
+                    LoginScreen(
+                        navigateToRegister = {
+                            navigate(
+                                Screen.RegisterScreen.route
+                            )
+                        },
+                        navigateToMain = {
+                            // Find groups with the user as a member
+                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
+                            navigate(
+                                Screen.MainScreen.route
+                            )
+                        },
+                    )
+                }
+                composable(Screen.RegisterScreen.route) {
+                    RegisterScreen(
+                        navigateToMain = {
+                            // Find groups with the user as a member
+                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
+                            navigate(
+                                Screen.MainScreen.route
+                            )
+                        },
+                        navigateToLogin = {
+                            navigate(
+                                Screen.LoginScreen.route
+                            )
+                        },
+                    )
+                }
+                composable(Screen.MainScreen.route) {
+                    Navigation()
+                }
+            }
+
+        }
+
+        // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
+        val something = it
+    }
+
+}
+
 sealed class Screen(val route: String) {
+    object MainScreen : Screen("MainScreen")
     object HomeScreen : Screen("HomeScreen")
     object NewGroupScreen : Screen("NewScreen")
     object ProfileScreen : Screen("ProfileScreen")

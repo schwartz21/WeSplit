@@ -1,5 +1,6 @@
 package com.example.notweshare.screens
 
+import android.content.Intent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
+import com.example.notweshare.MainActivity
 import com.example.notweshare.R
 import com.example.notweshare.components.passwordTextFieldCard
 import com.example.notweshare.components.TextFieldCard
@@ -42,8 +44,8 @@ import com.example.notweshare.components.TextFieldCard
 @Composable
 fun LoginScreen(
     navigateToRegister: () -> Unit,
-    navigateToHomeScreen: () -> Unit,
-) {
+    navigateToMain: () -> Unit,
+): Boolean {
 
     val largePadding = dimensionResource(R.dimen.padding_large)
 
@@ -118,7 +120,9 @@ fun LoginScreen(
                         } else if (screenActive) {
                             screenActive = false
                             userViewModel.setTheActiveUser(user)
-                            navigateToHomeScreen()
+
+                            navigateToMain()
+
                         }
                     }
 
@@ -153,4 +157,5 @@ fun LoginScreen(
 
         }
     }
+    return screenActive
 }
