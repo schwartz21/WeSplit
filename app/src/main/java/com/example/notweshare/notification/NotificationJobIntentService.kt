@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.JobIntentService
-import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.functions.FirebaseFunctions
 
 class NotificationJobIntentService : JobIntentService() {
 
@@ -18,27 +17,26 @@ class NotificationJobIntentService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        // Get data from the intent
-        val title = intent.getStringExtra("title")
-        val body = intent.getStringExtra("body")
+        val body = "BODY YESYT"
+        val title = "TEST"
 
-        // Send FCM message
-        sendFCMMessage(title, body)
+        val recipientToken = listOf("fNOlTce2QVSK4DjOO6uCLb:APA91bEODu_pKqkGLgjYulyFRwEti_kE_C402BSSM1rDq_g2hpc3xAb2_373iM9pPpPLSYvlCiHmKofAzCFPZGYXWrpI8WhO1yTioG80ylc3QI_eRWfP2ltrEsbKrTiMUWPKXEbQGoZD")
+
+        sendFCMMessage(recipientToken,title, body)
     }
 
-    private fun sendFCMMessage(title: String?, body: String?) {
+    private fun sendFCMMessage(token: List<String>, title: String, body: String) {
         try {
-            // The FCM token of the target device
-            val recipientToken = "c5ROfnZGScuI_8OP2QLfxQ:APA91bGrLcDs9fp_yTwbsm23oZbsyC29_aZyrl6NVK4920hBn7xFW7_isT9MGU28azMXC0Oz3B521pBD9u9Flspp4MWBDpiTm0ths1xbONfrBK1XPBBixmqML8O-ksC_OXI_OqrnDPK8\n"
 
-            // Create a RemoteMessage
-            val message = RemoteMessage.Builder(recipientToken)
-                .setMessageId(java.lang.String.valueOf(System.currentTimeMillis()))
-                .setData(mapOf("title" to title, "body" to body))
-                .build()
-
-            // Send the FCM message
-            FirebaseMessaging.getInstance().send(message)
+            val data = hashMapOf(
+                "title" to title,
+                "body" to body,
+                "tokens" to token
+            )
+            FirebaseFunctions
+                .getInstance()
+                .getHttpsCallable("sendNotification")
+                .call(data)
 
             Log.d("NotificationService", "FCM message sent successfully")
         } catch (e: Exception) {

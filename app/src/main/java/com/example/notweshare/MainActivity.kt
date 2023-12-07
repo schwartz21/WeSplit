@@ -1,6 +1,5 @@
 package com.example.notweshare
 
-import com.example.notweshare.notification.NotificationJobIntentService
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -36,6 +35,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.notweshare.models.TabItem
+import com.example.notweshare.notification.NotificationJobIntentService
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.NewGroupScreen
 import com.example.notweshare.screens.PermissionDialog
@@ -54,9 +54,9 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     Navigation("for the Android 2")
-//                    Button(onClick= {startNotificationService()}){
-//                        Text(text = "CLICK ME")
-//                    }
+                    Button(onClick= {startNotificationService()}){
+                      Text(text = "CLICK ME")
+                    }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
                         PermissionDialog()
                     }
