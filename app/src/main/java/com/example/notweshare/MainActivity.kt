@@ -1,6 +1,7 @@
 package com.example.notweshare
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
@@ -78,6 +80,14 @@ fun Navigation() {
         TabItem("Profile", Screen.ProfileScreen.route, R.drawable.profile)
     )
 
+    val tabIndexes = mapOf<String, Int>(
+        Screen.HomeScreen.route to 0,
+        Screen.GroupDetailsScreen.route to 0,
+        Screen.NewExpenseScreen.route to 0,
+        Screen.NewGroupScreen.route to 1,
+        Screen.ProfileScreen.route to 2,
+    )
+
 
     val tabBarHeight = with(LocalDensity.current) {
         65.sp.toDp()
@@ -96,6 +106,13 @@ fun Navigation() {
                     .fillMaxWidth()
                     .height(tabBarHeight)
             ) {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+                if (currentRoute != null) {
+                    selectedTabIndex = tabIndexes[currentRoute] ?: 0
+                }
+
                 tabs.forEachIndexed { index, tab ->
                     val tint =
                         ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
