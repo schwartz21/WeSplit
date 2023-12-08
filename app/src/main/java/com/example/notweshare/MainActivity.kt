@@ -4,6 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -59,9 +66,7 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
                     LoginAndRegister()
                 }
@@ -88,6 +93,8 @@ fun Navigation() {
         Screen.ProfileScreen.route to 2,
     )
 
+    val routes = tabIndexes.keys
+
 
     val tabBarHeight = with(LocalDensity.current) {
         65.sp.toDp()
@@ -97,64 +104,69 @@ fun Navigation() {
 
     // If We wish to change the highlighted tab, we should probably do it by modifiying an external variable
 
-    Scaffold(
-        bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                contentColor = Color.White,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(tabBarHeight)
-            ) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+    Scaffold(bottomBar = {
+        BottomAppBar(
+            containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            contentColor = Color.White,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(tabBarHeight)
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
 
-                if (currentRoute != null) {
-                    selectedTabIndex = tabIndexes[currentRoute] ?: 0
-                }
+            if (currentRoute != null) {
+                selectedTabIndex = tabIndexes[currentRoute] ?: 0
+            }
 
-                tabs.forEachIndexed { index, tab ->
-                    val tint =
-                        ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
-                    IconButton(
-                        onClick = {
-                            // This is the variable that must be changed to change the selected tab
-                            selectedTabIndex = index
-                            navController.navigate(tab.route)
-                        },
-                        modifier = Modifier.weight(1f)
+            tabs.forEachIndexed { index, tab ->
+                val tint =
+                    ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
+                IconButton(
+                    onClick = {
+                        // This is the variable that must be changed to change the selected tab
+                        selectedTabIndex = index
+                        navController.navigate(tab.route)
+                    }, modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Bottom
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Bottom
-                        ) {
-                            Image(
-                                colorFilter = tint,
-                                painter = painterResource(tab.icon),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Text(
-                                text = tab.title,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-                            )
-                        }
+                        Image(
+                            colorFilter = tint,
+                            painter = painterResource(tab.icon),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = tab.title,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                        )
                     }
                 }
             }
-
         }
-    ) {
+
+    }) {
         NavHost(
-            navController,
-            startDestination = Screen.HomeScreen.route,
-            modifier = Modifier.height(
+            navController, startDestination = Screen.HomeScreen.route, modifier = Modifier.height(
                 contentHeight
             )
         ) {
             with(navController) {
-                composable(Screen.HomeScreen.route) {
+                composable(
+                    route = Screen.HomeScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
                     HomeScreen(
                         navigateToGroupDetails = {
                             navigate(
@@ -163,7 +175,16 @@ fun Navigation() {
                         },
                     )
                 }
-                composable(Screen.NewGroupScreen.route) {
+                composable(Screen.NewGroupScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
                     NewGroupScreen(
                         navigateToGroups = {
                             navigate(
@@ -172,8 +193,28 @@ fun Navigation() {
                         },
                     )
                 }
-                composable(Screen.ProfileScreen.route) { ProfileScreen() }
-                composable(Screen.GroupDetailsScreen.route) {
+                composable(Screen.ProfileScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) { ProfileScreen() }
+                composable(
+                    route = Screen.GroupDetailsScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+
+                    }) {
                     GroupDetailsScreen(
                         navigateToNewExpense = {
                             navigate(
@@ -183,7 +224,17 @@ fun Navigation() {
                         context = context,
                     )
                 }
-                composable(Screen.NewExpenseScreen.route) {
+                composable(
+                    route = Screen.NewExpenseScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
                     NewExpenseScreen(
                         navigateUp = {
                             navigateUp()
@@ -199,9 +250,63 @@ fun Navigation() {
     }
 }
 
+val animationTime = 400
+val easing = CubicBezierEasing(0.65f, 0f, 0.35f, 1f)
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideIn(
+    routes: Set<String>,
+): EnterTransition {
+    val direction = slideDirection(routes, false)
+
+    return slideIntoContainer(
+        towards = direction,
+        animationSpec = tween(animationTime, easing = easing)
+    )
+}
+
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideOut(
+    routes: Set<String>
+): ExitTransition {
+    val direction = slideDirection(routes)
+
+    return slideOutOfContainer(
+        towards = direction,
+        animationSpec = tween(animationTime, easing = easing)
+    )
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideDirection(
+    routes: Set<String>,
+    exit: Boolean = true
+): AnimatedContentTransitionScope.SlideDirection {
+    val targetRoute = this.targetState.destination.route
+    val targetIndex = routes.indexOf(targetRoute)
+    val currentRoute = this.initialState.destination.route
+    val currentIndex = routes.indexOf(currentRoute)
+
+    Log.d(
+        "animation",
+        "targetRoute: $targetRoute, targetIndex: $targetIndex, currentRoute: $currentRoute, currentIndex: $currentIndex"
+    )
+
+    val direction = if (targetIndex > currentIndex) {
+        AnimatedContentTransitionScope.SlideDirection.Left
+    } else {
+        AnimatedContentTransitionScope.SlideDirection.Right
+    }
+    return direction
+}
+
 @Composable
 fun LoginAndRegister() {
     val navController = rememberNavController()
+
+    val routes = setOf(
+        Screen.LoginScreen.route,
+        Screen.RegisterScreen.route,
+        Screen.MainScreen.route,
+    )
+
     Scaffold(
     ) {
         NavHost(
@@ -209,7 +314,16 @@ fun LoginAndRegister() {
             startDestination = Screen.LoginScreen.route,
         ) {
             with(navController) {
-                composable(Screen.LoginScreen.route) {
+                composable(Screen.LoginScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
                     LoginScreen(
                         navigateToRegister = {
                             navigate(
@@ -225,7 +339,16 @@ fun LoginAndRegister() {
                         },
                     )
                 }
-                composable(Screen.RegisterScreen.route) {
+                composable(Screen.RegisterScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
                     RegisterScreen(
                         navigateToMain = {
                             // Find groups with the user as a member
@@ -241,7 +364,16 @@ fun LoginAndRegister() {
                         },
                     )
                 }
-                composable(Screen.MainScreen.route) {
+                composable(Screen.MainScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
                     Navigation()
                 }
             }
