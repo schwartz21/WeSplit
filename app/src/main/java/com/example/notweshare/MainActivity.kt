@@ -300,6 +300,13 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideDirection(
 @Composable
 fun LoginAndRegister() {
     val navController = rememberNavController()
+
+    val routes = setOf(
+        Screen.LoginScreen.route,
+        Screen.RegisterScreen.route,
+        Screen.MainScreen.route,
+    )
+
     Scaffold(
     ) {
         NavHost(
@@ -307,7 +314,16 @@ fun LoginAndRegister() {
             startDestination = Screen.LoginScreen.route,
         ) {
             with(navController) {
-                composable(Screen.LoginScreen.route) {
+                composable(Screen.LoginScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
                     LoginScreen(
                         navigateToRegister = {
                             navigate(
@@ -323,7 +339,16 @@ fun LoginAndRegister() {
                         },
                     )
                 }
-                composable(Screen.RegisterScreen.route) {
+                composable(Screen.RegisterScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
                     RegisterScreen(
                         navigateToMain = {
                             // Find groups with the user as a member
@@ -341,25 +366,13 @@ fun LoginAndRegister() {
                 }
                 composable(Screen.MainScreen.route,
                     enterTransition = {
-                        slideIntoContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(animationTime, easing = easing)
-                        )
+                        slideIn(routes)
                     }, exitTransition = {
-                        slideOutOfContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(animationTime, easing = easing)
-                        )
+                        slideOut(routes)
                     }, popEnterTransition = {
-                        slideIntoContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                            animationSpec = tween(animationTime, easing = easing)
-                        )
+                        slideIn(routes)
                     }, popExitTransition = {
-                        slideOutOfContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                            animationSpec = tween(animationTime, easing = easing)
-                        )
+                        slideOut(routes)
                     }) {
                     Navigation()
                 }
