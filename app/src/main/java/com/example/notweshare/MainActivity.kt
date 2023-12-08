@@ -71,9 +71,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Navigation()
-                    Button(onClick = {startNotificationService()}) {
-                        Text(text = "CLICK ME")
-                    }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         PermissionDialog()
                     }
@@ -95,17 +92,6 @@ class MainActivity : ComponentActivity() {
                 Log.e("FCM Token", "Failed to get token: ${task.exception}")
             }
         }
-    }
-
-
-    private fun startNotificationService() {
-        // Create an intent to start the com.example.notweshare.notification.NotificationJobIntentService
-        val intent = Intent(this, NotificationJobIntentService::class.java)
-        intent.putExtra("title", "Notification Title")
-        intent.putExtra("body", "Notification Body")
-
-        // Enqueue the work to be done by the service
-        NotificationJobIntentService.enqueueWork(this, intent)
     }
 }
 

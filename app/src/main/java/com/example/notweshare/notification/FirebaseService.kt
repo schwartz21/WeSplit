@@ -43,23 +43,48 @@ class FirebaseService : FirebaseMessagingService() {
         // Create an Intent for the notification
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        val openAppIntent = Intent().apply {
+            setPackage("dk.danskebank.mobilepay");
+        }
         val pendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            1,
+            openAppIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT + PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val activityPendingIntent = PendingIntent.getActivity(
+            this,
+            1,
             intent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+            //flag to control version
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+        )
+
+        val dismissIntent = PendingIntent.getBroadcast(
+            this,
+            1,  // Use a unique request code
+            Intent(this, NotificationDismissReceiver::class.java),
+            // flag to control version
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
         )
 
         // Build the notification
+        val bigTextStyle = NotificationCompat.BigTextStyle()
+            .bigText(notificationData.body)
         val notificationBuilder = NotificationCompat.Builder(this, "channel_id")
-            .setSmallIcon(R.drawable.baseline_notifications_active_24)
+            .setSmallIcon(R.drawable.notification)
             .setContentTitle(notificationData.title)
             .setContentText(notificationData.body)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
+            .setContentIntent(activityPendingIntent)
+            .addAction(R.drawable.notification, "Not now", dismissIntent)  // Add dismiss action
+            .addAction(R.drawable.notification, "Pay up", pendingIntent )
+            .setStyle(bigTextStyle)
+            .build()
 
         // Show the notification
-        notificationManager.notify(0, notificationBuilder.build())
+        notificationManager.notify(0, notificationBuilder)
 
         Log.d("MyFirebaseMessagingService", "onMessageReceived")
 

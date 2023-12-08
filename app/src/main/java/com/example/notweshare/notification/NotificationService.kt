@@ -9,9 +9,10 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.notweshare.MainActivity
 
+
 class NotificationService (private val context: Context) {
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    fun showNotification(name: String, amountOfMoneyOwed: String, groupName: String, nameOfOwingPerson: String) {
+    fun DEPRECATEDshowNotification(name: String, amountOfMoneyOwed: String, groupName: String, nameOfOwingPerson: String) {
 
         val activityIntent = Intent(context, MainActivity::class.java)
 
@@ -56,6 +57,19 @@ class NotificationService (private val context: Context) {
             .build()
 
         notificationManager.notify(1, notification)
+    }
+
+    fun showNotification(name: String, amountOfMoneyOwed: String, groupName: String, nameOfOwingPerson: String){
+        val intent = Intent(context, NotificationJobIntentService::class.java)
+
+        val notificationText = "Hi $nameOfOwingPerson, $name is asking you to pay the $amountOfMoneyOwed kr. that you owe in the group: $groupName "
+        val title = "You owe money!"
+
+        intent.putExtra("title", title)
+        intent.putExtra("body", notificationText)
+
+        // Enqueue the work to be done by the service
+        NotificationJobIntentService.enqueueWork(context, intent)
     }
 
 

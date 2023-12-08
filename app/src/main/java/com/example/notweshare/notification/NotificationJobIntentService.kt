@@ -17,10 +17,19 @@ class NotificationJobIntentService : JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        val body = "BODY YESYT"
-        val title = "TEST"
+        val notFound = "null"
+        val title = (intent.getStringExtra("title")?: notFound)
+        val body = (intent.getStringExtra("body")?: notFound)
 
-        val recipientToken = listOf("fNOlTce2QVSK4DjOO6uCLb:APA91bEODu_pKqkGLgjYulyFRwEti_kE_C402BSSM1rDq_g2hpc3xAb2_373iM9pPpPLSYvlCiHmKofAzCFPZGYXWrpI8WhO1yTioG80ylc3QI_eRWfP2ltrEsbKrTiMUWPKXEbQGoZD")
+        Log.d("NotificationService", "title: $title")
+        Log.d("NotificationService", "body: $body")
+
+        if (body == notFound || title == notFound){
+            Log.e("NotificationService","Notification was sent without title or body" )
+            return
+        }
+
+        val recipientToken = listOf("c51PEdblRh6cSrBWm6wLn5:APA91bFUnkm-TMBgl8nOYMk4NTj7ydqqftRv15FTCm8YiCo2DZWHWIAlQOvMa9CKnZAtwURHC187IZnSDkoZreR-6YGMWk5Bp6XvyRINLC30R3MjotQA-lAEb0d3ZbdLSCHbapVm9I4q")
 
         sendFCMMessage(recipientToken,title, body)
     }
