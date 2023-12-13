@@ -13,6 +13,7 @@ import java.util.*
  * @param phoneNumber The phone number of the user
  * @param email The email of the user
  * @param password The password of the user
+ * @param userToken The user token of the user
  * @param createdAt The date the user was created
  * @param documentID The document ID, which is the same as the phonenumber
  */
@@ -21,6 +22,7 @@ data class User(
     var phoneNumber: String = "",
     var email: String = "",
     var password: String = "",
+    var userToken: String = "",
 
     var createdAt: Date? = Date(),
 
