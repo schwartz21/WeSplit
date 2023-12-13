@@ -37,7 +37,7 @@ export const sendNotification =
         console.log(signature, "Data received", data);
         debug("Data received", data);
         const messages = data.tokens.map((token) => ({
-            notification: {
+            data: {
                 title: data.title,
                 body: data.body,
             },

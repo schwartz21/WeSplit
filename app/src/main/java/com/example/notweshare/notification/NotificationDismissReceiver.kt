@@ -10,6 +10,6 @@ class NotificationDismissReceiver : BroadcastReceiver() {
     ?) {
         // Dismiss the notification
         val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(1)
+        notificationManager.cancel(0)
     }
 }

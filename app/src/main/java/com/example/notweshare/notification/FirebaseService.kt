@@ -23,7 +23,7 @@ class FirebaseService : FirebaseMessagingService() {
         // Handle the incoming message
         println("onMessageRecived")
         Log.d("NotificationService", "Notification received")
-        val notificationData = remoteMessage.notification
+        val notificationData = remoteMessage.data
         // Extract relevant information from notificationData
         // Show a notification
         if (notificationData != null) {
@@ -31,7 +31,7 @@ class FirebaseService : FirebaseMessagingService() {
         }
     }
 
-    private fun showNotification(notificationData: RemoteMessage.Notification) {
+    private fun showNotification(notificationData: MutableMap<String, String>) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Create a notification channel for Android Oreo and higher
@@ -50,6 +50,7 @@ class FirebaseService : FirebaseMessagingService() {
         val openAppIntent = Intent().apply {
             setPackage("dk.danskebank.mobilepay");
         }
+
         val pendingIntent = PendingIntent.getActivity(
             this,
             1,
@@ -75,14 +76,14 @@ class FirebaseService : FirebaseMessagingService() {
 
         // Build the notification
         val bigTextStyle = NotificationCompat.BigTextStyle()
-            .bigText(notificationData.body)
+            .bigText(notificationData["body"])
         val notificationBuilder = NotificationCompat.Builder(this, "channel_id")
             .setSmallIcon(R.drawable.notification)
-            .setContentTitle(notificationData.title)
-            .setContentText(notificationData.body)
+            .setContentTitle(notificationData["title"])
+            .setContentText(notificationData["body"])
             .setContentIntent(activityPendingIntent)
             .addAction(R.drawable.notification, "Not now", dismissIntent)  // Add dismiss action
-            .addAction(R.drawable.notification, "Pay up", pendingIntent )
+            .addAction(R.drawable.notification, "Pay up", pendingIntent)
             .setStyle(bigTextStyle)
             .build()
 
