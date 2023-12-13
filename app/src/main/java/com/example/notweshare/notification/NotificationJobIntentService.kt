@@ -20,27 +20,26 @@ class NotificationJobIntentService : JobIntentService() {
         val notFound = "null"
         val title = (intent.getStringExtra("title")?: notFound)
         val body = (intent.getStringExtra("body")?: notFound)
+        val token = (intent.getStringExtra("token")?: notFound)
 
         Log.d("NotificationService", "title: $title")
         Log.d("NotificationService", "body: $body")
 
-        if (body == notFound || title == notFound){
-            Log.e("NotificationService","Notification was sent without title or body" )
+        if (body == notFound || title == notFound || token == notFound){
+            Log.e("NotificationService","Notification was sent without title, body or token" )
             return
         }
 
-        val recipientToken = listOf("c51PEdblRh6cSrBWm6wLn5:APA91bFUnkm-TMBgl8nOYMk4NTj7ydqqftRv15FTCm8YiCo2DZWHWIAlQOvMa9CKnZAtwURHC187IZnSDkoZreR-6YGMWk5Bp6XvyRINLC30R3MjotQA-lAEb0d3ZbdLSCHbapVm9I4q")
-
-        sendFCMMessage(recipientToken,title, body)
+        sendFCMMessage(token,title, body)
     }
 
-    private fun sendFCMMessage(token: List<String>, title: String, body: String) {
+    private fun sendFCMMessage(token: String, title: String, body: String) {
         try {
 
             val data = hashMapOf(
                 "title" to title,
                 "body" to body,
-                "tokens" to token
+                "tokens" to listOf(token)
             )
             FirebaseFunctions
                 .getInstance()

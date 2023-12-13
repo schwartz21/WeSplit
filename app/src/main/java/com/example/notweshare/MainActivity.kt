@@ -1,6 +1,5 @@
 package com.example.notweshare
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +10,6 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -50,8 +47,8 @@ import com.example.compose.AppTheme
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.models.TabItem
-import com.example.notweshare.notification.NotificationJobIntentService
 import com.example.notweshare.notification.NotificationService
+import com.example.notweshare.notification.updateFireBaseToken
 import com.example.notweshare.screens.GroupDetailsScreen
 import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.LoginScreen
@@ -61,7 +58,7 @@ import com.example.notweshare.screens.PermissionDialog
 import com.example.notweshare.screens.ProfileScreen
 import com.example.notweshare.screens.RegisterScreen
 import com.google.firebase.FirebaseApp
-import com.google.firebase.messaging.FirebaseMessaging
+
 
 class MainActivity : ComponentActivity() {
 
@@ -69,7 +66,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val noti = NotificationService(applicationContext)
         FirebaseApp.initializeApp(this)
-        getFireBaseToken()
         setContent {
             AppTheme {
                 // A surface container using the 'background' color from the theme
@@ -85,25 +81,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun getFireBaseToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                //save this token to the user and store in DB for late use.
-                //dont know if we should check if the token is the same as previous every time the app launches
-                val token = task.result
-                Log.d("NotificationService", token)
-                println(token)
-                // Send this token to your server to identify and target specific devices
-            } else {
-                Log.e("FCM Token", "Failed to get token: ${task.exception}")
-            }
-        }
-    }
+
 }
 
 
 @Composable
 fun Navigation() {
+
+    if(userViewModel.activeUser.value.documentID.isNotEmpty()){
+        updateFireBaseToken()
+    }
+
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(

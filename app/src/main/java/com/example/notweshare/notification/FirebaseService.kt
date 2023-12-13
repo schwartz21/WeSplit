@@ -9,13 +9,16 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.MainActivity
 import com.example.notweshare.R
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class FirebaseService : FirebaseMessagingService() {
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Handle the incoming message
         println("onMessageRecived")
@@ -90,4 +93,27 @@ class FirebaseService : FirebaseMessagingService() {
 
     }
 
+}
+
+fun updateFireBaseToken() {
+    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            //save this token to the user and store in DB for late use.
+            //dont know if we should check if the token is the same as previous every time the app launches
+            val token = task.result
+
+            val user = userViewModel.activeUser.value
+
+            if(token != user.userToken ){
+                user.userToken = token
+                userViewModel.editUser(user)
+            }
+
+            Log.d("NotificationService", token)
+            println(token)
+            // Send this token to your server to identify and target specific devices
+        } else {
+            Log.e("FCM Token", "Failed to get token: ${task.exception}")
+        }
+    }
 }

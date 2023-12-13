@@ -4,10 +4,12 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.example.notweshare.R
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.notweshare.MainActivity
+import com.example.notweshare.R
+import com.example.notweshare.models.Group
+import com.example.notweshare.models.User
 
 
 class NotificationService (private val context: Context) {
@@ -59,17 +61,19 @@ class NotificationService (private val context: Context) {
         notificationManager.notify(1, notification)
     }
 
-    fun showNotification(name: String, amountOfMoneyOwed: String, groupName: String, nameOfOwingPerson: String){
+    fun showNotification(name: String, amountOfMoneyOwed: String, group: Group, owingPerson: User){
         val intent = Intent(context, NotificationJobIntentService::class.java)
 
-        val notificationText = "Hi $nameOfOwingPerson, $name is asking you to pay the $amountOfMoneyOwed kr. that you owe in the group: $groupName "
+        val notificationText = "Hi ${owingPerson.name}, $name is asking you to pay the $amountOfMoneyOwed kr. that you owe in the group: ${group.name} "
         val title = "You owe money!"
 
         intent.putExtra("title", title)
         intent.putExtra("body", notificationText)
-
-        // Enqueue the work to be done by the service
-        NotificationJobIntentService.enqueueWork(context, intent)
+        if(owingPerson.userToken.isNotEmpty()){
+            intent.putExtra("token", owingPerson.userToken)
+            // Enqueue the work to be done by the service
+            NotificationJobIntentService.enqueueWork(context, intent)
+        }
     }
 
 

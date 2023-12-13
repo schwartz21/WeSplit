@@ -1,8 +1,8 @@
 package com.example.notweshare.components
 
-import androidx.compose.foundation.clickable
 import android.content.Context
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -77,7 +77,7 @@ fun MemberCard(
 }
 
 @Composable
-fun GroupDetailsMemberCard(context: Context, group: Group, member: String, memberName: String) {
+fun GroupDetailsMemberCard(context: Context, group: Group, memberPhone: String, memberName: String) {
 
     val userViewModel = userViewModel
     val notificationService = NotificationService(context)
@@ -86,7 +86,7 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val smallPadding = dimensionResource(R.dimen.padding_small)
 
-    val userContribution = getMemberDebt(group, member)
+    val userContribution = getMemberDebt(group, memberPhone)
     val absContribution = abs(userContribution)
     val userOwes = userContribution > 0
 
@@ -96,7 +96,7 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
         else -> MaterialTheme.colorScheme.onSurface
     }
 
-    val memberIsActiveUser = (member == userViewModel.activeUser.value.documentID)
+    val memberIsActiveUser = (memberPhone == userViewModel.activeUser.value.documentID)
 
     MemberCard(
         memberName = memberName,
@@ -111,18 +111,20 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
         if (userOwes && !memberIsActiveUser) {
             CustomIconButton(
                 clickAction = {
+                    userViewModel.findUserWithDocumentID(memberPhone){
                     notificationService.showNotification(
                         UserViewModel.userViewModel.activeUser.value.name,
                         userContribution.toString(),
-                        group.name,
-                        memberName
+                        group,
+                        it
                     )
+                    }
                 }
             )
         } else if (userOwes && memberIsActiveUser) {
             CustomIconButton(
                 id = R.drawable.payup,
-                clickAction = { payMember(member, group) }
+                clickAction = { payMember(memberPhone, group) }
             )
         }
     }
