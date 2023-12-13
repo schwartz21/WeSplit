@@ -6,6 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,8 +41,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
 import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupViewModel
@@ -66,11 +74,9 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation()
+                    LoginAndRegister()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         PermissionDialog()
                     }
@@ -96,162 +102,323 @@ class MainActivity : ComponentActivity() {
 }
 
 
-    @Composable
-    fun Navigation() {
-        val navController = rememberNavController()
-        var selectedTabIndex by remember { mutableStateOf(0) }
-        val tabs = listOf(
-            TabItem("Groups", Screen.HomeScreen.route, R.drawable.group),
-            TabItem("Create Group", Screen.NewGroupScreen.route, R.drawable.square_add),
-            TabItem("Profile", Screen.ProfileScreen.route, R.drawable.profile)
-        )
+@Composable
+fun Navigation() {
+    val navController = rememberNavController()
+    var selectedTabIndex by remember { mutableStateOf(0) }
+    val tabs = listOf(
+        TabItem("Groups", Screen.HomeScreen.route, R.drawable.group),
+        TabItem("Create Group", Screen.NewGroupScreen.route, R.drawable.square_add),
+        TabItem("Profile", Screen.ProfileScreen.route, R.drawable.profile)
+    )
+    val tabIndexes = mapOf<String, Int>(
+        Screen.HomeScreen.route to 0,
+        Screen.GroupDetailsScreen.route to 0,
+        Screen.NewExpenseScreen.route to 0,
+        Screen.NewGroupScreen.route to 1,
+        Screen.ProfileScreen.route to 2,
+    )
+
+    val routes = tabIndexes.keys
 
 
-        val tabBarHeight = with(LocalDensity.current) {
-            65.sp.toDp()
-        }
+    val tabBarHeight = with(LocalDensity.current) {
+        65.sp.toDp()
+    }
 
-        val contentHeight = LocalConfiguration.current.screenHeightDp.dp - tabBarHeight
+    val contentHeight = LocalConfiguration.current.screenHeightDp.dp - tabBarHeight
 
-        // If We wish to change the highlighted tab, we should probably do it by modifiying an external variable
+    Scaffold(bottomBar = {
+        BottomAppBar(
+            containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            contentColor = Color.White,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(tabBarHeight)
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
 
-        Scaffold(
-            bottomBar = {
-                if (userViewModel.activeUser.value.documentID.isNotEmpty()) {
-                    BottomAppBar(
-                        containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        contentColor = Color.White,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(tabBarHeight)
+            if (currentRoute != null) {
+                selectedTabIndex = tabIndexes[currentRoute] ?: 0
+            }
+
+            tabs.forEachIndexed { index, tab ->
+                val tint =
+                    ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
+                IconButton(
+                    onClick = {
+                        // This is the variable that must be changed to change the selected tab
+                        selectedTabIndex = index
+                        navController.navigate(tab.route)
+                    }, modifier = Modifier.weight(1f)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Bottom
                     ) {
-                        tabs.forEachIndexed { index, tab ->
-                            val tint =
-                                ColorFilter.tint(if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)
-                            IconButton(
-                                onClick = {
-                                    // This is the variable that must be changed to change the selected tab
-                                    selectedTabIndex = index
-                                    navController.navigate(tab.route)
-                                },
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.Bottom
-                                ) {
-                                    Image(
-                                        colorFilter = tint,
-                                        painter = painterResource(tab.icon),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                    Text(
-                                        text = tab.title,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
-                                    )
-                                }
-                            }
-                        }
+                        Image(
+                            colorFilter = tint,
+                            painter = painterResource(tab.icon),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = tab.title,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+                        )
                     }
                 }
             }
-        ) {
-            NavHost(
-                navController,
-                startDestination = Screen.LoginScreen.route,
-                modifier = Modifier.height(
-                    contentHeight
-                )
-            ) {
-                with(navController) {
-                    composable(Screen.LoginScreen.route) {
-                        LoginScreen(
-                            navigateToRegister = {
-                                navigate(
-                                    Screen.RegisterScreen.route
-                                )
-                            },
-                            navigateToHomeScreen = {
-                                // Find groups with the user as a member
-                                groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
-                                navigate(
-                                    Screen.HomeScreen.route
-                                )
-                            },
-                        )
-                    }
-                    composable(Screen.RegisterScreen.route) {
-                        RegisterScreen(
-                            navigateToHomeScreen = {
-                                // Find groups with the user as a member
-                                groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
-                                navigate(
-                                    Screen.HomeScreen.route
-                                )
-                            },
-                            navigateToLogin = {
-                                navigate(
-                                    Screen.LoginScreen.route
-                                )
-                            },
-                        )
-                    }
-                    composable(Screen.HomeScreen.route) {
-                        HomeScreen(
-                            navigateToGroupDetails = {
-                                navigate(
-                                    Screen.GroupDetailsScreen.route
-                                )
-                            },
-                        )
-                    }
-                    composable(Screen.NewGroupScreen.route) {
-                        NewGroupScreen(
-                            navigateToGroups = {
-                                navigate(
-                                    Screen.HomeScreen.route
-                                )
-                            },
-                        )
-                    }
-                    composable(Screen.ProfileScreen.route) { ProfileScreen() }
-                    composable(Screen.GroupDetailsScreen.route) {
-                        GroupDetailsScreen(
-                            navigateToNewExpense = {
-                                navigate(
-                                    Screen.NewExpenseScreen.route
-                                )
-                            },
-                            context = context,
-                        )
-                    }
-                    composable(Screen.NewExpenseScreen.route) {
-                        NewExpenseScreen(
-                            navigateUp = {
-                                navigateUp()
-                            },
-                        )
-                    }
-                }
+        }
 
+    }) {
+        NavHost(
+            navController, startDestination = Screen.HomeScreen.route, modifier = Modifier.height(
+                contentHeight
+            )
+        ) {
+            with(navController) {
+                composable(
+                    route = Screen.HomeScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
+                    HomeScreen(
+                        navigateToGroupDetails = {
+                            navigate(
+                                Screen.GroupDetailsScreen.route
+                            )
+                        },
+                    )
+                }
+                composable(Screen.NewGroupScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
+                    NewGroupScreen(
+                        navigateToGroups = {
+                            navigate(
+                                Screen.HomeScreen.route
+                            )
+                        },
+                    )
+                }
+                composable(Screen.ProfileScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) { ProfileScreen() }
+                composable(
+                    route = Screen.GroupDetailsScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+
+                    }) {
+                    GroupDetailsScreen(
+                        navigateToNewExpense = {
+                            navigate(
+                                Screen.NewExpenseScreen.route
+                            )
+                        },
+                        context = context,
+                    )
+                }
+                composable(
+                    route = Screen.NewExpenseScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
+                    NewExpenseScreen(
+                        navigateUp = {
+                            navigateUp()
+                        },
+                    )
+                }
             }
 
             // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
             val something = it
         }
     }
+}
 
-    sealed class Screen(val route: String) {
-        object HomeScreen : Screen("HomeScreen")
-        object NewGroupScreen : Screen("NewScreen")
-        object ProfileScreen : Screen("ProfileScreen")
-        object GroupDetailsScreen : Screen("GroupDetailsScreen")
-        object NewExpenseScreen : Screen("NewExpenseScreen")
-        object LoginScreen : Screen("LoginScreen")
-        object RegisterScreen : Screen("RegisterScreen")
+val animationTime = 400
+val easing = CubicBezierEasing(0.65f, 0f, 0.35f, 1f)
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideIn(
+    routes: Set<String>,
+): EnterTransition {
+    val direction = slideDirection(routes, false)
+
+    return slideIntoContainer(
+        towards = direction,
+        animationSpec = tween(animationTime, easing = easing)
+    )
+}
+
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideOut(
+    routes: Set<String>
+): ExitTransition {
+    val direction = slideDirection(routes)
+
+    return slideOutOfContainer(
+        towards = direction,
+        animationSpec = tween(animationTime, easing = easing)
+    )
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideDirection(
+    routes: Set<String>,
+    exit: Boolean = true
+): AnimatedContentTransitionScope.SlideDirection {
+    val targetRoute = this.targetState.destination.route
+    val targetIndex = routes.indexOf(targetRoute)
+    val currentRoute = this.initialState.destination.route
+    val currentIndex = routes.indexOf(currentRoute)
+
+    Log.d(
+        "animation",
+        "targetRoute: $targetRoute, targetIndex: $targetIndex, currentRoute: $currentRoute, currentIndex: $currentIndex"
+    )
+
+    val direction = if (targetIndex > currentIndex) {
+        AnimatedContentTransitionScope.SlideDirection.Left
+    } else {
+        AnimatedContentTransitionScope.SlideDirection.Right
     }
+    return direction
+}
+
+@Composable
+fun LoginAndRegister() {
+    val navController = rememberNavController()
+
+    val routes = setOf(
+        Screen.LoginScreen.route,
+        Screen.RegisterScreen.route,
+        Screen.MainScreen.route,
+    )
+
+    Scaffold(
+    ) {
+        NavHost(
+            navController,
+            startDestination = Screen.LoginScreen.route,
+        ) {
+            with(navController) {
+                composable(Screen.LoginScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
+                    LoginScreen(
+                        navigateToRegister = {
+                            navigate(
+                                Screen.RegisterScreen.route
+                            )
+                        },
+                        navigateToMain = {
+                            // Find groups with the user as a member
+                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
+                            navigate(
+                                Screen.MainScreen.route
+                            )
+                        },
+                    )
+                }
+                composable(Screen.RegisterScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
+                    RegisterScreen(
+                        navigateToMain = {
+                            // Find groups with the user as a member
+                            groupViewModel.findGroupsWithMember(userViewModel.activeUser.value.documentID)
+                            navigate(
+                                Screen.MainScreen.route
+                            )
+                        },
+                        navigateToLogin = {
+                            navigate(
+                                Screen.LoginScreen.route
+                            )
+                        },
+                    )
+                }
+                composable(Screen.MainScreen.route,
+                    enterTransition = {
+                        slideIn(routes)
+                    }, exitTransition = {
+                        slideOut(routes)
+                    }, popEnterTransition = {
+                        slideIn(routes)
+                    }, popExitTransition = {
+                        slideOut(routes)
+                    }) {
+                    Navigation()
+                }
+            }
+
+        }
+
+        // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
+        val something = it
+    }
+
+}
+
+sealed class Screen(val route: String) {
+    object MainScreen : Screen("MainScreen")
+    object HomeScreen : Screen("HomeScreen")
+    object NewGroupScreen : Screen("NewScreen")
+    object ProfileScreen : Screen("ProfileScreen")
+    object GroupDetailsScreen : Screen("GroupDetailsScreen")
+    object NewExpenseScreen : Screen("NewExpenseScreen")
+    object LoginScreen : Screen("LoginScreen")
+    object RegisterScreen : Screen("RegisterScreen")
+}
 
 @Preview(showBackground = true)
 @Composable

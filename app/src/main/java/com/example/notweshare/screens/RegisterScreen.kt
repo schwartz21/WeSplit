@@ -44,7 +44,7 @@ import com.example.notweshare.models.User
 
 @Composable
 fun RegisterScreen(
-    navigateToHomeScreen: () -> Unit,
+    navigateToMain: () -> Unit,
     navigateToLogin: () -> Unit,
 ) {
     val questionText = "Already a user? "
@@ -120,7 +120,7 @@ fun RegisterScreen(
                             errorMessages = "User already exists"
                         } else {
                             registerNewUser(fullName, phoneNumber, email, password)
-                            navigateToHomeScreen()
+                            navigateToMain()
                         }
                     }
                 },

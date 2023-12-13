@@ -24,9 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -36,16 +36,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
-import com.example.notweshare.components.passwordTextFieldCard
 import com.example.notweshare.components.TextFieldCard
+import com.example.notweshare.components.passwordTextFieldCard
 
 @Composable
 fun LoginScreen(
     navigateToRegister: () -> Unit,
-    navigateToHomeScreen: () -> Unit,
-) {
+    navigateToMain: () -> Unit,
+): Boolean {
 
     val largePadding = dimensionResource(R.dimen.padding_large)
+    val mediumPadding = dimensionResource(R.dimen.padding_medium)
+    val smallPadding = dimensionResource(R.dimen.padding_small)
 
     val questionText = "Not a user? "
     val clickableText = "Register"
@@ -87,70 +89,74 @@ fun LoginScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
-            phoneNumber = TextFieldCard("Phone number", phoneNumber)
-            password = passwordTextFieldCard("Password", password)
-            Spacer(modifier = Modifier.height(10.dp))
+//            Spacer(modifier = Modifier.height(10.dp))
+                Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(smallPadding))
+                phoneNumber = TextFieldCard("Phone number", phoneNumber)
+                password = passwordTextFieldCard("Password", password)
+                Spacer(modifier = Modifier.height(10.dp))
 
-            val minHeight = 48.dp
+                val minHeight = 48.dp
 
-            when (userViewModel.isLoading.value) {
-                true -> {
-                    Text(text = "Loading...", color = MaterialTheme.colorScheme.onBackground)
+                when (userViewModel.isLoading.value) {
+                    true -> {
+                        Text(text = "Loading...", color = MaterialTheme.colorScheme.onBackground)
+                    }
+                    false -> {}
                 }
-                false -> {}
-            }
 
-            Button(
-                onClick = {
-                    // Set error messages to "" so that it doesn't show the error message from the previous login attempt
-                    errorMessages = ""
+                Button(
+                    onClick = {
+                        // Set error messages to "" so that it doesn't show the error message from the previous login attempt
+                        errorMessages = ""
 
-                    // Check if any of the fields are empty
-                    if (phoneNumber == "" || password == "") {
-                        errorMessages = "Please fill out all fields"
-                        return@Button
-                    }
-
-                    userViewModel.findUserWithDocumentID(phoneNumber) { user ->
-                        if (user.documentID.isEmpty() || user.password != password) {
-                            errorMessages = "Phone number or Password is incorrect"
-                        } else if (screenActive) {
-                            screenActive = false
-                            userViewModel.setTheActiveUser(user)
-                            navigateToHomeScreen()
+                        // Check if any of the fields are empty
+                        if (phoneNumber == "" || password == "") {
+                            errorMessages = "Please fill out all fields"
+                            return@Button
                         }
-                    }
 
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(minHeight),
-                contentPadding = PaddingValues(),
-                shape=RoundedCornerShape(50.dp),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-            ) {
-                Text(
-                    text = "Login",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                        userViewModel.findUserWithDocumentID(phoneNumber) { user ->
+                            if (user.documentID.isEmpty() || user.password != password) {
+                                errorMessages = "Phone number or Password is incorrect"
+                            } else if (screenActive) {
+                                screenActive = false
+                                userViewModel.setTheActiveUser(user)
+
+                                navigateToMain()
+
+                            }
+                        }
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(minHeight),
+                    contentPadding = PaddingValues(),
+                    shape=RoundedCornerShape(50.dp),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                ) {
+                    Text(
+                        text = "Login",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(3.dp))
+                ClickableText(
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center),
+                    text = annotatedString,
+                    onClick = { offset ->
+                        annotatedString.getStringAnnotations(offset, offset)
+                            .firstOrNull()?.also { navigateToRegister() }
+                    })
+
+
             }
-
-            Spacer(modifier = Modifier.height(3.dp))
-            ClickableText(
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = TextAlign.Center),
-                text = annotatedString,
-                onClick = { offset ->
-                    annotatedString.getStringAnnotations(offset, offset)
-                        .firstOrNull()?.also { navigateToRegister() }
-                })
-
-            Text(text = errorMessages, color = Color.Red, modifier = Modifier.padding(10.dp))
-
         }
-    }
+
+    return screenActive
 }
