@@ -1,6 +1,7 @@
 package com.example.notweshare.components
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupV
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
+import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
 import com.example.notweshare.notification.NotificationService
@@ -164,10 +166,18 @@ private fun payMember(member: String, group: Group) {
     group.expenses.forEach() { expense ->
         val expenseMembers = expense.members.values
 
-        for (i in 0..expenseMembers.size - 1) {
-            if (expenseMembers.elementAt(i).memberId == member && !expenseMembers.elementAt(i).payed) {
-                expenseMembers.elementAt(i).payed = true
-                expense.members.replace(i.toString(), expenseMembers.elementAt(i))
+        for (i in expenseMembers.indices) {
+            val expenseMember = expenseMembers.elementAt(i)
+            if (expenseMember.memberId != member) {
+                continue
+            }
+            if (!expenseMember.payed) {
+                expenseMember.payed = true
+                expense.members.replace(i.toString(), expenseMember)
+            }else if(member == expense.owner){
+                // Commented out because this also introduces problems
+//                payAll(expense)
+                break
             }
         }
     }
@@ -175,3 +185,14 @@ private fun payMember(member: String, group: Group) {
     // Post new group
     groupViewModel.updateGroup(out)
 }
+
+// USe this to mark all members of an expense as having paid that expense
+//private fun payAll(expense: Expense){
+//    val expenseMembers = expense.members.values
+//
+//    for (i in expenseMembers.indices) {
+//        val expenseMember = expenseMembers.elementAt(i)
+//        expenseMember.payed = true
+//        expense.members.replace(i.toString(), expenseMember)
+//    }
+//}
