@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "752356301009",
+    "project_id": "wesplit-18873",
+    "storage_bucket": "wesplit-18873.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752356301009:android:fdab0d58614c5b5d8c4df0",
+        "android_client_info": {
+          "package_name": "com.example.notweshare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASOv1mwe-V1dDPoADALhedbM5OCh19634"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

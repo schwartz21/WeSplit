@@ -1,5 +1,6 @@
 package com.example.notweshare
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -9,9 +10,9 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,35 +49,52 @@ import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupV
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.models.TabItem
 import com.example.notweshare.notification.NotificationService
-import com.example.notweshare.screens.HomeScreen
-import com.example.notweshare.screens.NewExpenseScreen
+import com.example.notweshare.notification.updateFireBaseToken
 import com.example.notweshare.screens.GroupDetailsScreen
-import com.example.notweshare.screens.NewGroupScreen
-import com.example.notweshare.screens.ProfileScreen
+import com.example.notweshare.screens.HomeScreen
 import com.example.notweshare.screens.LoginScreen
+import com.example.notweshare.screens.NewExpenseScreen
+import com.example.notweshare.screens.NewGroupScreen
+import com.example.notweshare.screens.PermissionDialog
+import com.example.notweshare.screens.ProfileScreen
 import com.example.notweshare.screens.RegisterScreen
+import com.google.firebase.FirebaseApp
+
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val noti = NotificationService(applicationContext)
-
+        FirebaseApp.initializeApp(this)
         setContent {
             AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginAndRegister()
+                    Box {
+                        LoginAndRegister()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            PermissionDialog()
+                        }
+                    }
                 }
             }
         }
     }
+
+
 }
+
 
 @Composable
 fun Navigation() {
+
+    if(userViewModel.activeUser.value.documentID.isNotEmpty()){
+        updateFireBaseToken()
+    }
+
     val navController = rememberNavController()
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf(
@@ -84,7 +102,6 @@ fun Navigation() {
         TabItem("Create Group", Screen.NewGroupScreen.route, R.drawable.square_add),
         TabItem("Profile", Screen.ProfileScreen.route, R.drawable.profile)
     )
-
     val tabIndexes = mapOf<String, Int>(
         Screen.HomeScreen.route to 0,
         Screen.GroupDetailsScreen.route to 0,
@@ -101,8 +118,6 @@ fun Navigation() {
     }
 
     val contentHeight = LocalConfiguration.current.screenHeightDp.dp - tabBarHeight
-
-    // If We wish to change the highlighted tab, we should probably do it by modifiying an external variable
 
     Scaffold(bottomBar = {
         BottomAppBar(
@@ -243,10 +258,9 @@ fun Navigation() {
                 }
             }
 
+            // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
+            val something = it
         }
-
-        // THIS FOLLOWING LINE MUST BE THERE FOR THE LINTER TO WORK
-        val something = it
     }
 }
 
@@ -404,3 +418,4 @@ fun GreetingPreview() {
         Navigation()
     }
 }
+

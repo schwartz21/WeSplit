@@ -9,8 +9,7 @@ class NotificationDismissReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent
     ?) {
         // Dismiss the notification
-        val notificationManager =
-            context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(1)
+        val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(0)
     }
 }

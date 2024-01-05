@@ -31,7 +31,7 @@ class FirestoreQueries {
 
             @JvmStatic fun updateUser(user: User): Task<Void> {
                 val fbCollection = FirebaseFirestore.getInstance().collection(FirestoreQueries.userCollectionPath)
-                return fbCollection.document(user.phoneNumber).update("phoneNumber", user.phoneNumber, "email", user.email)
+                return fbCollection.document(user.phoneNumber).update("phoneNumber", user.phoneNumber, "email", user.email, "userToken", user.userToken, "name", user.name)
             }
         }
     }

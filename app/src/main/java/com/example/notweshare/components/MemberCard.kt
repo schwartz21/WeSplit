@@ -1,9 +1,9 @@
 package com.example.notweshare.components
 
-import androidx.compose.foundation.clickable
 import android.content.Context
+import android.util.Log
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +28,7 @@ import com.example.exampleapplication.viewmodels.GroupViewModel.Companion.groupV
 import com.example.exampleapplication.viewmodels.UserViewModel
 import com.example.exampleapplication.viewmodels.UserViewModel.Companion.userViewModel
 import com.example.notweshare.R
+import com.example.notweshare.models.Expense
 import com.example.notweshare.models.Group
 import com.example.notweshare.models.getMemberDebt
 import com.example.notweshare.notification.NotificationService
@@ -80,7 +79,7 @@ fun MemberCard(
 }
 
 @Composable
-fun GroupDetailsMemberCard(context: Context, group: Group, member: String, memberName: String) {
+fun GroupDetailsMemberCard(context: Context, group: Group, memberPhone: String, memberName: String) {
 
     val userViewModel = userViewModel
     val notificationService = NotificationService(context)
@@ -89,7 +88,7 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val smallPadding = dimensionResource(R.dimen.padding_small)
 
-    val userContribution = getMemberDebt(group, member)
+    val userContribution = getMemberDebt(group, memberPhone)
     val absContribution = abs(userContribution)
     val userOwes = userContribution > 0
 
@@ -99,7 +98,7 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
         else -> MaterialTheme.colorScheme.onSurface
     }
 
-    val memberIsActiveUser = (member == userViewModel.activeUser.value.documentID)
+    val memberIsActiveUser = (memberPhone == userViewModel.activeUser.value.documentID)
 
     MemberCard(
         memberName = memberName,
@@ -114,18 +113,20 @@ fun GroupDetailsMemberCard(context: Context, group: Group, member: String, membe
         if (userOwes && !memberIsActiveUser) {
             CustomIconButton(
                 clickAction = {
+                    userViewModel.findUserWithDocumentID(memberPhone){
                     notificationService.showNotification(
                         UserViewModel.userViewModel.activeUser.value.name,
                         userContribution.toString(),
-                        group.name,
-                        memberName
+                        group,
+                        it
                     )
+                    }
                 }
             )
         } else if (userOwes && memberIsActiveUser) {
             CustomIconButton(
                 id = R.drawable.payup,
-                clickAction = { payMember(member, group) }
+                clickAction = { payMember(memberPhone, group) }
             )
         }
     }
@@ -165,10 +166,18 @@ private fun payMember(member: String, group: Group) {
     group.expenses.forEach() { expense ->
         val expenseMembers = expense.members.values
 
-        for (i in 0..expenseMembers.size - 1) {
-            if (expenseMembers.elementAt(i).memberId == member && !expenseMembers.elementAt(i).payed) {
-                expenseMembers.elementAt(i).payed = true
-                expense.members.replace(i.toString(), expenseMembers.elementAt(i))
+        for (i in expenseMembers.indices) {
+            val expenseMember = expenseMembers.elementAt(i)
+            if (expenseMember.memberId != member) {
+                continue
+            }
+            if (!expenseMember.payed) {
+                expenseMember.payed = true
+                expense.members.replace(i.toString(), expenseMember)
+            }else if(member == expense.owner){
+                // Commented out because this also introduces problems
+//                payAll(expense)
+                break
             }
         }
     }
@@ -176,3 +185,14 @@ private fun payMember(member: String, group: Group) {
     // Post new group
     groupViewModel.updateGroup(out)
 }
+
+// USe this to mark all members of an expense as having paid that expense
+//private fun payAll(expense: Expense){
+//    val expenseMembers = expense.members.values
+//
+//    for (i in expenseMembers.indices) {
+//        val expenseMember = expenseMembers.elementAt(i)
+//        expenseMember.payed = true
+//        expense.members.replace(i.toString(), expenseMember)
+//    }
+//}
